@@ -1,11 +1,14 @@
 package GameComponents;
 
 import java.util.ArrayList;
+import Utente.User;
 /**
  *
  * @author Moresi Gianmarco
  */
 public abstract class GameDescription {
+    private final User utente= new User();
+
     //Contiene tutte le stanze del gioco
     private final ArrayList<Room> rooms= new ArrayList<>();
     
@@ -17,6 +20,9 @@ public abstract class GameDescription {
     
     //Setting della stanza corrente per il giocatore
     private final Room currentRoom=null;
+
+    //Inventario del giocatore
+    private final Inventory inventory=new Inventory(utente);
     
     public Room getCurrentRoom(){
         return this.currentRoom;
@@ -32,6 +38,10 @@ public abstract class GameDescription {
     
     public ArrayList<Object> getObjects(){
         return this.objects;
+    }
+
+    public Inventory getInventory(){
+        return this.inventory;
     }
     
     /*

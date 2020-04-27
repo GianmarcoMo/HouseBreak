@@ -24,7 +24,7 @@ public class Room {
     private Room est;
     
     //Lista di oggetti presenti nella stanza
-    private ArrayList<Object> objects;
+    private ArrayList<GameObject> objects;
     
     public Room(int id, String description, String ambiente){
         this.id=id;
@@ -52,14 +52,14 @@ public class Room {
     }   
     
     //Inserisce gli oggetti all'interno della stanza
-    public void setObjects(Object[] objects){
+    public void setObjects(GameObject[] objects){
         for(int k=0; k<objects.length; k++){
             this.objects.add(k, objects[k]);
         }
     }
     
     //inserisce l'oggetto che ha rimosso dall'inventario l'utente
-    public void setObjectDropped(Object object){
+    public void setObjectDropped(GameObject object){
         this.objects.add(this.objects.size(), object);
     }    
          
@@ -86,7 +86,7 @@ public class Room {
     }
     
     //Resistuisce l'index dell'oggetto cercato, se esiste.
-    public int getIndexObject(String object){
+    private int getIndexObject(String object){
         int index=0;
         while(this.objects.get(index)!=null){
             if(this.objects.get(index).containsObject(object)){
