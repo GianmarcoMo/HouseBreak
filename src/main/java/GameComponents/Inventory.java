@@ -31,10 +31,10 @@ public class Inventory {
 
     }
 
-    private int getIndex(GameObject object){
+    private int getIndex(GameObject obj){
         int index=0;
         for(index=0; index< this.objects.size(); index++){
-            if(objects.equals(object)){
+            if(objects.equals(obj)){
                 return index;
             }
         }

@@ -6,7 +6,7 @@ import Utente.User;
  *
  * @author Moresi Gianmarco
  */
-public abstract class GameDescription {
+public abstract class GameComponents {
     private final User utente= new User();
 
     //Contiene tutte le stanze del gioco
@@ -44,10 +44,9 @@ public abstract class GameDescription {
         return this.inventory;
     }
     
-    /*
-        public abstract void init() throws Exception;
+    public abstract void inizializzazione() throws Exception;
 
-        public abstract void nextMove(ParserOutput p, PrintStream out);
-    */
+    //public abstract void nextMove();
+    
     
 }
