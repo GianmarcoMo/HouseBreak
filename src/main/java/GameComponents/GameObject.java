@@ -8,23 +8,37 @@ import java.util.ArrayList;
  */
 public class GameObject {
     //identifica un modo univoco l'oggetto
-    private final int id;
+    private final int ID;
+
     private String name;
+
     private String descrizione;
+    
     private ArrayList<String> alias;
+    
     //indica se l'oggetto può essere aperto
     private boolean openable =false;
+    
     //indica se l'oggetto è aperto 
     private boolean open =false;
+    
     //indica se l'oggetto può essere raccolto
     private boolean pickable=true;
+    
     //indica se l'oggetto può essere premuto
     private boolean pushable=false;
+    
     //indica se l'oggetto è stato premuto
     private boolean push=false;
 
+    public GameObject(){
+        this.ID=0;
+        this.name=null;
+        this.descrizione=null;
+    }
+
     public GameObject(int id, String name, String description){
-        this.id=id;
+        this.ID=id;
         this.name=name;
         this.descrizione=description;
     }
@@ -63,11 +77,19 @@ public class GameObject {
     }
     //restituisce vero o falso se l'oggetto può essere apribile
     public boolean isOpenable(){
-        return this.open;
+        return this.openable;
     }
     //restituisce vero o falso se l'oggetto è aperto
     public boolean isOpen(){
         return this.open;
+    }
+
+    public void setPickable(){
+        this.pickable=true;
+    }
+
+    public boolean isPickable(){
+        return this.pickable;   
     }
     
     //Controlla se esiste l'oggetto inserito in input
@@ -92,7 +114,7 @@ public class GameObject {
     @Override
     public boolean equals(Object obj){
         final GameObject object= (GameObject) obj;
-        if(this.id == object.id){
+        if(this.ID == object.ID){
             return true;
         }else{
             return false;

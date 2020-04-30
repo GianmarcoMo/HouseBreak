@@ -1,17 +1,14 @@
 package GameComponents;
 
-import Utente.User;
 import java.util.ArrayList;
 /**
  * @author Moresi Gianmarco
  */
 public class Inventory {
-    User utente= new User();
-    ArrayList<GameObject> objects= new ArrayList<>();
+    ArrayList<GameObject> objects;
 
-    public Inventory(User usr){
-        this.utente.setEmail(usr.getEmail());
-        this.utente.setUsername(usr.getUsername());
+    public Inventory(){
+        objects= new ArrayList<>();
     }
 
     //Aggiunge un insieme di oggetti all'inventario

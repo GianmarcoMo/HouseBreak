@@ -20,9 +20,6 @@ public abstract class GameComponents {
     
     //Setting della stanza corrente per il giocatore
     private final Room currentRoom=null;
-
-    //Inventario del giocatore
-    private final Inventory inventory=new Inventory(utente);
     
     public Room getCurrentRoom(){
         return this.currentRoom;
@@ -38,10 +35,6 @@ public abstract class GameComponents {
     
     public ArrayList<Object> getObjects(){
         return this.objects;
-    }
-
-    public Inventory getInventory(){
-        return this.inventory;
     }
     
     public abstract void inizializzazione() throws Exception;
