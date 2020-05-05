@@ -1,39 +1,50 @@
 package GameComponents;
 
 import java.util.ArrayList;
-import java.util.Objects;
 /**
  *
  * @author Moresi Gianmarco
  */
 public class Command {
     //Indica il nome del comando
-    private final String name;
+    private StringBuilder nome;
     //Indica la descrizione, utile per fornire la responsabilità del comando
-    private final String description;
+    private StringBuilder description;
     //Indica gli alias del comando
     private ArrayList<String> alias;
     
     //Costruttore
-    public Command(String nome, String descrizione, String[] alias){
-        this.name=nome;
-        this.description=descrizione;
-        this.setAlias(alias); //richiama il meotod implementato giù per inserire gli alias
+    public Command(){
+        this.nome=new StringBuilder();
+        this.description=new StringBuilder();
+        this.alias = new ArrayList<>();
     }
     
-    //Inserisce tutti gli alias passati in input
-    public void setAlias(String[] alias){
-        for(int k=0; k<alias.length; k++){
-            this.alias.add(k,alias[k]);
-            
-        }
+    //Costruttore con stringa
+    public Command(String linea){
+        this.nome=new StringBuilder();
+        this.description=new StringBuilder();
+        this.alias = new ArrayList<>();
+        dividiAcqisizione(linea);
+    }
+
+    public void setNomeComando(char carattere){
+        this.nome.append(carattere);
+    }
+
+    public void setAlias(String aliasInput){
+        this.alias.add(alias.size(), aliasInput);
+    }
+
+    public void setDescrizione(char carattere){
+        this.description.append(carattere);
     }
     
-    public String getNameCommand(){
-        return this.name;
+    public StringBuilder getNomeComando(){
+        return this.nome;
     }
     
-    public String getDescriptionCommand(){
+    public StringBuilder getDescrizioneComando(){
         return this.description;
     }
     
@@ -45,7 +56,7 @@ public class Command {
     //controlla anche la lista degli alias
     public boolean containsCommand(String command){
         //Controllo principale
-        if(this.name.equals(command)){
+        if(this.nome.equals(command)){
             return true;
         }else{ //Se non esiste, controlla la lista degli alias
             if(this.containsAlias(command)){
@@ -58,6 +69,37 @@ public class Command {
     
     public boolean containsAlias(String alias){
         return this.alias.contains(alias);
+    }
+    
+    //nord Direzione per il giocatore. n,N,Nord,NORD,avanti,Avanti,AVANTI,
+    public void dividiAcqisizione(String line){
+        int index=0;
+        //Acquisizione nome comando.
+        while(line.charAt(index)!='.'){
+            this.setNomeComando(line.charAt(index));
+            index++;
+        }
+        index++;
+        
+        //Acquisizione descrizione comando
+        while(line.charAt(index)!='.'){
+            this.setDescrizione(line.charAt(index));
+            index++;
+        }
+        index++;
+        //Acquisizione dei vari alias
+        StringBuilder singoloAlias=new StringBuilder();
+        
+        while(line.charAt(index)!='.'){
+            if(line.charAt(index)==','){
+                this.setAlias(singoloAlias.toString());
+                singoloAlias.delete(0, singoloAlias.length());
+            }else{
+                singoloAlias.append(line.charAt(index));
+            }
+            index++;
+        }
+        
     }
    
 }
