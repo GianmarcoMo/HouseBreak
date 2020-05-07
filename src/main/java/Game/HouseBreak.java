@@ -30,8 +30,8 @@ import java.io.File;
 public class HouseBreak extends GameComponents{
 
     @Override
-    public void inizializzazione() throws IOException{
-        Scanner scan= null;
+    public void inizializzazione() throws IOException {
+        Scanner scan = null;
         /*
          * specifio la cartella dove sono situati i vari files per i comandi, oggetti
          * ecc..
@@ -40,8 +40,8 @@ public class HouseBreak extends GameComponents{
          * stessa, e bisogna solo aggiungere il nome del file.
          */
         final String FOLDER = "resources";
-        File file= new File(FOLDER);
-        
+        File file = new File(FOLDER);
+
         //Nuovo scanner per acquisizione da file per i comandi
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/comandi.dat")));
 
@@ -71,12 +71,58 @@ public class HouseBreak extends GameComponents{
         //si posizione sulla linea del commento
         //al prossimo scan.nextline si trova sulla prima stanza
         scan.nextLine();
+        //Stanza prigioniero
+        Room prigioniero = new Room(scan.nextLine());
+        //Stanza corridoio
+        Room corridoio = new Room(scan.nextLine());
+        //Stanza magazzino
+        Room magazzino = new Room(scan.nextLine());
+        magazzino.aggiungiNemico(); //inserisco nemico nella stanza
         //Stanza Cucina
         Room cucina = new Room(scan.nextLine());
+        //stanza bagno
+        Room bagno = new Room(scan.nextLine());
+        bagno.aggiungiNemico(); //inserisco nemico nella stanza
+        //stanza salone
+        Room salone = new Room(scan.nextLine());
+        salone.aggiungiNemico(); //inserisco nemico nella stanza
+        //stanza sicurezza
+        Room sicurezza = new Room(scan.nextLine());
+        sicurezza.bloccaStanza(); //blocca la stanza
+        //uscita
+        Room uscita= new Room(scan.nextLine());
+        uscita.bloccaStanza(); //blocca la porta d'uscita.
         
+        //Confini stanza prigioniero
+        prigioniero.setConfini("nord", corridoio);
+        
+        //confini stanza corridoio
+        corridoio.setConfini("sud", prigioniero);
+        corridoio.setConfini("est", magazzino);
+        corridoio.setConfini("ovest", cucina);
+        
+        //confini stanza magazzino
+        magazzino.setConfini("ovest", corridoio);
+        
+        //confini stanza cucina
+        cucina.setConfini("nord", bagno);
+        cucina.setConfini("est", corridoio);
+        
+        //Confini stanza bagno
+        bagno.setConfini("est", salone);
+        bagno.setConfini("sud", cucina);
+        
+        //Confini stanza salone
+        salone.setConfini("est", uscita);
+        salone.setConfini("sud", sicurezza);
+        salone.setConfini("ovest", bagno);
+        
+        //confini stanza sicurezza
+        sicurezza.setConfini("nord", salone);
 
-            
-    }   
+        scan.close();
+
+    }
     
 }
 

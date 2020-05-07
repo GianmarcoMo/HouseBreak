@@ -16,12 +16,17 @@ public class Room implements Input{
     //descrizione stanza
     private final StringBuilder descrizione;
     
+    //indica se la stanza è bloccata o no
+    private boolean bloccata=false;
+    
     //ambiente viene utilizzato per descrivere la stanza 
     //quando il giocatore si guarda attorno
     private final StringBuilder ambienteNord;
     private final StringBuilder ambienteEst;
     private final StringBuilder ambienteOvest;
     private final StringBuilder ambienteSud;
+    
+    private boolean nemico;
     
     //lista di stanza confinanti con quella attuale
     //divise in base alla loro direzione
@@ -41,6 +46,7 @@ public class Room implements Input{
         this.ambienteEst= new StringBuilder();
         this.ambienteOvest= new StringBuilder();
         this.ambienteSud= new StringBuilder();
+        this.nemico=false;
     }
     
     public Room(String lineaFile){
@@ -51,7 +57,49 @@ public class Room implements Input{
         this.ambienteEst= new StringBuilder();
         this.ambienteOvest= new StringBuilder();
         this.ambienteSud= new StringBuilder();
+        this.nemico=false;
         acquisizoneInputFile(lineaFile);
+    }
+    
+    //Aggiunge un nemico alla stanza
+    public void aggiungiNemico(){
+        this.nemico=true;
+    }
+    
+    //blocca la stanza indicata
+    public void bloccaStanza(){
+        this.bloccata=true;
+    }
+    
+    //sblocca la stanza indicata
+    public void sbloccaStanza(){
+        this.bloccata=false;
+    }
+    
+    //restituisce se la porta è bloccata
+    public boolean bloccata(){
+        if(bloccata){
+            System.out.println("La porta è bloccata! Cerca il modo di aprirla!");
+        }
+        return this.bloccata;
+    }
+    
+    //elimina nemico dalla stanza
+    //usato quandno viene ammazzato dal giocatore
+    public void eliminaNemico(){
+        this.nemico=false;
+    }
+    
+    //controlla se in questa stanza c'è un nemico
+    //Avvisa l'utente.
+    public boolean nemico(){
+        if(nemico){
+            System.out.println("Attento c'è un nemico! Ammazzalo prima che lui ammazzi te!! ");
+            return true;
+        }else{
+            System.out.println("Non ci sono nemici in questa stanza!");
+            return false;
+        }
     }
     
     //funzione che passa in input la posizione della stanza 
@@ -77,6 +125,19 @@ public class Room implements Input{
     public void setObjects(GameObject[] objects){
         for(int k=0; k<objects.length; k++){
             this.objects.add(k, objects[k]);
+        }
+    }
+    
+    //Controlla se nella stanza ci sono degli oggetti 
+    //che il giocatore può usare.
+    private void oggetti(){
+        if(this.objects.size()>1){
+            System.out.println("Ci sono degli oggetti nella stanza!");
+            System.out.print("Nella stanza è presente: ");
+            for(int k=0; k<this.objects.size(); k++){
+                System.out.print(this.objects.get(k).getNome()+", ");
+            }
+            System.out.print(".");
         }
     }
     
@@ -127,15 +188,23 @@ public class Room implements Input{
     }
     
     public StringBuilder getAmbienteNord(){
+        //richiama il metodo per vedere se ci sono oggetti nella stanza.
+        this.oggetti();
         return this.ambienteNord;
     }
     public StringBuilder getAmbienteSud(){
+        //richiama il metodo per vedere se ci sono oggetti nella stanza.
+        this.oggetti();
         return this.ambienteSud;
     }
     public StringBuilder getAmbienteEst(){
+        //richiama il metodo per vedere se ci sono oggetti nella stanza.
+        this.oggetti();
         return this.ambienteEst;
     }
     public StringBuilder getAmbienteOvest(){
+        //richiama il metodo per vedere se ci sono oggetti nella stanza.
+        this.oggetti();
         return this.ambienteOvest;
     }
     
