@@ -1,8 +1,8 @@
 package Game;
 
 import GameComponents.*;
-import Utente.User;
-import java.util.Scanner;
+//import Utente.User;
+//import java.util.Scanner;
 
 public class Starter {
     private final GameComponents gioco;

@@ -7,11 +7,11 @@ import java.util.ArrayList;
  */
 public class Command {
     //Indica il nome del comando
-    private StringBuilder nome;
+    private final StringBuilder nome;
     //Indica la descrizione, utile per fornire la responsabilità del comando
-    private StringBuilder description;
+    private final StringBuilder description;
     //Indica gli alias del comando
-    private ArrayList<String> alias;
+    private final ArrayList<String> alias;
     
     //Costruttore
     public Command(){
@@ -20,24 +20,50 @@ public class Command {
         this.alias = new ArrayList<>();
     }
     
-    //Costruttore con stringa
-    public Command(String linea){
+    //Costruttore con input linea del file
+    public Command(String line){
         this.nome=new StringBuilder();
         this.description=new StringBuilder();
         this.alias = new ArrayList<>();
-        dividiAcqisizione(linea);
+        
+        int index=0;
+        //Acquisizione nome comando.
+        while(line.charAt(index)!='.'){
+            nome.append(line.charAt(index));
+            index++;
+        }
+        index++;
+        
+        //Acquisizione descrizione comando
+        while(line.charAt(index)!='.'){
+            description.append(line.charAt(index));
+            index++;
+        }
+        index++;
+        //Acquisizione dei vari alias
+        StringBuilder singoloAlias=new StringBuilder();
+        
+        while(line.charAt(index)!='.'){
+            if(line.charAt(index)==','){
+                alias.add(alias.size(), singoloAlias.toString());
+                singoloAlias.delete(0, singoloAlias.length());
+            }else{
+                singoloAlias.append(line.charAt(index));
+            }
+            index++;
+        }
     }
 
-    public void setNomeComando(char carattere){
-        this.nome.append(carattere);
+    public void setNomeComando(String nomeInput){
+        this.nome.append(nomeInput);
     }
 
     public void setAlias(String aliasInput){
         this.alias.add(alias.size(), aliasInput);
     }
 
-    public void setDescrizione(char carattere){
-        this.description.append(carattere);
+    public void setDescrizione(String descrizioneInput){
+        this.description.append(descrizioneInput);
     }
     
     public StringBuilder getNomeComando(){
@@ -56,7 +82,7 @@ public class Command {
     //controlla anche la lista degli alias
     public boolean containsCommand(String command){
         //Controllo principale
-        if(this.nome.equals(command)){
+        if(this.nome.toString().equals(command)){
             return true;
         }else{ //Se non esiste, controlla la lista degli alias
             if(this.containsAlias(command)){
@@ -70,36 +96,4 @@ public class Command {
     public boolean containsAlias(String alias){
         return this.alias.contains(alias);
     }
-    
-    //nord Direzione per il giocatore. n,N,Nord,NORD,avanti,Avanti,AVANTI,
-    public void dividiAcqisizione(String line){
-        int index=0;
-        //Acquisizione nome comando.
-        while(line.charAt(index)!='.'){
-            this.setNomeComando(line.charAt(index));
-            index++;
-        }
-        index++;
-        
-        //Acquisizione descrizione comando
-        while(line.charAt(index)!='.'){
-            this.setDescrizione(line.charAt(index));
-            index++;
-        }
-        index++;
-        //Acquisizione dei vari alias
-        StringBuilder singoloAlias=new StringBuilder();
-        
-        while(line.charAt(index)!='.'){
-            if(line.charAt(index)==','){
-                this.setAlias(singoloAlias.toString());
-                singoloAlias.delete(0, singoloAlias.length());
-            }else{
-                singoloAlias.append(line.charAt(index));
-            }
-            index++;
-        }
-        
-    }
-   
 }

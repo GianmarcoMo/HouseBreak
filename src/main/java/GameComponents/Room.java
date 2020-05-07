@@ -1,35 +1,57 @@
 package GameComponents;
 
 import java.util.ArrayList;
-
+import GameComponents.Input;
 /**
  *
  * @author  Moresi Gianmarco
  */
-public class Room {
+public class Room implements Input{
     //ID per identificare una stanza nel caso ci siano due stanze con lo stesso nome
-    private int id;
+    private static int id;
     
-    private String name;
-    private String description;
+    //nome stanza
+    private final StringBuilder nome;
+    
+    //descrizione stanza
+    private final StringBuilder descrizione;
+    
     //ambiente viene utilizzato per descrivere la stanza 
     //quando il giocatore si guarda attorno
-    private String ambiente;
+    private final StringBuilder ambienteNord;
+    private final StringBuilder ambienteEst;
+    private final StringBuilder ambienteOvest;
+    private final StringBuilder ambienteSud;
     
     //lista di stanza confinanti con quella attuale
     //divise in base alla loro direzione
-    private Room nord;
-    private Room sud;
-    private Room ovest;
-    private Room est;
+    private Room nord=null;
+    private Room sud=null;
+    private Room ovest=null;
+    private Room est=null;
     
     //Lista di oggetti presenti nella stanza
     private ArrayList<GameObject> objects;
     
-    public Room(int id, String description, String ambiente){
-        this.id=id;
-        this.description=description;
-        this.ambiente=ambiente;
+    public Room(){
+        id++;
+        this.nome=new StringBuilder();
+        this.descrizione=new StringBuilder();
+        this.ambienteNord= new StringBuilder();
+        this.ambienteEst= new StringBuilder();
+        this.ambienteOvest= new StringBuilder();
+        this.ambienteSud= new StringBuilder();
+    }
+    
+    public Room(String lineaFile){
+        id++;
+        this.nome=new StringBuilder();
+        this.descrizione=new StringBuilder();
+        this.ambienteNord= new StringBuilder();
+        this.ambienteEst= new StringBuilder();
+        this.ambienteOvest= new StringBuilder();
+        this.ambienteSud= new StringBuilder();
+        acquisizoneInputFile(lineaFile);
     }
     
     //funzione che passa in input la posizione della stanza 
@@ -94,6 +116,82 @@ public class Room {
             }
         }
         return -1;
+    }
+    
+    public StringBuilder getNomeStanza(){
+        return this.nome;
+    }
+    
+    public StringBuilder getDescrizioneStanza(){
+        return this.descrizione;
+    }
+    
+    public StringBuilder getAmbienteNord(){
+        return this.ambienteNord;
+    }
+    public StringBuilder getAmbienteSud(){
+        return this.ambienteSud;
+    }
+    public StringBuilder getAmbienteEst(){
+        return this.ambienteEst;
+    }
+    public StringBuilder getAmbienteOvest(){
+        return this.ambienteOvest;
+    }
+    
+    public int getId(){
+        return this.id;
+    }
+
+    @Override
+    public void acquisizoneInputFile(String lineaInput) {
+        int index=0;
+        
+        //Acquisizione il nome della stanza
+        while(lineaInput.charAt(index)!= '.'){
+            this.nome.append(lineaInput.charAt(index));
+            index++;
+        }
+        //Salta la posizione dove si trova il punto.
+        index++;
+        
+        //Acquisizone descrizione stanza
+        while(lineaInput.charAt(index)!='.'){
+            this.descrizione.append(lineaInput.charAt(index));
+            index++;
+        }
+        
+        //Salta la posizione dove si trova il punto
+        index++;
+        
+        //acquisizione ambiente nord
+        while(lineaInput.charAt(index)!='.'){
+            this.ambienteNord.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+        
+        //acquisizione ambiente est
+        while(lineaInput.charAt(index)!='.'){
+            this.ambienteEst.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+        
+        //acquisizione ambiente sud
+        while(lineaInput.charAt(index)!='.'){
+            this.ambienteSud.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+        
+        //acquisizione ambiente Ovest
+        while(lineaInput.charAt(index)!='.'){
+            this.ambienteOvest.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+        
     }
     
 }
