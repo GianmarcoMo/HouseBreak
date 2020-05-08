@@ -16,7 +16,7 @@ public abstract class GameComponents {
     private final ArrayList<Command> commands= new ArrayList<>();
     
     //Contiene tutti gli oggetti del gioco
-    private final ArrayList<Object> objects= new ArrayList<>();
+    private final ArrayList<GameObject> objects= new ArrayList<>();
     
     //Setting della stanza corrente per il giocatore
     private final Room currentRoom=null;
@@ -25,15 +25,15 @@ public abstract class GameComponents {
         return this.currentRoom;
     }
     
-    public ArrayList<Command> getCommands(){
+    public ArrayList<Command> getCommand(){
         return this.commands;
     }
     
-    public ArrayList<Room> getRooms(){
+    public ArrayList<Room> getRoom(){
         return this.rooms;
     }
     
-    public ArrayList<Object> getObjects(){
+    public ArrayList<GameObject> getObject(){
         return this.objects;
     }
     

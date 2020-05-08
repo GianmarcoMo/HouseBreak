@@ -1,18 +1,18 @@
 package GameComponents;
 
 import java.util.ArrayList;
-
+import GameComponents.Input;
 /**
  *
  * @author Moresi Gianmarco
  */
-public class GameObject {
+public class GameObject implements Input {
     //identifica un modo univoco l'oggetto
-    private final int ID;
+    private static int ID;
 
-    private String name;
+    private final StringBuilder name;
 
-    private String descrizione;
+    private final StringBuilder descrizione;
     
     private ArrayList<String> alias;
     
@@ -32,30 +32,31 @@ public class GameObject {
     private boolean push=false;
 
     public GameObject(){
-        this.ID=0;
-        this.name=null;
-        this.descrizione=null;
+        ID++;
+        this.name=new StringBuilder();
+        this.descrizione=new StringBuilder();
+        this.alias=new ArrayList<>();
     }
 
-    public GameObject(int id, String name, String description){
-        this.ID=id;
-        this.name=name;
-        this.descrizione=description;
+    public GameObject(String lineaInput){
+        ID++;
+        this.name=new StringBuilder();
+        this.descrizione=new StringBuilder();
+        this.alias=new ArrayList<>();
+        acquisizoneInputFile(lineaInput);
     }
 
     //Inserisce tutti gli alias passati in input
-    public void setAlias(String[] alias){
-        for(int k=0; k<alias.length; k++){
-            this.alias.add(k,alias[k]);
-        }
+    public void setAlias(String aliasInput){
+        alias.add(aliasInput);
     }
     
     public String getNome(){
-        return this.name;
+        return this.name.toString();
     }
     
     public String getDescrizione(){
-        return this.descrizione;
+        return this.descrizione.toString();
     }
     //Setta l'oggetto pushable, può essere premuto
     public void setPushable(){
@@ -120,5 +121,40 @@ public class GameObject {
             return false;
         }
     }
+
+    @Override
+    public void acquisizoneInputFile(String lineaInput) {
+        int index=0;
+        //Acquisizione nome oggetto
+        while(lineaInput.charAt(index)!= '-'){
+            this.name.append(lineaInput.charAt(index));
+            index++;
+        }
+        //Salto carattere per dividere argomenti
+        index++;
+        
+        while(lineaInput.charAt(index) != '-'){
+            this.descrizione.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+        
+        //Acquisizione dei vari alias
+        StringBuilder singoloAlias=new StringBuilder();
+        while(lineaInput.charAt(index) != '-'){
+            if(lineaInput.charAt(index)==','){
+                //inserisco l'alias estratto nella lista
+                alias.add(singoloAlias.toString());
+                //pulisco lo stringbuilder per contenere altri alias
+                singoloAlias.delete(0, singoloAlias.length());
+            }else{
+                //Compongo il singolo alias
+                singoloAlias.append(lineaInput.charAt(index));
+            }
+            index++;
+        }
+    }
     
+
+   
 }
