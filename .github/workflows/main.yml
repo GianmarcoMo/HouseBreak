@@ -28,3 +28,19 @@ jobs:
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml
       env:
         GITHUB_TOKEN: ${{ github.token }}
+        
+    
+
+    - name: Run java checkstyle
+      uses: nikitasavinov/checkstyle-action@0.1.0
+      with:
+        # GITHUB_TOKEN.
+        github_token: ${{ github.token }}
+        # Report level for reviewdog [info,warning,error]
+        level: warning
+        # Reporter of reviewdog command [github-pr-check,github-pr-review]
+        reporter: github-pr-check
+        # Checkstyle config file
+        checkstyle_config: google_checks.xml
+
+
