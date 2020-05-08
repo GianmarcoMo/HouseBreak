@@ -88,6 +88,10 @@ public class GameObject implements Input {
     public void setPickable(){
         this.pickable=true;
     }
+    
+    public void deletePickable(){
+        this.pickable=false;
+    }
 
     public boolean isPickable(){
         return this.pickable;   

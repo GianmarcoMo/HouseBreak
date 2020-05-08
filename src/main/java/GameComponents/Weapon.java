@@ -1,23 +1,35 @@
 package GameComponents;
 
 import java.util.Scanner;
+import java.lang.Integer;
+import GameComponents.Input;
 
-public class Weapon extends GameObject {
+/**
+ *
+ * @author Moresi Gianmarco
+ */
+public class Weapon implements Input {
+    private final StringBuilder nome;
     private int munizioni;
     private int vita;
-    private int danno;
-    private String tipoMunizioni;
+    private final int danno;
+    private final StringBuilder tipoMunizioni;
 
     public Weapon(){
+        this.nome= new StringBuilder();
         this.munizioni=0;
-        this.vita=0;
+        this.vita=100;
         this.danno=0;
+        this.tipoMunizioni= new StringBuilder();
     }
 
-    public Weapon(int munizioni, int vita, int danno){
-        this.munizioni=munizioni;
-        this.vita=vita;
-        this.danno=danno;
+    public Weapon(String lineaInput){
+        this.nome= new StringBuilder();
+        this.munizioni=0;
+        this.vita=100;
+        this.danno=0;
+        this.tipoMunizioni= new StringBuilder();
+        acquisizoneInputFile(lineaInput);
     }
 
     public void aumentaMunizioni(int numeroMunizioni){
@@ -36,17 +48,22 @@ public class Weapon extends GameObject {
         
     }
 
+    public String getNomeArma(){
+        return this.nome.toString();
+    }
+    
     public int getMunizioni(){
         //Se il tipo munizioni è diverso da null
         //Allora restituisci le munizioni
-        if(this.tipoMunizioni != null)
+        if(this.tipoMunizioni != null){
             return this.munizioni;
-        else
+        }else{
         //se non esiste il tipo munizioni
         //l'arma non può avere delle munizioni
         //esempio mazza, padella ecc...
             nonHaMunizioni();
             return 0;
+        }
     }
 
     //messaggio che avvisa che l'arma non ha munizioni
@@ -62,12 +79,12 @@ public class Weapon extends GameObject {
     }
 
     public int getVita(){
-        if(vita>50)
+        if(vita>50){
             return this.vita;
-        else 
+        }else{ 
             vitaArmaRischio();
             return this.vita;
-            
+        }
     }
 
     //messaggio che avvisa che l'arma si trova in pessime condizioni
@@ -81,16 +98,16 @@ public class Weapon extends GameObject {
     }
 
     public String tipoMunizioni(){
-        return this.tipoMunizioni;
+        return this.tipoMunizioni.toString();
     }
 
     public boolean munizioniCompatibili(String munizioni){
-        if(this.tipoMunizioni == munizioni)
+        if(this.tipoMunizioni.toString().equals(munizioni)){
             return true;
-        else
+        }else{
             munizioniNonCompatibili();
             return false;
-
+        }
     }
 
     private void munizioniNonCompatibili(){
@@ -105,6 +122,71 @@ public class Weapon extends GameObject {
         Scanner scann= new Scanner(System.in);
         String troll= scann.nextLine();
         System.out.println(("AHAHAHA ti prendevo in giro, non esiste nessun comando"));
+    }
+
+    @Override
+    public void acquisizoneInputFile(String lineaInput) throws NumberFormatException{
+        int index=0;
+        //Serve per prendere gli interi dal file.
+        StringBuilder numeroFile= new StringBuilder();
+        
+        //Nome arma
+        while(lineaInput.charAt(index) != '-'){
+            this.nome.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+        
+        //Munizioni arma
+        while(lineaInput.charAt(index) != '-'){
+            numeroFile.append(lineaInput.charAt(index));
+            index++;
+        }
+        this.munizioni=conversioneInt(numeroFile.toString());
+      
+        index++;
+        numeroFile.delete(0, numeroFile.length());
+        
+        //Vita arma
+        while(lineaInput.charAt(index) != '-'){
+            numeroFile.append(lineaInput.charAt(index));
+            index++;
+        } 
+        this.vita=conversioneInt(numeroFile.toString());
+        
+        index++;   
+        numeroFile.delete(0, numeroFile.length());
+        
+        //Danno arma
+        while(lineaInput.charAt(index) != '-'){
+            numeroFile.append(lineaInput.charAt(index));
+            index++;
+        } 
+        
+        this.vita=conversioneInt(numeroFile.toString());
+        
+        index++;   
+        numeroFile.delete(0, numeroFile.length());
+        
+        //Tipo munizioni
+        while(lineaInput.charAt(index) != '-'){
+            this.tipoMunizioni.append(lineaInput.charAt(index));
+            index++;
+        }
+        
+    }
+    
+    private int conversioneInt(String numeroInput){
+        //Conversione stringa in intero
+        try{
+            //Conversione stringa in int
+            return Integer.parseInt(numeroInput);
+        }catch(NumberFormatException ex){
+        }finally{
+            //Caricamento numero predefinito
+            //Cosi puo' continuare l'esecuzione
+            return 0;
+        }
     }
 
 }

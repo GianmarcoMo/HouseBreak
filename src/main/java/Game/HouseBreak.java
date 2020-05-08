@@ -1,37 +1,20 @@
 package Game;
 
 import GameComponents.*;
-import Utente.*;
+//import Utente.*;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
-
-
-/**
-
-    nord n,N,Nord,NORD,avanti,Avanti,AVANTI,
-    sud s,S,Sud,SUD,indietro,Indietro,INDIETRO,
-    est e,E,Est,EST,destra,Destra,DESTRA,
-    ovest o,O,Ovest,OVEST,sinistra,Sinistra,SINISTRA,
-    inventario inv,i,I,zaino,ZAINO,Zaino,bag,Bag,b,
-    fine esci,end,ESCI,Esci,END,End,muori,ammazzati,ucciditi,
-    osserva guarda,scruta,analizza,
-    raccogli pick,prendi,inserisci,
-    apri sfonda,              
-    premi spingi,push,pugno,
-
-
- */
 
 public class HouseBreak extends GameComponents{
 
     @Override
     public void inizializzazione() throws IOException {
         Scanner scan = null;
+        
         /*
          * specifio la cartella dove sono situati i vari files per i comandi, oggetti
          * ecc..
@@ -147,9 +130,12 @@ public class HouseBreak extends GameComponents{
         //confini stanza sicurezza
         sicurezza.setConfini("nord", salone);
         
-        //TODO DEVI INSERIRE GLI OGGETTI
-        //----------------------------------------------------------
+        //Stanza iniziale.
+        setStanzaCorrente(prigioniero);
         
+        //TODO DEVI INSERIRE GLI OGGETTI
+        
+        //----------------------------------------------------------
         scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));
 
         //Salto la linea dei commenti
@@ -161,7 +147,6 @@ public class HouseBreak extends GameComponents{
         //oggetto soda
         GameObject soda= new GameObject(scan.nextLine());
         getObject().add(soda);
-        
         //oggetto iphone
         GameObject iphone= new GameObject(scan.nextLine());
         getObject().add(iphone);
@@ -174,6 +159,20 @@ public class HouseBreak extends GameComponents{
         //oggetto scarafaggio
         GameObject scarafaggio= new GameObject(scan.nextLine());
         getObject().add(scarafaggio);
+        scarafaggio.setPushable();
+        scarafaggio.deletePickable();
+        //----------------------------------------------------------
+        
+        scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
+        
+        //inserisci munizioni tra gli oggetti.
+        scan.nextLine(); //salto linea commento
+        
+        Weapon glock= new Weapon(scan.nextLine());
+        Weapon coltello= new Weapon(scan.nextLine());
+        
+        System.out.println("Arma: "+ glock.getNomeArma());
+        glock.getMunizioni();
         
         scan.close();
 

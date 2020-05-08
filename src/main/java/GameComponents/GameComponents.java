@@ -19,10 +19,10 @@ public abstract class GameComponents {
     private final ArrayList<GameObject> objects= new ArrayList<>();
     
     //Setting della stanza corrente per il giocatore
-    private final Room currentRoom=null;
+    private Room stanzaCorrente=null;
     
     public Room getCurrentRoom(){
-        return this.currentRoom;
+        return this.stanzaCorrente;
     }
     
     public ArrayList<Command> getCommand(){
@@ -33,12 +33,16 @@ public abstract class GameComponents {
         return this.rooms;
     }
     
+    public void setStanzaCorrente(Room stanzaInput){
+        this.stanzaCorrente=stanzaInput;
+    }
+    
     public ArrayList<GameObject> getObject(){
         return this.objects;
     }
     
     public abstract void inizializzazione() throws Exception;
-
+    
     //public abstract void nextMove();
     
     
