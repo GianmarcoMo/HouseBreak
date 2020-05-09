@@ -38,6 +38,9 @@ public class Room implements Input{
     //Lista di oggetti presenti nella stanza
     private ArrayList<GameObject> objects;
     
+    //Lista delle armi 
+    private ArrayList<Weapon> armi;
+    
     public Room(){
         id++;
         this.nome=new StringBuilder();
@@ -47,6 +50,8 @@ public class Room implements Input{
         this.ambienteOvest= new StringBuilder();
         this.ambienteSud= new StringBuilder();
         this.nemico=false;
+        this.objects= new ArrayList<>();
+        this.armi= new ArrayList<>();
     }
     
     public Room(String lineaFile){
@@ -58,6 +63,8 @@ public class Room implements Input{
         this.ambienteOvest= new StringBuilder();
         this.ambienteSud= new StringBuilder();
         this.nemico=false;
+        this.objects= new ArrayList<>();
+        this.armi= new ArrayList<>();
         acquisizoneInputFile(lineaFile);
     }
     
@@ -69,6 +76,16 @@ public class Room implements Input{
     //blocca la stanza indicata
     public void bloccaStanza(){
         this.bloccata=true;
+    }
+    
+    //Restituisce l'insieme degli oggetti della stanza
+    public ArrayList<GameObject> getObject(){
+        return this.objects;
+    }
+    
+    //Restituisce l'array di armi
+    public ArrayList<Weapon> getArmi(){
+        return this.armi;
     }
     
     //sblocca la stanza indicata
@@ -121,29 +138,39 @@ public class Room implements Input{
         }
     }   
     
-    //Inserisce gli oggetti all'interno della stanza
-    public void setObjects(GameObject[] objects){
-        for(int k=0; k<objects.length; k++){
-            this.objects.add(k, objects[k]);
-        }
-    }
-    
     //Controlla se nella stanza ci sono degli oggetti 
     //che il giocatore può usare.
-    private void oggetti(){
-        if(this.objects.size()>1){
+    public void oggetti() {
+        if (this.objects.size() >= 1 || this.armi.size() >= 1) {
+            int k = 0;
             System.out.println("Ci sono degli oggetti nella stanza!");
             System.out.print("Nella stanza è presente: ");
-            for(int k=0; k<this.objects.size(); k++){
-                System.out.print(this.objects.get(k).getNome()+", ");
+
+            if (this.objects.size() >= 1) {
+                System.out.print(this.objects.get(k).getNome());
+                for (k = 1; k < this.objects.size(); k++) {
+                    System.out.print(", ");
+                    System.out.print(this.objects.get(k).getNome());
+                }
+                System.out.print(".\n");
+
             }
-            System.out.print(".");
+            k = 0;
+            if (this.armi.size() >= 1) {
+                System.out.print("Armi: "+this.armi.get(k).getNomeArma());
+                for (k = 1; k < this.armi.size(); k++) {
+                    System.out.print(", ");
+                    System.out.print(this.armi.get(k).getNomeArma());
+                }
+                System.out.print(".\n");
+            }
+
         }
     }
     
     //inserisce l'oggetto che ha rimosso dall'inventario l'utente
     public void setObjectDropped(GameObject object){
-        this.objects.add(this.objects.size(), object);
+        this.objects.add(object);
     }    
          
     //Rimuove l'oggetto in input, se esiste.

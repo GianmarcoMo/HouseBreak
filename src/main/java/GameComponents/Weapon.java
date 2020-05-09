@@ -12,7 +12,7 @@ public class Weapon implements Input {
     private final StringBuilder nome;
     private int munizioni;
     private int vita;
-    private final int danno;
+    private int danno;
     private final StringBuilder tipoMunizioni;
 
     public Weapon(){
@@ -55,7 +55,7 @@ public class Weapon implements Input {
     public int getMunizioni(){
         //Se il tipo munizioni è diverso da null
         //Allora restituisci le munizioni
-        if(this.tipoMunizioni != null){
+        if(!"".equals(this.tipoMunizioni.toString())){
             return this.munizioni;
         }else{
         //se non esiste il tipo munizioni
@@ -135,16 +135,16 @@ public class Weapon implements Input {
             this.nome.append(lineaInput.charAt(index));
             index++;
         }
-        index++;
+        index+=2;
         
-        //Munizioni arma
+        //Munizioni armanulla
         while(lineaInput.charAt(index) != '-'){
             numeroFile.append(lineaInput.charAt(index));
             index++;
         }
         this.munizioni=conversioneInt(numeroFile.toString());
       
-        index++;
+        index+=2;
         numeroFile.delete(0, numeroFile.length());
         
         //Vita arma
@@ -154,7 +154,7 @@ public class Weapon implements Input {
         } 
         this.vita=conversioneInt(numeroFile.toString());
         
-        index++;   
+        index+=2;   
         numeroFile.delete(0, numeroFile.length());
         
         //Danno arma
@@ -163,15 +163,18 @@ public class Weapon implements Input {
             index++;
         } 
         
-        this.vita=conversioneInt(numeroFile.toString());
+        this.danno=conversioneInt(numeroFile.toString());
+        index++;
         
-        index++;   
-        numeroFile.delete(0, numeroFile.length());
-        
-        //Tipo munizioni
-        while(lineaInput.charAt(index) != '-'){
-            this.tipoMunizioni.append(lineaInput.charAt(index));
-            index++;
+        if(lineaInput.charAt(index) != '+'){
+            index++;   
+            numeroFile.delete(0, numeroFile.length());
+
+            //Tipo munizioni
+            while (lineaInput.charAt(index) != '-') {
+                this.tipoMunizioni.append(lineaInput.charAt(index));
+                index++;
+            } 
         }
         
     }
@@ -182,7 +185,6 @@ public class Weapon implements Input {
             //Conversione stringa in int
             return Integer.parseInt(numeroInput);
         }catch(NumberFormatException ex){
-        }finally{
             //Caricamento numero predefinito
             //Cosi puo' continuare l'esecuzione
             return 0;

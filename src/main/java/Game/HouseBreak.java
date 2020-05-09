@@ -58,6 +58,9 @@ public class HouseBreak extends GameComponents{
         //Comando per premere un pulsante
         Command premi = new Command(scan.nextLine());
         getCommand().add(premi);
+        //Comando per unire le munizioni all'arma.
+        Command combina= new Command(scan.nextLine());
+        getCommand().add(combina);
         
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le stanze
@@ -144,23 +147,41 @@ public class HouseBreak extends GameComponents{
         //oggetto benda
         GameObject benda= new GameObject(scan.nextLine());
         getObject().add(benda);
+        magazzino.getObject().add(benda);
+        
         //oggetto soda
         GameObject soda= new GameObject(scan.nextLine());
         getObject().add(soda);
+        cucina.getObject().add(soda);
+        
         //oggetto iphone
         GameObject iphone= new GameObject(scan.nextLine());
         getObject().add(iphone);
+        
         //oggetto rivista
         GameObject rivista= new GameObject(scan.nextLine());
         getObject().add(rivista);
+        salone.getObject().add(rivista);
+        
         //oggetto carta
         GameObject carta= new GameObject(scan.nextLine());
         getObject().add(carta);
+        bagno.getObject().add(carta);
+        
         //oggetto scarafaggio
         GameObject scarafaggio= new GameObject(scan.nextLine());
         getObject().add(scarafaggio);
         scarafaggio.setPushable();
         scarafaggio.deletePickable();
+        salone.getObject().add(scarafaggio);
+        
+        
+        
+        //Munizioni per la pistola
+        GameObject munizioni= new GameObject(scan.nextLine());
+        getObject().add(munizioni);
+        bagno.getObject().add(munizioni);
+        
         //----------------------------------------------------------
         
         scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
@@ -168,11 +189,13 @@ public class HouseBreak extends GameComponents{
         //inserisci munizioni tra gli oggetti.
         scan.nextLine(); //salto linea commento
         
+        //Inizializzo la pistola
         Weapon glock= new Weapon(scan.nextLine());
-        Weapon coltello= new Weapon(scan.nextLine());
+        magazzino.getArmi().add(glock);
         
-        System.out.println("Arma: "+ glock.getNomeArma());
-        glock.getMunizioni();
+        //Inzializzo il coltello
+        Weapon coltello= new Weapon(scan.nextLine());
+        cucina.getArmi().add(coltello);
         
         scan.close();
 

@@ -18,11 +18,7 @@ public class Starter {
     }
 
     private void Story(){
-        System.out.println("\n\n\t|||||||||||||||||||||||||||||||||");
-        System.out.println("\t");
-        System.out.println("\t|||| BEVENUTO IN HOUSE BREAK ||||");
-        System.out.println("\t");
-        System.out.println("\t|||||||||||||||||||||||||||||||||\n\n");
+        System.out.println("\n\nBEVENUTO IN HOUSE BREAK\n");
         System.out.println("Ti chiami Will, un ex-agente dei servizi segreti Americani, che sa cose che non dovrebbe sapere. ");
         System.out.println("Sono passati diversi anni dal tuo congedo e l'attuale presidente degli Stati Uniti non accetta ");
         System.out.println("che tu sia in giro, ma non vuole ammazzarti.");
