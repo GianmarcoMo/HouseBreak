@@ -28,18 +28,9 @@ public class HouseBreak extends GameComponents{
         //Nuovo scanner per acquisizione da file per i comandi
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/comandi.dat")));
 
-        //Comando per andare avanti
-        Command nord = new Command(scan.nextLine());
-        getCommand().add(nord);
-        //Comando per andare indietro
-        Command sud = new Command(scan.nextLine());
-        getCommand().add(sud);
-        //Comando per andare a destra
-        Command est = new Command(scan.nextLine());
-        getCommand().add(est);
-        //Comando per andare a sinistra
-        Command ovest = new Command(scan.nextLine());
-        getCommand().add(ovest);
+        //Comando per muoversi nel gioco
+        Command vai = new Command(scan.nextLine());
+        getCommand().add(vai);       
         //Comando per l'inventario
         Command inventario = new Command(scan.nextLine());
         getCommand().add(inventario);
@@ -61,6 +52,24 @@ public class HouseBreak extends GameComponents{
         //Comando per unire le munizioni all'arma.
         Command combina= new Command(scan.nextLine());
         getCommand().add(combina);
+        
+        //nord sud est ovest
+        //----------------------------------------------------------
+        //nuovo scanner per acquisizione da file per le direzioni
+        scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/direzioni.dat")));
+        
+        //Direzione nord
+        Direzione nord= new Direzione(scan.nextLine());
+        getDirezione().add(nord);
+        //direzione sud
+        Direzione sud= new Direzione(scan.nextLine());
+        getDirezione().add(sud);
+        //Direzione est
+        Direzione est= new Direzione(scan.nextLine());
+        getDirezione().add(est);
+        //Direzione ovest
+        Direzione ovest= new Direzione(scan.nextLine());
+        getDirezione().add(ovest);
         
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le stanze

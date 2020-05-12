@@ -104,11 +104,7 @@ public class GameObject implements Input {
         if(this.name.equals(object)){
             return true;
         }else{ //se il nome non è uguale, cerca negli alias
-            if(this.containsAlias(object)){
-                return true;
-            }else{
-                return false;
-            }
+            return this.containsAlias(object);
         }
     }
     

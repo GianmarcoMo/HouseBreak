@@ -1,7 +1,4 @@
-nord. Direzione per il giocatore. n,N,Nord,NORD,avanti,Avanti,AVANTI.
-sud. Direzione per il giocatore. s,S,Sud,SUD,indietro,Indietro,INDIETRO.
-est. Direzione per il giocatore. e,E,Est,EST,destra,Destra,DESTRA.
-ovest. Direzione per il giocatore. o,O,Ovest,OVEST,sinistra,Sinistra,SINISTRA.
+vai. Cammina verso una direzione specificata. cammina,corri,muoviti,spostati,go.
 inventario. Elenca gli oggetti presenti nell'inventario del giocatore. inv,i,I,zaino,ZAINO,Zaino,bag,Bag,b.
 fine. Termina la partita per il giocatore. esci,end,ESCI,Esci,END,End,muori,ammazzati,ucciditi.
 osserva. Effettua una descrizione della stanza. guarda,scruta,analizza.

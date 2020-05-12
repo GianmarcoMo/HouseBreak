@@ -8,7 +8,7 @@ import GameComponents.Input;
  *
  * @author Moresi Gianmarco
  */
-public class Weapon implements Input {
+public class Weapon implements Input  {
     private final StringBuilder nome;
     private int munizioni;
     private int vita;
@@ -45,7 +45,6 @@ public class Weapon implements Input {
             //diminuisce la vita
             this.diminuisciVita();
         }
-        
     }
 
     public String getNomeArma(){
@@ -177,6 +176,10 @@ public class Weapon implements Input {
             } 
         }
         
+    }
+    
+    public boolean equals(String nomeInput){
+        return this.getNomeArma().equals(nomeInput);
     }
     
     private int conversioneInt(String numeroInput){

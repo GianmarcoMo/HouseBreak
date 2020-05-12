@@ -1,1 +1,3 @@
 GameComponents/Input.class
+Game/Parser.class
+GameComponents/Direzione.class

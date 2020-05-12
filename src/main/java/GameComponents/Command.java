@@ -5,7 +5,7 @@ import java.util.ArrayList;
  *
  * @author Moresi Gianmarco
  */
-public class Command {
+public class Command implements Input{
     //Indica il nome del comando
     private final StringBuilder nome;
     //Indica la descrizione, utile per fornire la responsabilità del comando
@@ -21,37 +21,12 @@ public class Command {
     }
     
     //Costruttore con input linea del file
-    public Command(String line){
+    public Command(String lineaInput){
         this.nome=new StringBuilder();
         this.description=new StringBuilder();
         this.alias = new ArrayList<>();
         
-        int index=0;
-        //Acquisizione nome comando.
-        while(line.charAt(index)!='.'){
-            nome.append(line.charAt(index));
-            index++;
-        }
-        index++;
-        
-        //Acquisizione descrizione comando
-        while(line.charAt(index)!='.'){
-            description.append(line.charAt(index));
-            index++;
-        }
-        index++;
-        //Acquisizione dei vari alias
-        StringBuilder singoloAlias=new StringBuilder();
-        
-        while(line.charAt(index)!='.'){
-            if(line.charAt(index)==','){
-                alias.add(alias.size(), singoloAlias.toString());
-                singoloAlias.delete(0, singoloAlias.length());
-            }else{
-                singoloAlias.append(line.charAt(index));
-            }
-            index++;
-        }
+       
     }
 
     public void setNomeComando(String nomeInput){
@@ -85,15 +60,41 @@ public class Command {
         if(this.nome.toString().equals(command)){
             return true;
         }else{ //Se non esiste, controlla la lista degli alias
-            if(this.containsAlias(command)){
-                return true;
-            }else{
-                return false;
-            }
+            return this.containsAlias(command);
         }
     }
     
     public boolean containsAlias(String alias){
         return this.alias.contains(alias);
+    }
+
+    @Override
+    public void acquisizoneInputFile(String lineaInput) {
+        int index = 0;
+        //Acquisizione nome comando.
+        while (lineaInput.charAt(index) != '.') {
+            nome.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+
+        //Acquisizione descrizione comando
+        while (lineaInput.charAt(index) != '.') {
+            description.append(lineaInput.charAt(index));
+            index++;
+        }
+        index++;
+        //Acquisizione dei vari alias
+        StringBuilder singoloAlias = new StringBuilder();
+
+        while (lineaInput.charAt(index) != '.') {
+            if (lineaInput.charAt(index) == ',') {
+                alias.add(alias.size(), singoloAlias.toString());
+                singoloAlias.delete(0, singoloAlias.length());
+            } else {
+                singoloAlias.append(lineaInput.charAt(index));
+            }
+            index++;
+        }
     }
 }

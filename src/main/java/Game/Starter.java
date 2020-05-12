@@ -2,7 +2,7 @@ package Game;
 
 import GameComponents.*;
 //import Utente.User;
-//import java.util.Scanner;
+import java.util.Scanner;
 
 public class Starter {
     private final GameComponents gioco;
@@ -36,11 +36,14 @@ public class Starter {
         rooms e comandi saranno stati inizializzati nel gioco.
     */
     public void run(){
-        Story();        
+        Story(); 
+        System.out.println("\n< ----------------- > \n");
+        //Scanner per input dell'utente.
+        Scanner scan= new Scanner(System.in);
     }
 
     public static void main(String[] args){
         Starter game= new Starter(new HouseBreak());
-        game.Story();
+        game.run();
     }
 }

@@ -18,6 +18,9 @@ public abstract class GameComponents {
     //Contiene tutti gli oggetti del gioco
     private final ArrayList<GameObject> objects= new ArrayList<>();
     
+    //Contiene le direzioni per muoversi
+    private final ArrayList<Direzione> direzioni= new ArrayList<>();
+    
     //Setting della stanza corrente per il giocatore
     private Room stanzaCorrente=null;
     
@@ -27,6 +30,10 @@ public abstract class GameComponents {
     
     public ArrayList<Command> getCommand(){
         return this.commands;
+    }
+    
+    public ArrayList<Direzione> getDirezione(){
+        return this.direzioni;
     }
     
     public ArrayList<Room> getRoom(){
