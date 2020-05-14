@@ -40,21 +40,23 @@ public class Starter {
         System.out.println("\n< ----------------- > \n");
         //Scanner per input dell'utente.
         Scanner scan= new Scanner(System.in);
-        System.out.println("\nCosa vuoi fare?");
-        System.out.print("->");
-        Parser parser= new Parser(scan.nextLine(), gioco.getCommand(),
-                    gioco.getObject(), gioco.getArmi(), gioco.getDirezione());
+        
+        Parser parser= null;
         while(true){
-            if(parser.getComando() != null){
-                System.out.println("comando : "+ parser.getComando().getNomeComando());
-            }else{
-                System.out.println("Non capisco cosa vuoi fare!\n"
-                        + "Se vuoi consulta 'help' per i comandi. ");
-            }
             System.out.println("\nCosa vuoi fare?");
             System.out.print("->");
             parser= new Parser(scan.nextLine(), gioco.getCommand(),
                     gioco.getObject(), gioco.getArmi(), gioco.getDirezione());
+            
+            if(parser.getComando() != null){
+                System.out.println("comando : "+ parser.getComando().getNomeComando());
+                if(parser.getComando().containsCommand("esci")){
+                    System.exit(0);
+                }
+            }else {
+                System.out.println("Non capisco cosa vuoi fare!\n"
+                    + "Se vuoi consulta 'help' per i comandi. ");
+            }
         }
     }
 

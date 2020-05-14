@@ -1,9 +1,9 @@
 vai. Cammina verso una direzione specificata. cammina,corri,muoviti,spostati,go.
 inventario. Elenca gli oggetti presenti nell'inventario del giocatore. inv,i,I,zaino,ZAINO,Zaino,bag,Bag,b.
-fine. Termina la partita per il giocatore. esci,end,ESCI,Esci,END,End,muori,ammazzati,ucciditi.
 osserva. Effettua una descrizione della stanza. guarda,scruta,analizza.
 raccogli. Raccogli un determinato oggetto/arma indicato dal giocatore. pick,prendi,inserisci.
 apri. Apre una porta bloccata o una scatola contenente oggetti. sfonda.
 premi. Premi un pulsante o un altro oggetto premibile. spingi,push,pugno.
 combina. Combina due oggetti tra di loro. unisci,ricarica,monta.
 spara. Attacchi un nemico con i pugni o un arma. attacca,colpisci,stordisci.
+esci. Esci dal gioco. quit,exit,esci,end,ESCI,Esci,END,End,muori,ammazzati,ucciditi.

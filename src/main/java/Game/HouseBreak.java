@@ -34,9 +34,6 @@ public class HouseBreak extends GameComponents{
         //Comando per l'inventario
         Command inventario = new Command(scan.nextLine());
         getCommand().add(inventario);
-        //Comando per terminare gioco
-        Command fine = new Command(scan.nextLine());
-        getCommand().add(fine);
         //Comando per osservare la stanza
         Command osserva = new Command(scan.nextLine());
         getCommand().add(osserva);
@@ -55,6 +52,9 @@ public class HouseBreak extends GameComponents{
         //Comando per attaccare
         Command attacca= new Command(scan.nextLine());
         getCommand().add(attacca);
+        //Comando per uscire
+        Command esci= new Command(scan.nextLine());
+        getCommand().add(esci);
         
         //nord sud est ovest
         //----------------------------------------------------------
