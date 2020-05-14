@@ -25,8 +25,7 @@ public class Command implements Input{
         this.nome=new StringBuilder();
         this.description=new StringBuilder();
         this.alias = new ArrayList<>();
-        
-       
+        acquisizoneInputFile(lineaInput);
     }
 
     public void setNomeComando(String nomeInput){

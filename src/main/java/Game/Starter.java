@@ -5,10 +5,10 @@ import GameComponents.*;
 import java.util.Scanner;
 
 public class Starter {
-    private final GameComponents gioco;
+    private GameComponents gioco;
 
-    public Starter(GameComponents gioco){
-        this.gioco= gioco;
+    public Starter(GameComponents giocoInput){
+        this.gioco= giocoInput;
         try{
             //inizializzazione delle componenti del gioco
             this.gioco.inizializzazione();
@@ -40,10 +40,26 @@ public class Starter {
         System.out.println("\n< ----------------- > \n");
         //Scanner per input dell'utente.
         Scanner scan= new Scanner(System.in);
+        System.out.println("\nCosa vuoi fare?");
+        System.out.print("->");
+        Parser parser= new Parser(scan.nextLine(), gioco.getCommand(),
+                    gioco.getObject(), gioco.getArmi(), gioco.getDirezione());
+        while(true){
+            if(parser.getComando() != null){
+                System.out.println("comando : "+ parser.getComando().getNomeComando());
+            }else{
+                System.out.println("Non capisco cosa vuoi fare!\n"
+                        + "Se vuoi consulta 'help' per i comandi. ");
+            }
+            System.out.println("\nCosa vuoi fare?");
+            System.out.print("->");
+            parser= new Parser(scan.nextLine(), gioco.getCommand(),
+                    gioco.getObject(), gioco.getArmi(), gioco.getDirezione());
+        }
     }
 
     public static void main(String[] args){
-        Starter game= new Starter(new HouseBreak());
-        game.run();
+        Starter gioco= new Starter(new HouseBreak());
+        gioco.run();
     }
 }

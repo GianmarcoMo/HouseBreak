@@ -30,7 +30,7 @@ public class HouseBreak extends GameComponents{
 
         //Comando per muoversi nel gioco
         Command vai = new Command(scan.nextLine());
-        getCommand().add(vai);       
+        getCommand().add(vai);   
         //Comando per l'inventario
         Command inventario = new Command(scan.nextLine());
         getCommand().add(inventario);
@@ -52,6 +52,9 @@ public class HouseBreak extends GameComponents{
         //Comando per unire le munizioni all'arma.
         Command combina= new Command(scan.nextLine());
         getCommand().add(combina);
+        //Comando per attaccare
+        Command attacca= new Command(scan.nextLine());
+        getCommand().add(attacca);
         
         //nord sud est ovest
         //----------------------------------------------------------
@@ -201,13 +204,19 @@ public class HouseBreak extends GameComponents{
         //Inizializzo la pistola
         Weapon glock= new Weapon(scan.nextLine());
         magazzino.getArmi().add(glock);
+        getArmi().add(glock);
         
         //Inzializzo il coltello
         Weapon coltello= new Weapon(scan.nextLine());
         cucina.getArmi().add(coltello);
+        getArmi().add(coltello);
         
         scan.close();
 
+    }
+
+    @Override
+    public void onUpdate(final Parser parser) {
     }
     
 }

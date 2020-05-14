@@ -29,6 +29,19 @@ public class Direzione implements Input{
     public String getDirezione(){
         return this.direzione.toString();
     }
+    
+    public boolean equals(String direzioneInput){
+        if(this.direzione.toString().equals(direzioneInput)){
+            return true;
+        }else{
+            for(int i=0; i<this.alias.size(); i++){
+                if(this.alias.get(i).equals(direzioneInput)){
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
 
     @Override
     public void acquisizoneInputFile(String lineaInput) {
@@ -56,6 +69,5 @@ public class Direzione implements Input{
             }
             index++;
         }
-
     }
 }

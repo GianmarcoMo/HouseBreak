@@ -1,6 +1,7 @@
 package GameComponents;
 
 import java.util.ArrayList;
+import Game.Parser;
 import Utente.User;
 /**
  *
@@ -20,6 +21,13 @@ public abstract class GameComponents {
     
     //Contiene le direzioni per muoversi
     private final ArrayList<Direzione> direzioni= new ArrayList<>();
+    
+    //Contiene le armi del gioco
+    private final ArrayList<Weapon> armi= new ArrayList<>();
+    
+    public ArrayList<Weapon> getArmi(){
+        return this.armi;
+    }
     
     //Setting della stanza corrente per il giocatore
     private Room stanzaCorrente=null;
@@ -50,7 +58,7 @@ public abstract class GameComponents {
     
     public abstract void inizializzazione() throws Exception;
     
-    //public abstract void nextMove();
+    public abstract void onUpdate(Parser parser);
     
     
 }
