@@ -45,28 +45,22 @@ public class Direzione implements Input{
 
     @Override
     public void acquisizoneInputFile(String lineaInput) {
+        String[] tokens= lineaInput.split("\\s+");
         int index = 0;
 
         //Acquisizione nome direzione.
-        while (lineaInput.charAt(index) != '.') {
-            direzione.append(lineaInput.charAt(index));
+        while (!tokens[index].equals(".")) {
+            this.direzione.append(tokens[index]+" ");
             index++;
         }
+        System.out.println("direzione "+ direzione);
         index++;
 
         //Acquisizione dei vari alias
-        StringBuilder singoloAlias = new StringBuilder();
 
-        while (lineaInput.charAt(index) != '.') {
-            //Se incontra la virgola, che divide i vari alias
-            //aggiungi l'alias trovato all'ArrayList e resetta lo StringBuilder
-            if (lineaInput.charAt(index) == ',') {
-                alias.add(alias.size(), singoloAlias.toString());
-                singoloAlias.delete(0, singoloAlias.length());
-            } else {    
-                //Se non incontra la virgola, continua a inserire i caratteri
-                singoloAlias.append(lineaInput.charAt(index));
-            }
+        while (!tokens[index].equals(".")) {
+            this.alias.add(tokens[index]);
+            System.out.println("alias "+ tokens[index]);
             index++;
         }
     }

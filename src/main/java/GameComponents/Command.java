@@ -69,30 +69,26 @@ public class Command implements Input{
 
     @Override
     public void acquisizoneInputFile(String lineaInput) {
+        String[] tokens= lineaInput.split("\\s+");
         int index = 0;
+        
         //Acquisizione nome comando.
-        while (lineaInput.charAt(index) != '.') {
-            nome.append(lineaInput.charAt(index));
+        while (!tokens[index].equals(".")) {
+            nome.append(tokens[index]);
             index++;
         }
         index++;
 
         //Acquisizione descrizione comando
-        while (lineaInput.charAt(index) != '.') {
-            description.append(lineaInput.charAt(index));
+        while (!tokens[index].equals(".")) {
+            description.append(tokens[index]+" ");
             index++;
         }
         index++;
-        //Acquisizione dei vari alias
-        StringBuilder singoloAlias = new StringBuilder();
-
-        while (lineaInput.charAt(index) != '.') {
-            if (lineaInput.charAt(index) == ',') {
-                alias.add(alias.size(), singoloAlias.toString());
-                singoloAlias.delete(0, singoloAlias.length());
-            } else {
-                singoloAlias.append(lineaInput.charAt(index));
-            }
+        
+        //Inserimento degli alias
+        while (!tokens[index].equals(".")) {
+            alias.add(tokens[index]);
             index++;
         }
     }
