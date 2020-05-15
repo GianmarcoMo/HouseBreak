@@ -69,6 +69,7 @@ public class Command implements Input{
 
     @Override
     public void acquisizoneInputFile(String lineaInput) {
+        //divide la parola in input in tokens
         String[] tokens= lineaInput.split("\\s+");
         int index = 0;
         
@@ -81,7 +82,7 @@ public class Command implements Input{
 
         //Acquisizione descrizione comando
         while (!tokens[index].equals(".")) {
-            description.append(tokens[index]+" ");
+            description.append(tokens[index]).append(" ");
             index++;
         }
         index++;

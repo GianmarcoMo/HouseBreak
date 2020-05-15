@@ -50,17 +50,15 @@ public class Direzione implements Input{
 
         //Acquisizione nome direzione.
         while (!tokens[index].equals(".")) {
-            this.direzione.append(tokens[index]+" ");
+            this.direzione.append(tokens[index]).append(" ");
             index++;
         }
-        System.out.println("direzione "+ direzione);
         index++;
 
         //Acquisizione dei vari alias
 
         while (!tokens[index].equals(".")) {
             this.alias.add(tokens[index]);
-            System.out.println("alias "+ tokens[index]);
             index++;
         }
     }

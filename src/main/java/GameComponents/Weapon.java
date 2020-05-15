@@ -1,8 +1,6 @@
 package GameComponents;
 
 import java.util.Scanner;
-import java.lang.Integer;
-import GameComponents.Input;
 
 /**
  *
@@ -18,16 +16,16 @@ public class Weapon implements Input  {
     public Weapon(){
         this.nome= new StringBuilder();
         this.munizioni=0;
-        this.vita=100;
-        this.danno=0;
+        this.vita=(int) (Math.random() * 100);
+        this.danno=(int) (Math.random() * 90);
         this.tipoMunizioni= new StringBuilder();
     }
 
     public Weapon(String lineaInput){
         this.nome= new StringBuilder();
         this.munizioni=0;
-        this.vita=100;
-        this.danno=0;
+        this.vita=(int) (Math.random() * 100);
+        this.danno=(int) (Math.random() * 90);
         this.tipoMunizioni= new StringBuilder();
         acquisizoneInputFile(lineaInput);
     }
@@ -127,71 +125,26 @@ public class Weapon implements Input  {
     public void acquisizoneInputFile(String lineaInput) throws NumberFormatException{
         int index=0;
         //Serve per prendere gli interi dal file.
-        StringBuilder numeroFile= new StringBuilder();
+        String numeroFile= new String();
+        //divide la parola in input in tokens
+        String[] tokens= lineaInput.split("\\s+");
         
         //Nome arma
-        while(lineaInput.charAt(index) != '-'){
-            this.nome.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.nome.append(tokens[index]);
             index++;
         }
-        index+=2;
-        
-        //Munizioni armanulla
-        while(lineaInput.charAt(index) != '-'){
-            numeroFile.append(lineaInput.charAt(index));
-            index++;
-        }
-        this.munizioni=conversioneInt(numeroFile.toString());
-      
-        index+=2;
-        numeroFile.delete(0, numeroFile.length());
-        
-        //Vita arma
-        while(lineaInput.charAt(index) != '-'){
-            numeroFile.append(lineaInput.charAt(index));
-            index++;
-        } 
-        this.vita=conversioneInt(numeroFile.toString());
-        
-        index+=2;   
-        numeroFile.delete(0, numeroFile.length());
-        
-        //Danno arma
-        while(lineaInput.charAt(index) != '-'){
-            numeroFile.append(lineaInput.charAt(index));
-            index++;
-        } 
-        
-        this.danno=conversioneInt(numeroFile.toString());
         index++;
         
-        if(lineaInput.charAt(index) != '+'){
-            index++;   
-            numeroFile.delete(0, numeroFile.length());
-
-            //Tipo munizioni
-            while (lineaInput.charAt(index) != '-') {
-                this.tipoMunizioni.append(lineaInput.charAt(index));
-                index++;
-            } 
+        //Tipo Munizioni arma
+        while(!tokens[index].equals(".")){
+            this.tipoMunizioni.append(tokens[index]);
+            index++;
         }
-        
+        index++;
     }
     
     public boolean equals(String nomeInput){
         return this.getNomeArma().equals(nomeInput);
     }
-    
-    private int conversioneInt(String numeroInput){
-        //Conversione stringa in intero
-        try{
-            //Conversione stringa in int
-            return Integer.parseInt(numeroInput);
-        }catch(NumberFormatException ex){
-            //Caricamento numero predefinito
-            //Cosi puo' continuare l'esecuzione
-            return 0;
-        }
-    }
-
 }

@@ -2,6 +2,7 @@ package GameComponents;
 
 import java.util.ArrayList;
 import GameComponents.Input;
+import Utils.EditorParola;
 /**
  *
  * @author Moresi Gianmarco
@@ -10,9 +11,9 @@ public class GameObject implements Input {
     //identifica un modo univoco l'oggetto
     private static int ID;
 
-    private final StringBuilder name;
+    private StringBuilder name;
 
-    private final StringBuilder descrizione;
+    private StringBuilder descrizione;
     
     private ArrayList<String> alias;
     
@@ -124,37 +125,33 @@ public class GameObject implements Input {
 
     @Override
     public void acquisizoneInputFile(String lineaInput) {
+        //edito che permette di eliminare il trailing space
+        EditorParola editor= new EditorParola();
+        //divide la parola in input in tokens
+        String[] tokens= lineaInput.split("\\s+");
         int index=0;
         //Acquisizione nome oggetto
-        while(lineaInput.charAt(index)!= '-'){
-            this.name.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.name.append(tokens[index]).append(" ");
             index++;
         }
+        //elimino il trailing space
+        this.name = editor.rimozzioneTrailingSpace(this.name);
+
         //Salto carattere per dividere argomenti
         index++;
-        
-        while(lineaInput.charAt(index) != '-'){
-            this.descrizione.append(lineaInput.charAt(index));
+
+        while(!tokens[index].equals(".")){
+            this.descrizione.append(tokens[index]).append(" ");
             index++;
         }
+        this.descrizione= editor.rimozzioneTrailingSpace(this.descrizione);
         index++;
-        
+
         //Acquisizione dei vari alias
-        StringBuilder singoloAlias=new StringBuilder();
-        while(lineaInput.charAt(index) != '-'){
-            if(lineaInput.charAt(index)==','){
-                //inserisco l'alias estratto nella lista
-                alias.add(singoloAlias.toString());
-                //pulisco lo stringbuilder per contenere altri alias
-                singoloAlias.delete(0, singoloAlias.length());
-            }else{
-                //Compongo il singolo alias
-                singoloAlias.append(lineaInput.charAt(index));
-            }
+        while(!tokens[index].equals(".")){
+            this.alias.add(tokens[index]);
             index++;
         }
     }
-    
-
-   
 }

@@ -2,6 +2,7 @@ package GameComponents;
 
 import java.util.ArrayList;
 import GameComponents.Input;
+import Utils.EditorParola;
 /**
  *
  * @author  Moresi Gianmarco
@@ -11,20 +12,20 @@ public class Room implements Input{
     private static int id;
     
     //nome stanza
-    private final StringBuilder nome;
+    private StringBuilder nome;
     
     //descrizione stanza
-    private final StringBuilder descrizione;
+    private StringBuilder descrizione;
     
     //indica se la stanza è bloccata o no
     private boolean bloccata=false;
     
     //ambiente viene utilizzato per descrivere la stanza 
     //quando il giocatore si guarda attorno
-    private final StringBuilder ambienteNord;
-    private final StringBuilder ambienteEst;
-    private final StringBuilder ambienteOvest;
-    private final StringBuilder ambienteSud;
+    private StringBuilder ambienteNord;
+    private StringBuilder ambienteEst;
+    private StringBuilder ambienteOvest;
+    private StringBuilder ambienteSud;
     
     private boolean nemico;
     
@@ -240,54 +241,61 @@ public class Room implements Input{
     }
 
     @Override
-    public void acquisizoneInputFile(String lineaInput) {
+    public void acquisizoneInputFile(final String lineaInput) {
         int index=0;
-        
+        //edito che permette di eliminare il trailing space
+        EditorParola editor= new EditorParola();
+        //divide la parola in input in tokens
+        String[] tokens= lineaInput.split("\\s+");
         //Acquisizione il nome della stanza
-        while(lineaInput.charAt(index)!= '.'){
-            this.nome.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.nome.append(tokens[index]).append(" ");
             index++;
         }
+        this.nome=editor.rimozzioneTrailingSpace(this.nome);
         //Salta la posizione dove si trova il punto.
         index++;
         
         //Acquisizone descrizione stanza
-        while(lineaInput.charAt(index)!='.'){
-            this.descrizione.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.descrizione.append(tokens[index]).append(" ");
             index++;
         }
-        
+        this.descrizione= editor.rimozzioneTrailingSpace(this.descrizione);
         //Salta la posizione dove si trova il punto
         index++;
         
         //acquisizione ambiente nord
-        while(lineaInput.charAt(index)!='.'){
-            this.ambienteNord.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.ambienteNord.append(tokens[index]).append(" ");
             index++;
         }
+        this.ambienteNord= editor.rimozzioneTrailingSpace(this.ambienteNord);
         index++;
         
         //acquisizione ambiente est
-        while(lineaInput.charAt(index)!='.'){
-            this.ambienteEst.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.ambienteEst.append(tokens[index]).append(" ");
             index++;
         }
+        this.ambienteEst= editor.rimozzioneTrailingSpace(this.ambienteEst);
         index++;
         
         //acquisizione ambiente sud
-        while(lineaInput.charAt(index)!='.'){
-            this.ambienteSud.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.ambienteSud.append(tokens[index]).append(" ");
             index++;
         }
+        this.ambienteSud= editor.rimozzioneTrailingSpace(this.ambienteSud);
         index++;
         
         //acquisizione ambiente Ovest
-        while(lineaInput.charAt(index)!='.'){
-            this.ambienteOvest.append(lineaInput.charAt(index));
+        while(!tokens[index].equals(".")){
+            this.ambienteOvest.append(tokens[index]).append(" ");
             index++;
         }
+        this.ambienteOvest= editor.rimozzioneTrailingSpace(this.ambienteOvest);
         index++;
-        
     }
     
 }

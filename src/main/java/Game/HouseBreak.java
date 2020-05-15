@@ -77,9 +77,6 @@ public class HouseBreak extends GameComponents{
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le stanze
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/rooms.dat")));
-        //si posizione sulla linea del commento
-        //al prossimo scan.nextline si trova sulla prima stanza
-        scan.nextLine();
         
         //Stanza prigioniero
         Room prigioniero = new Room(scan.nextLine());
@@ -153,9 +150,6 @@ public class HouseBreak extends GameComponents{
         //----------------------------------------------------------
         scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));
 
-        //Salto la linea dei commenti
-        scan.nextLine();
-
         //oggetto benda
         GameObject benda= new GameObject(scan.nextLine());
         getObject().add(benda);
@@ -197,9 +191,6 @@ public class HouseBreak extends GameComponents{
         //----------------------------------------------------------
         
         scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
-        
-        //inserisci munizioni tra gli oggetti.
-        scan.nextLine(); //salto linea commento
         
         //Inizializzo la pistola
         Weapon glock= new Weapon(scan.nextLine());
