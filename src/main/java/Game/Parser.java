@@ -68,7 +68,7 @@ public class Parser {
                             arma = armi.get(indexSecondoToken);
                         }else{
                             //Controlla se il secondo token è una direzione
-                            indexSecondoToken = controllaDirezione(comandoUtente, direzioni);
+                            indexSecondoToken = controllaDirezione(tokens[1], direzioni);
                             
                             //se il secondo token è una direzione
                             if(indexSecondoToken != -1){
@@ -80,6 +80,10 @@ public class Parser {
                 }
             }
         }
+    }
+
+    Parser() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     //Controlla se esiste il comando inserito dall'utente

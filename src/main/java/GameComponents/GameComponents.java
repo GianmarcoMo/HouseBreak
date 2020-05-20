@@ -21,14 +21,20 @@ public abstract class GameComponents {
     
     //Contiene le direzioni per muoversi
     private final ArrayList<Direzione> direzioni= new ArrayList<>();
-    
+
     //Contiene le armi del gioco
     private final ArrayList<Weapon> armi= new ArrayList<>();
-    
+
+    private final Bussola bussolaUtente = new Bussola();
+
     public ArrayList<Weapon> getArmi(){
         return this.armi;
     }
-    
+
+    public User getUser(){
+        return this.utente;
+    }
+
     //Setting della stanza corrente per il giocatore
     private Room stanzaCorrente=null;
     
@@ -46,6 +52,10 @@ public abstract class GameComponents {
     
     public ArrayList<Room> getRoom(){
         return this.rooms;
+    }
+    
+    public Bussola getBussola(){
+        return bussolaUtente;
     }
     
     public void setStanzaCorrente(Room stanzaInput){

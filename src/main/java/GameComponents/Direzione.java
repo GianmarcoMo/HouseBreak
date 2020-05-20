@@ -31,11 +31,11 @@ public class Direzione implements Input{
     }
     
     public boolean equals(String direzioneInput){
-        if(this.direzione.toString().equals(direzioneInput)){
+        if(this.direzione.toString().contains(direzioneInput)){
             return true;
         }else{
             for(int i=0; i<this.alias.size(); i++){
-                if(this.alias.get(i).equals(direzioneInput)){
+                if(this.alias.get(i).contains(direzioneInput)){
                     return true;
                 }
             }

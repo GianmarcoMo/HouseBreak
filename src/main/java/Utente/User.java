@@ -38,7 +38,12 @@ public class User {
 
     //controlla se il giocatore è bloccato
     public boolean bloccato(){
-        return this.bloccato;
+        if(this.bloccato) {
+            System.out.println("Sei bloccato! Cerca il modo di liberarti!");
+            return this.bloccato;
+        }else{
+            return this.bloccato;
+        }
     }
 
     //blocca il giocatore, di solito avviene dopo un evento nel gioco

@@ -4,6 +4,7 @@ GameComponents/Room.class
 GameComponents/Inventory.class
 Game/Starter.class
 Utils/EditorParola.class
+GameComponents/Bussola.class
 Game/HouseBreak.class
 GameComponents/Weapon.class
 GameComponents/Command.class

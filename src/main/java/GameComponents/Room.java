@@ -1,7 +1,6 @@
 package GameComponents;
 
 import java.util.ArrayList;
-import GameComponents.Input;
 import Utils.EditorParola;
 /**
  *
@@ -26,6 +25,11 @@ public class Room implements Input{
     private StringBuilder ambienteEst;
     private StringBuilder ambienteOvest;
     private StringBuilder ambienteSud;
+    //quando viene effettuato lo spostamento, in base alla direzione,
+    //viene inserito uno dei 4 ambienti in ultimoAmbiente
+    //Cosi quando viene effettuato il comando "guarda"
+    //viene mostrato ultimoAmbiente che coincide con la direzione del giocatore.
+    private String ultimoAmbiente;
     
     private boolean nemico;
     
@@ -63,6 +67,7 @@ public class Room implements Input{
         this.ambienteEst= new StringBuilder();
         this.ambienteOvest= new StringBuilder();
         this.ambienteSud= new StringBuilder();
+        this.ultimoAmbiente=null;
         this.nemico=false;
         this.objects= new ArrayList<>();
         this.armi= new ArrayList<>();
@@ -72,6 +77,14 @@ public class Room implements Input{
     //Aggiunge un nemico alla stanza
     public void aggiungiNemico(){
         this.nemico=true;
+    }
+    
+    public void setUltimoAmbiente(String ambienteInput){
+        this.ultimoAmbiente=ambienteInput;
+    }
+    
+    public String getUltimoAmbiente(){
+        return this.ultimoAmbiente;
     }
     
     //blocca la stanza indicata
@@ -137,8 +150,22 @@ public class Room implements Input{
         }else if(posizione.contains("est")){
             this.est=room;
         }
-    }   
-    
+    }
+
+    public Room getRoom(String direzione){
+        if(direzione.contains("nord")){
+            return this.nord;
+        }else if(direzione.contains("sud")){
+            return this.sud;
+        }else if(direzione.contains("ovest")){
+            return this.ovest;
+        }else if(direzione.contains("est")){
+            return this.est;
+        }else{
+            return null;
+        }
+    }
+
     //Controlla se nella stanza ci sono degli oggetti 
     //che il giocatore può usare.
     public void oggetti() {
@@ -206,7 +233,7 @@ public class Room implements Input{
         }
         return -1;
     }
-    
+   
     public StringBuilder getNomeStanza(){
         return this.nome;
     }
@@ -236,6 +263,20 @@ public class Room implements Input{
         return this.ambienteOvest;
     }
     
+    public StringBuilder getAmbienteRoom(String direzione){
+        if(direzione.contains("nord")){
+            return this.ambienteNord;
+        }else if(direzione.contains("sud")){
+            return this.ambienteSud;
+        }else if(direzione.contains("ovest")){
+            return this.ambienteOvest;
+        }else if(direzione.contains("est")){
+            return this.ambienteEst;
+        }else{
+            return null;
+        }
+    }
+    
     public int getId(){
         return this.id;
     }
@@ -247,6 +288,7 @@ public class Room implements Input{
         EditorParola editor= new EditorParola();
         //divide la parola in input in tokens
         String[] tokens= lineaInput.split("\\s+");
+        
         //Acquisizione il nome della stanza
         while(!tokens[index].equals(".")){
             this.nome.append(tokens[index]).append(" ");

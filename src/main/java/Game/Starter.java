@@ -17,6 +17,9 @@ public class Starter {
         }
     }
 
+    /**
+     * Mostra a monitor l'introduzione al gioco
+     */
     private void Story(){
         System.out.println("\n\nBEVENUTO IN HOUSE BREAK\n");
         System.out.println("Ti chiami Will, un ex-agente dei servizi segreti Americani, che sa cose che non dovrebbe sapere. ");
@@ -26,32 +29,34 @@ public class Starter {
         System.out.println("e svieni. \nTi risvegli in una stanza, vuota, solo con un termosifone, dove ti hanno legato, ");
         System.out.println("cerca di liberarti, e scappare da questo incubo, mi raccomando, occhi aperti!");
         System.out.println("\nBuona fortuna!\n\n");
+        System.out.println("\n< ----------------- > \n");
     }
 
-    /* Permette di avviare una partita
+    /**
+     * Permette di avviare una partita
         verrà indicata la stanza corrente, ovvero quella iniziale
         verranno inseriti in input i comandi dall'utente
         
         Quando verrà avviato questo metodo, tutti gli objects, 
         rooms e comandi saranno stati inizializzati nel gioco.
-    */
+     */
     public void run(){
         Story(); 
-        System.out.println("\n< ----------------- > \n");
         //Scanner per input dell'utente.
         Scanner scan= new Scanner(System.in);
         
-        Parser parser= null;
+        Parser parser;
         while(true){
             System.out.println("\nCosa vuoi fare?");
             System.out.print("->");
             parser= new Parser(scan.nextLine(), gioco.getCommand(),
                     gioco.getObject(), gioco.getArmi(), gioco.getDirezione());
-            
+
             if(parser.getComando() != null){
-                System.out.println("comando : "+ parser.getComando().getNomeComando());
                 if(parser.getComando().containsCommand("esci")){
                     System.exit(0);
+                }else{
+                    gioco.onUpdate(parser);
                 }
             }else {
                 System.out.println("Non capisco cosa vuoi fare!\n"

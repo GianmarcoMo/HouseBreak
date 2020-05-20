@@ -81,6 +81,7 @@ public class HouseBreak extends GameComponents{
         //Stanza prigioniero
         Room prigioniero = new Room(scan.nextLine());
         getRoom().add(prigioniero);
+        prigioniero.setUltimoAmbiente(prigioniero.getAmbienteNord().toString());
         
         //Stanza corridoio
         Room corridoio = new Room(scan.nextLine());
@@ -202,13 +203,58 @@ public class HouseBreak extends GameComponents{
         cucina.getArmi().add(coltello);
         getArmi().add(coltello);
         
+        //Blocco il giocatore
+        //getUser().bloccaGiocatore();
+        
         scan.close();
 
     }
 
     @Override
     public void onUpdate(final Parser parser) {
+        //Controlla se il comando è per muoversi
+        if(parser.getComando().containsCommand("vai")){
+            if (parser.getDirezione() != null) {
+                this.movimentoPlayer(parser.getDirezione(), parser.getDirezione().getDirezione());
+            }else{
+                System.out.println("Nessuna stanza inserita.");
+            }
+        }else if( parser.getComando().containsCommand("osserva")){
+            this.guardaStanza();
+        }
     }
     
+    private void movimentoPlayer(Direzione direzioneParser, String direzioneInput) {
+        //La stanza è appena illuminata da una candela, e tu sei ammanettato al termosifone, trova il modo di liberarti! 
+        //Hai un coltellino svizzero nella tasca, e davanti a te c'è una porta.
+        if (getCurrentRoom().getRoom(getBussola()
+                .getPosizioneUtente(direzioneInput)) != null) {
+
+            //Se esiste la stanza esiste, controlla se il giocatore è bloccato
+            if (!getUser().bloccato()) {
+                //Se la stanza esiste, controlla se è bloccata
+                if (!getCurrentRoom().getRoom(getBussola()
+                        .getPosizioneUtente(direzioneInput)).bloccata()) {
+
+                    setStanzaCorrente(getCurrentRoom().getRoom(getBussola()
+                            .getPosizioneUtente(direzioneInput)));
+                    System.out.println(getCurrentRoom().getDescrizioneStanza());
+
+                    getCurrentRoom().setUltimoAmbiente(getCurrentRoom().getAmbienteRoom(getBussola()
+                            .getPosizioneUtente(direzioneInput)).toString());
+                    
+                    getBussola().spostamentoInput(getBussola()
+                            .getPosizioneUtente(direzioneInput));
+                }
+            }
+        } else {
+            System.out.println("Non esiste nessuna stanza nella direzione in cui ti vuoi muovere!");
+        }
+    }
+    
+    private void guardaStanza(){
+        System.out.println(this.getCurrentRoom().getUltimoAmbiente());
+    }
+
 }
 
