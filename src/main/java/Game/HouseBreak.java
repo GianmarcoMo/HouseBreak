@@ -13,7 +13,7 @@ public class HouseBreak extends GameComponents{
 
     @Override
     public void inizializzazione() throws IOException {
-        Scanner scan = null;
+        Scanner scan;
         
         /*
          * specifio la cartella dove sono situati i vari files per i comandi, oggetti
@@ -206,25 +206,48 @@ public class HouseBreak extends GameComponents{
         //Blocco il giocatore
         //getUser().bloccaGiocatore();
         
+        //Dimensione dell'inventario
+        //tasca sinistra e destra del pantalone
+        getUser().getInvetario().setSizeInvetory(2);
+        
         scan.close();
 
     }
 
     @Override
     public void onUpdate(final Parser parser) {
-        //Controlla se il comando è per muoversi
+        //COMANDO MOVIMENTO
         if(parser.getComando().containsCommand("vai")){
             if (parser.getDirezione() != null) {
-                this.movimentoPlayer(parser.getDirezione(), parser.getDirezione().getDirezione());
+                this.movimentoPlayer(parser.getDirezione().getDirezione());
             }else{
-                System.out.println("Nessuna stanza inserita.");
+                System.out.println("Nessuna direzione inserita.");
             }
-        }else if( parser.getComando().containsCommand("osserva")){
+            //COMANDO PER GUARDARE LA STANZA
+        }else if(parser.getComando().containsCommand("osserva")){
             this.guardaStanza();
+            this.getCurrentRoom().getDescrizioneOggetti();
+            //COMANDO PER RACCOGLIERE OGGETTI
+        }else if(parser.getComando().containsCommand("raccogli")){
+            //OGGETTO
+            if(parser.getObject() != null){
+                raccogliOggetto(parser.getObject());
+                //ARMA
+            }else if(parser.getArma() != null){
+                raccogliArma(parser.getArma());
+            }else{
+                System.out.println("Che oggetto devo prendere?");
+            }
         }
     }
     
-    private void movimentoPlayer(Direzione direzioneParser, String direzioneInput) {
+    /**
+     * Funzione che gestisce il movimento del player da una stanza all'altra
+     * controlla se esiste una stanza nella direzione interessata,
+     * controlla se e' bloccata, e agisce di conseguenza.
+     * @param direzioneInput - direzione inserita in input
+     */
+    private void movimentoPlayer(String direzioneInput) {
         //La stanza è appena illuminata da una candela, e tu sei ammanettato al termosifone, trova il modo di liberarti! 
         //Hai un coltellino svizzero nella tasca, e davanti a te c'è una porta.
         if (getCurrentRoom().getRoom(getBussola()
@@ -252,9 +275,37 @@ public class HouseBreak extends GameComponents{
         }
     }
     
+    /**
+     * Fornisce in output l'ambientazione della stanza.
+     */
     private void guardaStanza(){
         System.out.println(this.getCurrentRoom().getUltimoAmbiente());
     }
 
+    private void raccogliOggetto(GameObject oggettoInput) {
+        if (this.getCurrentRoom().containsObject(oggettoInput)) {
+            //Se esiste l'oggetto, controlla se il player
+            //ha almeno uno slot libero
+            if (this.getUser().getInvetario().getSizeInvetory() > 0) {
+                getUser().getInvetario().addObject(oggettoInput);
+                this.getCurrentRoom().deleteObject(oggettoInput);
+            }
+        }else{
+            System.out.println("Non esiste nessun oggetto con quel nome!");
+        }
+    }
+    
+    private void raccogliArma(Weapon armaInput){
+        if (this.getCurrentRoom().containsWeapon(armaInput)){
+            //Se esiste l'arma, controlla se il player
+            //ha almeno uno slot libero
+            if(this.getUser().getInvetario().getSizeInvetory() > 0){
+                getUser().getInvetario().addArma(armaInput);
+                this.getCurrentRoom().deleteArma(armaInput);
+            }
+        }else{
+            System.out.println("Non esiste nessun'arma con quel nome!");
+        }
+    }
 }
 

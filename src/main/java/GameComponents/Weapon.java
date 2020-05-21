@@ -6,11 +6,11 @@ import java.util.Scanner;
  *
  * @author Moresi Gianmarco
  */
-public class Weapon implements Input  {
+public class Weapon implements Input {
     private final StringBuilder nome;
     private int munizioni;
     private int vita;
-    private int danno;
+    private final int danno;
     private final StringBuilder tipoMunizioni;
 
     public Weapon(){
@@ -122,7 +122,7 @@ public class Weapon implements Input  {
     }
 
     @Override
-    public void acquisizoneInputFile(String lineaInput) throws NumberFormatException{
+    public final void acquisizoneInputFile(String lineaInput) throws NumberFormatException{
         int index=0;
         //Serve per prendere gli interi dal file.
         String numeroFile= new String();
@@ -144,7 +144,7 @@ public class Weapon implements Input  {
         index++;
     }
     
-    public boolean equals(String nomeInput){
-        return this.getNomeArma().equals(nomeInput);
+    public boolean containsArma(String nomeInput){
+        return this.nome.toString().contains(nomeInput);
     }
 }

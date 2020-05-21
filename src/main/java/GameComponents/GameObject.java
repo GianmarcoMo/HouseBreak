@@ -1,7 +1,6 @@
 package GameComponents;
 
 import java.util.ArrayList;
-import GameComponents.Input;
 import Utils.EditorParola;
 /**
  *
@@ -100,27 +99,17 @@ public class GameObject implements Input {
     
     //Controlla se esiste l'oggetto inserito in input
     //effettua un controllo anche nella lista alias
-    public boolean containsObject(String object){
+    public boolean containsObject(String objectInput){
         //controllo principale
-        if(this.name.equals(object)){
+        if(this.name.toString().equals(objectInput)){
             return true;
         }else{ //se il nome non è uguale, cerca negli alias
-            return this.containsAlias(object);
+            return this.containsAlias(objectInput);
         }
     }
     
-    public boolean containsAlias(String alias){
-        return this.alias.contains(alias);
-    }
-
-    @Override
-    public boolean equals(Object obj){
-        final GameObject object= (GameObject) obj;
-        if(this.ID == object.ID){
-            return true;
-        }else{
-            return false;
-        }
+    public boolean containsAlias(String aliasInput){
+        return alias.stream().anyMatch((oggetto) -> (oggetto.equals(aliasInput)));
     }
 
     @Override

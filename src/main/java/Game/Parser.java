@@ -112,7 +112,7 @@ public class Parser {
     //restituisce il suo index, se esiste
     private int controllaArma(String armaInput, ArrayList<Weapon> armi) {
         for (int i = 0; i < armi.size(); i++) {
-            if (armi.get(i).equals(armaInput)) {
+            if (armi.get(i).containsArma(armaInput)) {
                 return i;
             }
         }

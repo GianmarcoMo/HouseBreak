@@ -41,10 +41,10 @@ public class Room implements Input{
     private Room est=null;
     
     //Lista di oggetti presenti nella stanza
-    private ArrayList<GameObject> objects;
+    private final ArrayList<GameObject> objects;
     
     //Lista delle armi 
-    private ArrayList<Weapon> armi;
+    private final ArrayList<Weapon> armi;
     
     public Room(){
         id++;
@@ -168,31 +168,18 @@ public class Room implements Input{
 
     //Controlla se nella stanza ci sono degli oggetti 
     //che il giocatore può usare.
-    public void oggetti() {
+    public void getDescrizioneOggetti() {
         if (this.objects.size() >= 1 || this.armi.size() >= 1) {
-            int k = 0;
-            System.out.println("Ci sono degli oggetti nella stanza!");
-            System.out.print("Nella stanza è presente: ");
-
+            System.out.println("\nNella stanza ci sono degli oggetti!");             
+            System.out.print("-");
             if (this.objects.size() >= 1) {
-                System.out.print(this.objects.get(k).getNome());
-                for (k = 1; k < this.objects.size(); k++) {
-                    System.out.print(", ");
-                    System.out.print(this.objects.get(k).getNome());
-                }
-                System.out.print(".\n");
-
+                objects.forEach((elemento) -> {
+                    System.out.print(elemento.getNome()+" ");
+                });
             }
-            k = 0;
-            if (this.armi.size() >= 1) {
-                System.out.print("Armi: "+this.armi.get(k).getNomeArma());
-                for (k = 1; k < this.armi.size(); k++) {
-                    System.out.print(", ");
-                    System.out.print(this.armi.get(k).getNomeArma());
-                }
-                System.out.print(".\n");
-            }
-
+            armi.forEach((arma) -> {
+                System.out.print(arma.getNomeArma()+" ");
+            });
         }
     }
     
@@ -201,33 +188,52 @@ public class Room implements Input{
         this.objects.add(object);
     }    
          
-    //Rimuove l'oggetto in input, se esiste.
-    public void deleteObject(String nameObject){
-        //se la stanza contiene l'oggetto
-        if(this.containsObject(nameObject)){
-            //rimuove l'oggetto dalla lista tramite l'index trovato con la funzione
-            // .getIndexObject
-            this.objects.remove(this.getIndexObject(nameObject));
-        }
+    //Rimuove l'oggetto in input
+    public void deleteObject(GameObject objectInput) {
+        this.objects.remove(this.getIndexObject(objectInput));
     }
-    
-    //Restituisce true o false se la stanza contiene l'oggetto.
-    public boolean containsObject(String object){
-        int k=0;
-        while(this.objects.get(k)!=null){
-            //richiama il metodo di objects per effettuare il confronto con l'oggetto.
-            if(this.objects.get(k).containsObject(object)){
-                return true;
+
+    //Resistuisce l'index dell'oggetto cercato, se esiste.
+    private int getIndexObject(GameObject object) {
+        for (int index = 0; index < objects.size(); index++) {
+            if (object == objects.get(index)) {
+                return index;
             }
         }
-        return false;
+        return -1;
     }
     
+    /**
+     * Restituisce true o false se la stanza contiene l'oggetto.
+     * @param oggettoInput - oggetto passato in input
+     * @return boolean - se l'oggetto e' presente in stanza o meno
+     */
+    public boolean containsObject(GameObject oggettoInput){
+        //controlla gli oggetti dell'arrayList objects e controlla se
+        //e' uguale all'oggetto in input restituendo un boolean
+        return objects.stream().anyMatch((elemento) -> (elemento==oggettoInput));
+    }
+    
+    /**
+     * Restituisce true o false se la stanza contiene l'arma inserita.
+     * @param armaInput - arma passata in input
+     * @return boolean - se l'arma e' presente in stanza o meno
+     */
+    public boolean containsWeapon(Weapon armaInput){
+        //controlla gli oggetti dell'arrayList objects e controlla se
+        //e' uguale all'oggetto in input restituendo un boolean
+        return armi.stream().anyMatch((elemento) -> (elemento==armaInput));
+    }
+    
+    //Rimuove l'oggetto in input
+    public void deleteArma(Weapon armaInput) {
+        this.armi.remove(this.getIndexArma(armaInput));
+    }
+
     //Resistuisce l'index dell'oggetto cercato, se esiste.
-    private int getIndexObject(String object){
-        int index=0;
-        while(this.objects.get(index)!=null){
-            if(this.objects.get(index).containsObject(object)){
+    private int getIndexArma(Weapon object) {
+        for (int index = 0; index < armi.size(); index++) {
+            if (object == armi.get(index)) {
                 return index;
             }
         }
@@ -243,23 +249,15 @@ public class Room implements Input{
     }
     
     public StringBuilder getAmbienteNord(){
-        //richiama il metodo per vedere se ci sono oggetti nella stanza.
-        this.oggetti();
         return this.ambienteNord;
     }
     public StringBuilder getAmbienteSud(){
-        //richiama il metodo per vedere se ci sono oggetti nella stanza.
-        this.oggetti();
         return this.ambienteSud;
     }
     public StringBuilder getAmbienteEst(){
-        //richiama il metodo per vedere se ci sono oggetti nella stanza.
-        this.oggetti();
         return this.ambienteEst;
     }
     public StringBuilder getAmbienteOvest(){
-        //richiama il metodo per vedere se ci sono oggetti nella stanza.
-        this.oggetti();
         return this.ambienteOvest;
     }
     
@@ -282,7 +280,7 @@ public class Room implements Input{
     }
 
     @Override
-    public void acquisizoneInputFile(final String lineaInput) {
+    public final void acquisizoneInputFile(final String lineaInput) {
         int index=0;
         //edito che permette di eliminare il trailing space
         EditorParola editor= new EditorParola();
