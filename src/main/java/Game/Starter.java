@@ -54,6 +54,7 @@ public class Starter {
 
             if(parser.getComando() != null){
                 if(parser.getComando().containsCommand("esci")){
+                    System.out.println("Che brutta fine... Ciao piccolo angelo :(\n\n");
                     System.exit(0);
                 }else{
                     gioco.onUpdate(parser);

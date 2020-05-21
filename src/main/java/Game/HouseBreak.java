@@ -30,7 +30,7 @@ public class HouseBreak extends GameComponents{
 
         //Comando per muoversi nel gioco
         Command vai = new Command(scan.nextLine());
-        getCommand().add(vai);   
+        getCommand().add(vai);
         //Comando per l'inventario
         Command inventario = new Command(scan.nextLine());
         getCommand().add(inventario);
@@ -40,23 +40,25 @@ public class HouseBreak extends GameComponents{
         //Comando per raccogliere oggetti/armi
         Command raccogli = new Command(scan.nextLine());
         getCommand().add(raccogli);
-        //Comando per aprire contenitore
-        Command apri = new Command(scan.nextLine());
-        getCommand().add(apri);
         //Comando per premere un pulsante
         Command premi = new Command(scan.nextLine());
         getCommand().add(premi);
         //Comando per unire le munizioni all'arma.
-        Command combina= new Command(scan.nextLine());
+        Command combina = new Command(scan.nextLine());
         getCommand().add(combina);
         //Comando per attaccare
-        Command attacca= new Command(scan.nextLine());
+        Command attacca = new Command(scan.nextLine());
         getCommand().add(attacca);
         //Comando per uscire
-        Command esci= new Command(scan.nextLine());
+        Command esci = new Command(scan.nextLine());
         getCommand().add(esci);
-        
-        //nord sud est ovest
+        //Comando per lasciare un oggetto
+        Command lascia = new Command(scan.nextLine());
+        getCommand().add(lascia);
+        //Comando per visualizzare i comandi del gioco
+        Command help = new Command(scan.nextLine());
+        getCommand().add(help);
+
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le direzioni
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/direzioni.dat")));
@@ -204,12 +206,7 @@ public class HouseBreak extends GameComponents{
         getArmi().add(coltello);
         
         //Blocco il giocatore
-        //getUser().bloccaGiocatore();
-        
-        //Dimensione dell'inventario
-        //tasca sinistra e destra del pantalone
-        getUser().getInvetario().setSizeInvetory(2);
-        
+        //getUser().bloccaGiocatore();      
         scan.close();
 
     }
@@ -236,9 +233,28 @@ public class HouseBreak extends GameComponents{
             }else if(parser.getArma() != null){
                 raccogliArma(parser.getArma());
             }else{
-                System.out.println("Che oggetto devo prendere?");
+                System.out.println("Che oggetto vuoi prendere?");
             }
+            //COMANDO PER LASCIARE UN OGGETTO/ARMA
+        }else if(parser.getComando().containsCommand("lascia")){
+            //OGGETTO
+            if (parser.getObject() != null) {
+                lasciaOggetto(parser.getObject());
+                //ARMA
+            } else if (parser.getArma() != null){
+                lasciaArma(parser.getArma());
+            }else{
+                System.out.println("Che oggetto vuoi lasciare?");
+            }
+            //COMANDO PER GUARDARE GLI OGGETTI/ARMI NELL'INVENTARIO
+        }else if(parser.getComando().containsCommand("inventario")){
+            getUser().getInvetario().guardaInventario();
+        }else if(parser.getComando().containsCommand("help")){
+            mostraComandi();
         }
+        //premi
+        //combina
+        //spara
     }
     
     /**
@@ -252,7 +268,6 @@ public class HouseBreak extends GameComponents{
         //Hai un coltellino svizzero nella tasca, e davanti a te c'è una porta.
         if (getCurrentRoom().getRoom(getBussola()
                 .getPosizioneUtente(direzioneInput)) != null) {
-
             //Se esiste la stanza esiste, controlla se il giocatore è bloccato
             if (!getUser().bloccato()) {
                 //Se la stanza esiste, controlla se è bloccata
@@ -282,6 +297,11 @@ public class HouseBreak extends GameComponents{
         System.out.println(this.getCurrentRoom().getUltimoAmbiente());
     }
 
+    /**
+     * Gestisce la raccolta dell'oggetto indicato
+     * dall'utente in input, viene inserito nell'inventario
+     * @param oggettoInput - oggetto riconosciuto dal parser
+     */
     private void raccogliOggetto(GameObject oggettoInput) {
         if (this.getCurrentRoom().containsObject(oggettoInput)) {
             //Se esiste l'oggetto, controlla se il player
@@ -295,6 +315,11 @@ public class HouseBreak extends GameComponents{
         }
     }
     
+    /**
+     * Gestisce la raccolta dell'arma indicata
+     * dall'utente in input, viene inserita nell'inventario.
+     * @param armaInput - amra riconosciuta dal parser
+     */
     private void raccogliArma(Weapon armaInput){
         if (this.getCurrentRoom().containsWeapon(armaInput)){
             //Se esiste l'arma, controlla se il player
@@ -306,6 +331,48 @@ public class HouseBreak extends GameComponents{
         }else{
             System.out.println("Non esiste nessun'arma con quel nome!");
         }
+    }
+
+    /**
+     * Elimina dall'inventario dell'utente l'oggetto indicato
+     *
+     * @param oggettoInput - oggetto indicato in input dall'utente
+     */
+    private void lasciaOggetto(GameObject oggettoInput) {
+        //Controlla se l'oggetto esiste nell'inventario
+        if (getUser().getInvetario().containsObject(oggettoInput)) {
+            //Eliminazione oggetto dall'inventario
+            getUser().getInvetario().dropObject(oggettoInput);
+            //Inserisco l'oggetto alla stanza.
+            getCurrentRoom().getObject().add(oggettoInput);
+        } else {
+            System.out.println("Non hai questo oggetto.");
+        }
+    }
+    
+    /**
+     * Elimina l'arma dall'inventario
+     * @param armaInput - arma riconosciuta da parser
+     */
+    private void lasciaArma(Weapon armaInput) {
+        //Controlla se esiste l'arma nell'inventario
+        if (getUser().getInvetario().containsArma(armaInput)) {
+            getUser().getInvetario().dropArma(armaInput);
+            getCurrentRoom().getArmi().add(armaInput);
+        } else {
+            System.out.println("Non hai un'arma con questo nome.");
+        }
+    }
+
+    /**
+     * Mostra i comandi disponibili
+     */
+    private void mostraComandi(){
+        System.out.println("+------------------------------------ Comandi House Break --------------------------------------+");
+        getCommand().forEach((comando) ->{
+            System.out.println(" | "+comando.getNomeComando()+" \t"+comando.getDescrizioneComando());
+        });
+        System.out.println("+-------------------------------------------------------------------------------------------------------------+");
     }
 }
 

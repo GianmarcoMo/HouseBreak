@@ -170,15 +170,14 @@ public class Room implements Input{
     //che il giocatore può usare.
     public void getDescrizioneOggetti() {
         if (this.objects.size() >= 1 || this.armi.size() >= 1) {
-            System.out.println("\nNella stanza ci sono degli oggetti!");             
-            System.out.print("-");
+            System.out.println("\nOggetti:");
             if (this.objects.size() >= 1) {
                 objects.forEach((elemento) -> {
-                    System.out.print(elemento.getNome()+" ");
+                    System.out.println("-"+elemento.getNome());
                 });
             }
             armi.forEach((arma) -> {
-                System.out.print(arma.getNomeArma()+" ");
+                System.out.println("-"+arma.getNomeArma());
             });
         }
     }
