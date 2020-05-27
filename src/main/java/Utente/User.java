@@ -62,6 +62,9 @@ public class User {
 
     public void aumentaVita(int valore){
         this.vita+=valore;
+        if(this.vita > 100){
+            vita=100;
+        }
     }
 
     public void diminuisciVita(int valore){

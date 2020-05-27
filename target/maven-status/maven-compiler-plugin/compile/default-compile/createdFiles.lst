@@ -13,3 +13,4 @@ Utente/User.class
 Game/Parser.class
 GameComponents/GameObject.class
 GameComponents/Direzione.class
+GameComponents/Curatore.class

@@ -13,23 +13,23 @@ public class GameObject implements Input {
     private StringBuilder name;
 
     private StringBuilder descrizione;
-    
-    private ArrayList<String> alias;
-    
+
+    private final ArrayList<String> alias;
+
     //indica se l'oggetto può essere aperto
-    private boolean openable =false;
-    
+    private boolean openable = false;
+
     //indica se l'oggetto è aperto 
-    private boolean open =false;
-    
+    private boolean open = false;
+
     //indica se l'oggetto può essere raccolto
-    private boolean pickable=true;
-    
+    private boolean pickable = true;
+
     //indica se l'oggetto può essere premuto
-    private boolean pushable=false;
-    
+    private boolean pushable = false;
+
     //indica se l'oggetto è stato premuto
-    private boolean push=false;
+    private boolean push = false;
 
     public GameObject(){
         ID++;

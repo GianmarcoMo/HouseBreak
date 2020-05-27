@@ -1,6 +1,7 @@
 package Game;
 
 import GameComponents.Command;
+import GameComponents.Curatore;
 import GameComponents.GameObject;
 import GameComponents.Weapon;
 import GameComponents.Direzione;
@@ -58,6 +59,7 @@ public class Parser {
                     } else {
                         //Controlla se il secondo token è un'arma
                         indexSecondoToken = controllaArma(tokens[1], armi);
+                        
                         //Controlla se l'index è diverso da -1
                         //quindi che l'arma esiste
                         if (indexSecondoToken != -1) {
@@ -73,7 +75,7 @@ public class Parser {
                             //se il secondo token è una direzione
                             if(indexSecondoToken != -1){
                                 //estra l'oggetto direzione e viene assegnato all'attributo.
-                                this.direzione=direzioni.get(indexSecondoToken);
+                                this.direzione = direzioni.get(indexSecondoToken);
                             }
                         }
                     }
@@ -81,11 +83,7 @@ public class Parser {
             }
         }
     }
-
-    Parser() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
+    
     //Controlla se esiste il comando inserito dall'utente
     //restituisce l'index del comando nell'Array, se esiste
     private int controllaComando(String comandoInput, ArrayList<Command> comandi) {
@@ -144,5 +142,4 @@ public class Parser {
     public Weapon getArma(){
         return this.arma;
     }
-
 }

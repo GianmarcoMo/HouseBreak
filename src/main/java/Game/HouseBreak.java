@@ -58,6 +58,9 @@ public class HouseBreak extends GameComponents{
         //Comando per visualizzare i comandi del gioco
         Command help = new Command(scan.nextLine());
         getCommand().add(help);
+        //Comando per utilizzare un oggetto
+        Command usa = new Command(scan.nextLine());
+        getCommand().add(usa);
 
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le direzioni
@@ -151,18 +154,7 @@ public class HouseBreak extends GameComponents{
         //TODO DEVI INSERIRE GLI OGGETTI
         
         //----------------------------------------------------------
-        scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));
-
-        //oggetto benda
-        GameObject benda= new GameObject(scan.nextLine());
-        getObject().add(benda);
-        magazzino.getObject().add(benda);
-        
-        //oggetto soda
-        GameObject soda= new GameObject(scan.nextLine());
-        getObject().add(soda);
-        cucina.getObject().add(soda);
-        
+        scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));                
         //oggetto iphone
         GameObject iphone= new GameObject(scan.nextLine());
         getObject().add(iphone);
@@ -184,13 +176,26 @@ public class HouseBreak extends GameComponents{
         scarafaggio.deletePickable();
         salone.getObject().add(scarafaggio);
         
-        
-        
         //Munizioni per la pistola
         GameObject munizioni= new GameObject(scan.nextLine());
         getObject().add(munizioni);
         bagno.getObject().add(munizioni);
         
+        //----------------------------------------------------------
+        //--- OGGETTI CURATORI
+        scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/curatori.dat")));
+        
+        //Oggetto benda
+        Curatore benda = new Curatore(scan.nextLine());
+        benda.setPuntiVita(45);
+        getObject().add(benda);
+        magazzino.getObject().add(benda);
+        
+        //oggetto soda
+        Curatore soda = new Curatore(scan.nextLine());
+        soda.setPuntiVita(25);
+        getObject().add(soda);
+        cucina.getObject().add(soda);
         //----------------------------------------------------------
         
         scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
@@ -207,6 +212,7 @@ public class HouseBreak extends GameComponents{
         
         //Blocco il giocatore
         //getUser().bloccaGiocatore();      
+        getUser().diminuisciVita(0);
         scan.close();
 
     }
@@ -249,12 +255,27 @@ public class HouseBreak extends GameComponents{
             //COMANDO PER GUARDARE GLI OGGETTI/ARMI NELL'INVENTARIO
         }else if(parser.getComando().containsCommand("inventario")){
             getUser().getInvetario().guardaInventario();
+            //COMANDO PER VISUALIZZARE I COMANDI DISPONIBILI
         }else if(parser.getComando().containsCommand("help")){
             mostraComandi();
+            //COMANDO PER UTILIZZARE DEGLI OGGETTI
+        }else if(parser.getComando().containsCommand("usa")){
+            if(parser.getObject()!= null){
+                if(getUser().getInvetario().containsObject(parser.getObject())){
+                    usaCuratore((Curatore) parser.getObject());
+                }else{
+                    System.out.println("Non hai "+parser.getObject().getNome()+" nell'inventario.");
+                }
+            }else{
+                System.out.println("Penso che non esiste l'oggetto che vuoi usare.");
+            }
+        }else if(parser.getComando().containsCommand("premi")){
+            //TODO
+        }else if(parser.getComando().containsCommand("combina")){
+            //TODO
+        }else if(parser.getComando().containsCommand("spara")){
+            //TODO
         }
-        //premi
-        //combina
-        //spara
     }
     
     /**
@@ -374,5 +395,15 @@ public class HouseBreak extends GameComponents{
         });
         System.out.println("+-------------------------------------------------------------------------------------------------------------+");
     }
+    
+    private void usaCuratore(Curatore oggettoCuratore){
+        if(getUser().getVita() < 100){
+            getUser().aumentaVita(oggettoCuratore.getPuntiVita());
+            System.out.println("Vita attuale: "+ getUser().getVita());
+        }else{
+            System.out.println("La tua vita è al 100%");
+        }
+    }
+    
 }
 

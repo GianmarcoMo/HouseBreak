@@ -8,3 +8,4 @@ spara . Attacca un nemico con i pugni o un'arma. . attacca colpisci stordisci .
 esci . Esci dal gioco. . quit exit esci end Esci End muori ammazzati ucciditi morire .
 lascia . Rimuovi un oggetto dall'inventario. . rimuovi elimina abbandona estrai .
 help . Mostra i comandi presenti nel gioco. . aiuto comandi istruzioni regole .
+usa . Ti permette di usare un oggetto, come benda o soda. . curati bevi utilizza .

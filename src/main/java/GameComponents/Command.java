@@ -5,7 +5,7 @@ import java.util.ArrayList;
  *
  * @author Moresi Gianmarco
  */
-public class Command implements Input{
+public final class Command implements Input{
     //Indica il nome del comando
     private final StringBuilder nome;
     //Indica la descrizione, utile per fornire la responsabilità del comando
@@ -63,7 +63,7 @@ public class Command implements Input{
         }
     }
     
-    public boolean containsAlias(String alias){
+    private boolean containsAlias(String alias){
         return this.alias.contains(alias);
     }
 

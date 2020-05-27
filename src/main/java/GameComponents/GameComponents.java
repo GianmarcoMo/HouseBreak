@@ -8,24 +8,31 @@ import Utente.User;
  * @author Moresi Gianmarco
  */
 public abstract class GameComponents {
-    private final User utente= new User();
+
+    private final User utente = new User();
 
     //Contiene tutte le stanze del gioco
-    private final ArrayList<Room> rooms= new ArrayList<>();
-    
+    private final ArrayList<Room> rooms = new ArrayList<>();
+
     //Contiene tutti i comandi del gioco
-    private final ArrayList<Command> commands= new ArrayList<>();
-    
+    private final ArrayList<Command> commands = new ArrayList<>();
+
     //Contiene tutti gli oggetti del gioco
-    private final ArrayList<GameObject> objects= new ArrayList<>();
-    
+    private final ArrayList<GameObject> objects = new ArrayList<>();
+
+    //Contiene tutti gli oggetti curatori
+    private final ArrayList<Curatore> curatori = new ArrayList<>();
+
     //Contiene le direzioni per muoversi
-    private final ArrayList<Direzione> direzioni= new ArrayList<>();
+    private final ArrayList<Direzione> direzioni = new ArrayList<>();
 
     //Contiene le armi del gioco
-    private final ArrayList<Weapon> armi= new ArrayList<>();
+    private final ArrayList<Weapon> armi = new ArrayList<>();
 
     private final Bussola bussolaUtente = new Bussola();
+    
+    //Setting della stanza corrente per il giocatore
+    private Room stanzaCorrente=null;
 
     public ArrayList<Weapon> getArmi(){
         return this.armi;
@@ -34,9 +41,6 @@ public abstract class GameComponents {
     public User getUser(){
         return this.utente;
     }
-
-    //Setting della stanza corrente per il giocatore
-    private Room stanzaCorrente=null;
     
     public Room getCurrentRoom(){
         return this.stanzaCorrente;
@@ -64,6 +68,10 @@ public abstract class GameComponents {
     
     public ArrayList<GameObject> getObject(){
         return this.objects;
+    }
+    
+    public ArrayList<Curatore> getCuratori(){
+        return this.curatori;
     }
     
     public abstract void inizializzazione() throws Exception;
