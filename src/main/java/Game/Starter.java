@@ -50,8 +50,7 @@ public class Starter {
             System.out.println("\nCosa vuoi fare?");
             System.out.print("->");
             parser= new Parser(scan.nextLine(), gioco.getCommand(),
-                    gioco.getObject(), gioco.getArmi(),
-                    gioco.getDirezione());
+                    gioco.getObject(), gioco.getDirezione());
 
             if(parser.getComando() != null){
                 if(parser.getComando().containsCommand("esci")){

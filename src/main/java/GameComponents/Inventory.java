@@ -6,30 +6,22 @@ import java.util.ArrayList;
  */
 public class Inventory {
     private final ArrayList<GameObject> objectsUser;
-    private final ArrayList<Weapon> armiUser;
     private int size;
 
     public Inventory(){
         objectsUser= new ArrayList<>();
-        armiUser = new ArrayList<>();
         size=2;
     }
     
     public void guardaInventario(){
-        if(objectsUser.size() >= 1 || armiUser.size() >= 1){
-            if(objectsUser.size()>=1){
-            System.out.println("\nOggetti nell'inventario:");
-            objectsUser.forEach((elemento) -> {
-                System.out.println("-"+elemento.getNome()+"   "+elemento.getDescrizione());
-            });
-            }
-            if(armiUser.size()>=1){
-                System.out.println("\nArmi nell'inventario:");
-                armiUser.forEach((arma) -> {
-                    System.out.println("-"+arma.getNomeArma());
+        if (objectsUser.size() >= 1) {
+            if (objectsUser.size() >= 1) {
+                System.out.println("\nOggetti nell'inventario:");
+                objectsUser.forEach((elemento) -> {
+                    System.out.println("-" + elemento.getNome() + "   " + elemento.getDescrizione());
                 });
             }
-        }else{
+        } else {
             System.out.println("Inventario piu' vuoto del tuo conto in banca!");
         }
         
@@ -60,34 +52,6 @@ public class Inventory {
         }
         return -1;
     }
-    
-     //aggiunge un singolo oggetto all'inventario
-    public void addArma(Weapon armaInput){
-        this.armiUser.add(this.armiUser.size(), armaInput);
-        System.out.println("Hai raccolto: "+ armaInput.getNomeArma());
-        this.decementaSizeInventory();
-    }
-
-    public void dropArma(Weapon armaInput){
-        this.armiUser.remove(this.getIndexArma(armaInput));
-        System.out.println("Hai lasciato: "+ armaInput.getNomeArma());
-        this.incrementaSizeInvetory();
-
-    }
-
-    private int getIndexArma(Weapon armaInput){
-        for(int index=0; index< this.armiUser.size(); index++){
-            if(armiUser.get(index).getNomeArma().equals(armaInput.getNomeArma())){
-                return index;
-            }
-        }
-        return -1;
-    }
-    
-    public boolean containsArma(Weapon armaInput){
-        return armiUser.stream().anyMatch((arma) -> (arma.equals(armaInput)));
-    }
-
     private void setSizeInvetory(int sizeInput){
         this.size = sizeInput;
     }

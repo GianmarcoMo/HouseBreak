@@ -15,6 +15,10 @@ public class GameObject implements Input {
     private StringBuilder descrizione;
 
     private final ArrayList<String> alias;
+    
+    private boolean usabile = false;
+    
+    private boolean ricaricabile = false;
 
     //indica se l'oggetto può essere aperto
     private boolean openable = false;
@@ -30,7 +34,7 @@ public class GameObject implements Input {
 
     //indica se l'oggetto è stato premuto
     private boolean push = false;
-
+    
     public GameObject(){
         ID++;
         this.name=new StringBuilder();
@@ -49,6 +53,23 @@ public class GameObject implements Input {
     //Inserisce tutti gli alias passati in input
     public void setAlias(String aliasInput){
         alias.add(aliasInput);
+    }
+    //Imposta se l'oggetto è usabile
+    public void setUsabile(){
+        this.usabile = true;
+    }
+    
+    public boolean getUsabile(){
+        return this.usabile;
+    }
+    
+    //imposta se l'oggetto è ricaricabile
+    public void setRicaricabile(){
+        this.ricaricabile = true;
+    }
+    
+    public boolean getRicaricabile(){
+        return this.ricaricabile;
     }
     
     public String getNome(){
@@ -70,6 +91,11 @@ public class GameObject implements Input {
     //restituisce vero o falso se l'oggetto è stato premuto
     public boolean isPushed(){
         return this.push;
+    }
+    
+    //preme l'oggetto
+    public void push(){
+        this.push=true;
     }
 
     //setta l'oggetto apribile
@@ -94,7 +120,7 @@ public class GameObject implements Input {
     }
 
     public boolean isPickable(){
-        return this.pickable;   
+        return this.pickable;
     }
     
     //Controlla se esiste l'oggetto inserito in input

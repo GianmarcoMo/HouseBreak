@@ -1,4 +1,5 @@
 package GameComponents;
+import java.lang.String;
 
 /**
  * Oggetti che permettono di curare il giocatore

@@ -1,58 +1,51 @@
 package GameComponents;
-
-import java.util.Scanner;
+import java.lang.String;
 
 /**
  *
  * @author Moresi Gianmarco
  */
-public class Weapon implements Input {
-    private final StringBuilder nome;
+public class Weapon extends GameObject{
     private int munizioni;
     private int vita;
-    private final int danno;
-    private final StringBuilder tipoMunizioni;
-
-    public Weapon(){
-        this.nome= new StringBuilder();
+    private int danno;
+    private GameObject tipoMunizioni = null;
+    
+    public Weapon(String lineaInput, GameObject munizioni){
         this.munizioni=0;
-        this.vita=(int) (Math.random() * 100);
-        this.danno=(int) (Math.random() * 90);
-        this.tipoMunizioni= new StringBuilder();
-    }
-
-    public Weapon(String lineaInput){
-        this.nome= new StringBuilder();
-        this.munizioni=0;
-        this.vita=(int) (Math.random() * 100);
-        this.danno=(int) (Math.random() * 90);
-        this.tipoMunizioni= new StringBuilder();
+        this.vita=100;
+        this.danno= 0;
+        this.tipoMunizioni = munizioni;
         acquisizoneInputFile(lineaInput);
+    }
+    
+    /**
+     * Imposta il danno dell'arma
+     * @param dannoInput - danno inserito in input
+     */
+    public void setDanno(int dannoInput){
+        this.danno = dannoInput;
     }
 
     public void aumentaMunizioni(int numeroMunizioni){
         this.munizioni+=numeroMunizioni;
     }
 
-    public void attacca(int numeroAttacchi){
-        while(numeroAttacchi!=0 && vita>0){
+    public void attacca(){
+        if(getVita() > 0){
             //diminuisce le munizioni, se esistono
             this.munizioni-=1;
-            //diminuisce il numero di attacchi
-            numeroAttacchi-=1;
             //diminuisce la vita
             this.diminuisciVita();
+        }else{
+            System.out.println("Arma rotta! Buttala! Occupa solo spazio!");
         }
-    }
-
-    public String getNomeArma(){
-        return this.nome.toString();
     }
     
     public int getMunizioni(){
         //Se il tipo munizioni è diverso da null
         //Allora restituisci le munizioni
-        if(!"".equals(this.tipoMunizioni.toString())){
+        if(this.tipoMunizioni != null){
             return this.munizioni;
         }else{
         //se non esiste il tipo munizioni
@@ -69,14 +62,17 @@ public class Weapon implements Input {
     }
 
     //diminuisce la vita dell'arma
-    public void diminuisciVita(){
+    private void diminuisciVita(){
         //la vita diminuirà di un numero casuale 
         //ogni volta che viene usata per sparare/colpire
-        this.vita-= Math.random()*15;
+        this.vita-= Math.random()*10;
+        if(this.vita <= 0){
+            System.out.println("Arma rotta!");
+        }
     }
 
-    public int getVita(){
-        if(vita>50){
+    private int getVita(){
+        if(vita > 50){
             return this.vita;
         }else{ 
             vitaArmaRischio();
@@ -94,57 +90,7 @@ public class Weapon implements Input {
         return this.danno;
     }
 
-    public String tipoMunizioni(){
+    public String getTipoMunizioni(){
         return this.tipoMunizioni.toString();
-    }
-
-    public boolean munizioniCompatibili(String munizioni){
-        if(this.tipoMunizioni.toString().equals(munizioni)){
-            return true;
-        }else{
-            munizioniNonCompatibili();
-            return false;
-        }
-    }
-
-    private void munizioniNonCompatibili(){
-        System.out.println("Le munizioni non sono compatibili, trova altre munizioni. ");
-        System.out.println("Oppure usa l'arma come una mazza");
-        System.out.println("Basta scrivere 'usa arma mani' ");
-        troll();
-        
-    }
-
-    private void troll(){
-        Scanner scann= new Scanner(System.in);
-        String troll= scann.nextLine();
-        System.out.println(("AHAHAHA ti prendevo in giro, non esiste nessun comando"));
-    }
-
-    @Override
-    public final void acquisizoneInputFile(String lineaInput) throws NumberFormatException{
-        int index=0;
-        //Serve per prendere gli interi dal file.
-        String numeroFile= new String();
-        //divide la parola in input in tokens
-        String[] tokens= lineaInput.split("\\s+");
-        
-        //Nome arma
-        while(!tokens[index].equals(".")){
-            this.nome.append(tokens[index]);
-            index++;
-        }
-        index++;
-        
-        //Tipo Munizioni arma
-        while(!tokens[index].equals(".")){
-            this.tipoMunizioni.append(tokens[index]);
-            index++;
-        }
-        index++;
-    }
-    
-    public boolean containsArma(String nomeInput){
-        return this.nome.toString().contains(nomeInput);
     }
 }

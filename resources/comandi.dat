@@ -3,7 +3,7 @@ inventario . Elenca gli oggetti presenti nell'inventario del giocatore. . inv za
 osserva . Effettua una descrizione della stanza. . guarda scruta analizza .
 raccogli . Raccogle un oggetto/arma specificata. . pick prendi inserisci .
 premi . Premi un pulsante o un altro oggetto premibile. . spingi push pugno .
-combina . Combina due oggetti tra di loro. . unisci ricarica monta .
+ricarica . Ricarica l'arma equipaggiata. . unisci ricarica combina .
 spara . Attacca un nemico con i pugni o un'arma. . attacca colpisci stordisci .
 esci . Esci dal gioco. . quit exit esci end Esci End muori ammazzati ucciditi morire .
 lascia . Rimuovi un oggetto dall'inventario. . rimuovi elimina abbandona estrai .

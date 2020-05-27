@@ -1,9 +1,7 @@
 package Game;
 
 import GameComponents.Command;
-import GameComponents.Curatore;
 import GameComponents.GameObject;
-import GameComponents.Weapon;
 import GameComponents.Direzione;
 
 import java.util.ArrayList;
@@ -13,19 +11,16 @@ import java.util.ArrayList;
  * @author Moresi Gianmarco
  */
 public class Parser {
-
     //prende il comando inserito dall'utente, se valido
     private Command comandoInput = null;
     private GameObject oggetto = null;
-    private Weapon arma = null;
     private Direzione direzione = null;
 
     /*
     Costruttore che prende in input i vari componenti del gioco e effettua i controlli
      */
     public Parser(String comandoUtente, final ArrayList<Command> comandiGioco,
-            final ArrayList<GameObject> oggettiGioco, final ArrayList<Weapon> armi,
-            final ArrayList<Direzione> direzioni) {
+            final ArrayList<GameObject> oggettiGioco, final ArrayList<Direzione> direzioni) {
         //Controllo che la stringa non è vuota.
         //Se la stringa inserita dall'utente è vuota
         //Non esegue nessuna istruzione e restituisce tutti gli attributi a null
@@ -43,7 +38,7 @@ public class Parser {
                 //Se esiste il comando, lo inserisce in comandoInput
                 //estraendolo dall'array 
                 comandoInput = comandiGioco.get(indexComando);
-                
+       
                 //Verifica se esiste un altro token es. oggetto/arma/direzione movimento.
                 if (tokens.length > 1) {
                     //Controlla se il secondo token è un oggetto.
@@ -54,29 +49,16 @@ public class Parser {
                         /*
                         se l'oggetto esiste, viene estratto dall'arrayList 
                         e viene inserito nell'attributo oggetto.
-                        */
+                         */
                         oggetto = oggettiGioco.get(indexSecondoToken);
                     } else {
-                        //Controlla se il secondo token è un'arma
-                        indexSecondoToken = controllaArma(tokens[1], armi);
-                        
-                        //Controlla se l'index è diverso da -1
-                        //quindi che l'arma esiste
+                        //Controlla se il secondo token è una direzione
+                        indexSecondoToken = controllaDirezione(tokens[1], direzioni);
+
+                        //se il secondo token è una direzione
                         if (indexSecondoToken != -1) {
-                            /*
-                                se l'arma esiste, viene estratta dall'arrayList 
-                                e viene inserito nell'attributo arma.
-                            */
-                            arma = armi.get(indexSecondoToken);
-                        }else{
-                            //Controlla se il secondo token è una direzione
-                            indexSecondoToken = controllaDirezione(tokens[1], direzioni);
-                            
-                            //se il secondo token è una direzione
-                            if(indexSecondoToken != -1){
-                                //estra l'oggetto direzione e viene assegnato all'attributo.
-                                this.direzione = direzioni.get(indexSecondoToken);
-                            }
+                            //estra l'oggetto direzione e viene assegnato all'attributo.
+                            this.direzione = direzioni.get(indexSecondoToken);
                         }
                     }
                 }
@@ -106,17 +88,6 @@ public class Parser {
         return -1;
     }
 
-    //Controllas se esiste l'oggetto cercato
-    //restituisce il suo index, se esiste
-    private int controllaArma(String armaInput, ArrayList<Weapon> armi) {
-        for (int i = 0; i < armi.size(); i++) {
-            if (armi.get(i).containsArma(armaInput)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-    
     //Controlla se il secondo token è una direzione.
     private int controllaDirezione(String direzioneInput, ArrayList<Direzione> direzioni){
         for(int i=0; i<direzioni.size(); i++){
@@ -137,9 +108,5 @@ public class Parser {
     
     public GameObject getObject(){
         return this.oggetto;
-    }
-    
-    public Weapon getArma(){
-        return this.arma;
     }
 }

@@ -43,9 +43,6 @@ public class Room implements Input{
     //Lista di oggetti presenti nella stanza
     private final ArrayList<GameObject> objects;
     
-    //Lista delle armi 
-    private final ArrayList<Weapon> armi;
-    
     public Room(){
         id++;
         this.nome=new StringBuilder();
@@ -56,7 +53,6 @@ public class Room implements Input{
         this.ambienteSud= new StringBuilder();
         this.nemico=false;
         this.objects= new ArrayList<>();
-        this.armi= new ArrayList<>();
     }
     
     public Room(String lineaFile){
@@ -70,7 +66,6 @@ public class Room implements Input{
         this.ultimoAmbiente=null;
         this.nemico=false;
         this.objects= new ArrayList<>();
-        this.armi= new ArrayList<>();
         acquisizoneInputFile(lineaFile);
     }
     
@@ -95,11 +90,6 @@ public class Room implements Input{
     //Restituisce l'insieme degli oggetti della stanza
     public ArrayList<GameObject> getObject(){
         return this.objects;
-    }
-    
-    //Restituisce l'array di armi
-    public ArrayList<Weapon> getArmi(){
-        return this.armi;
     }
     
     //sblocca la stanza indicata
@@ -169,16 +159,13 @@ public class Room implements Input{
     //Controlla se nella stanza ci sono degli oggetti 
     //che il giocatore può usare.
     public void getDescrizioneOggetti() {
-        if (this.objects.size() >= 1 || this.armi.size() >= 1) {
+        if (this.objects.size() >= 1) {
             System.out.println("\nOggetti:");
             if (this.objects.size() >= 1) {
                 objects.forEach((elemento) -> {
                     System.out.println("-"+elemento.getNome());
                 });
             }
-            armi.forEach((arma) -> {
-                System.out.println("-"+arma.getNomeArma());
-            });
         }
     }
     
@@ -213,32 +200,6 @@ public class Room implements Input{
         return objects.stream().anyMatch((elemento) -> (elemento==oggettoInput));
     }
     
-    /**
-     * Restituisce true o false se la stanza contiene l'arma inserita.
-     * @param armaInput - arma passata in input
-     * @return boolean - se l'arma e' presente in stanza o meno
-     */
-    public boolean containsWeapon(Weapon armaInput){
-        //controlla gli oggetti dell'arrayList objects e controlla se
-        //e' uguale all'oggetto in input restituendo un boolean
-        return armi.stream().anyMatch((elemento) -> (elemento==armaInput));
-    }
-    
-    //Rimuove l'oggetto in input
-    public void deleteArma(Weapon armaInput) {
-        this.armi.remove(this.getIndexArma(armaInput));
-    }
-
-    //Resistuisce l'index dell'oggetto cercato, se esiste.
-    private int getIndexArma(Weapon object) {
-        for (int index = 0; index < armi.size(); index++) {
-            if (object == armi.get(index)) {
-                return index;
-            }
-        }
-        return -1;
-    }
-   
     public StringBuilder getNomeStanza(){
         return this.nome;
     }

@@ -7,7 +7,7 @@ public class User {
     private String email;
     private int vita;
     private boolean bloccato;
-    private Inventory inventario;
+    private final Inventory inventario;
     
     public User(){
         username=null;

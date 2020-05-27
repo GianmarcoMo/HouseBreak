@@ -44,8 +44,8 @@ public class HouseBreak extends GameComponents{
         Command premi = new Command(scan.nextLine());
         getCommand().add(premi);
         //Comando per unire le munizioni all'arma.
-        Command combina = new Command(scan.nextLine());
-        getCommand().add(combina);
+        Command ricarica = new Command(scan.nextLine());
+        getCommand().add(ricarica);
         //Comando per attaccare
         Command attacca = new Command(scan.nextLine());
         getCommand().add(attacca);
@@ -177,9 +177,9 @@ public class HouseBreak extends GameComponents{
         salone.getObject().add(scarafaggio);
         
         //Munizioni per la pistola
-        GameObject munizioni= new GameObject(scan.nextLine());
-        getObject().add(munizioni);
-        bagno.getObject().add(munizioni);
+        GameObject munizioniGlock= new GameObject(scan.nextLine());
+        getObject().add(munizioniGlock);
+        bagno.getObject().add(munizioniGlock);
         
         //----------------------------------------------------------
         //--- OGGETTI CURATORI
@@ -188,12 +188,14 @@ public class HouseBreak extends GameComponents{
         //Oggetto benda
         Curatore benda = new Curatore(scan.nextLine());
         benda.setPuntiVita(45);
+        benda.setUsabile();
         getObject().add(benda);
         magazzino.getObject().add(benda);
         
         //oggetto soda
         Curatore soda = new Curatore(scan.nextLine());
         soda.setPuntiVita(25);
+        soda.setUsabile();
         getObject().add(soda);
         cucina.getObject().add(soda);
         //----------------------------------------------------------
@@ -201,18 +203,20 @@ public class HouseBreak extends GameComponents{
         scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
         
         //Inizializzo la pistola
-        Weapon glock= new Weapon(scan.nextLine());
-        magazzino.getArmi().add(glock);
-        getArmi().add(glock);
+        Weapon glock= new Weapon(scan.nextLine(),munizioniGlock);
+        glock.setDanno(67);
+        glock.setRicaricabile();
+        magazzino.getObject().add(glock);
+        getObject().add(glock);
         
         //Inzializzo il coltello
-        Weapon coltello= new Weapon(scan.nextLine());
-        cucina.getArmi().add(coltello);
-        getArmi().add(coltello);
+        Weapon coltello= new Weapon(scan.nextLine(), null);
+        coltello.setDanno(35);
+        cucina.getObject().add(coltello);
+        getObject().add(coltello);
         
         //Blocco il giocatore
-        //getUser().bloccaGiocatore();      
-        getUser().diminuisciVita(0);
+        //getUser().bloccaGiocatore();
         scan.close();
 
     }
@@ -226,58 +230,91 @@ public class HouseBreak extends GameComponents{
             }else{
                 System.out.println("Nessuna direzione inserita.");
             }
+            
             //COMANDO PER GUARDARE LA STANZA
         }else if(parser.getComando().containsCommand("osserva")){
             this.guardaStanza();
             this.getCurrentRoom().getDescrizioneOggetti();
+            
             //COMANDO PER RACCOGLIERE OGGETTI
         }else if(parser.getComando().containsCommand("raccogli")){
             //OGGETTO
             if(parser.getObject() != null){
                 raccogliOggetto(parser.getObject());
-                //ARMA
-            }else if(parser.getArma() != null){
-                raccogliArma(parser.getArma());
             }else{
                 System.out.println("Che oggetto vuoi prendere?");
             }
+            
             //COMANDO PER LASCIARE UN OGGETTO/ARMA
         }else if(parser.getComando().containsCommand("lascia")){
             //OGGETTO
             if (parser.getObject() != null) {
                 lasciaOggetto(parser.getObject());
-                //ARMA
-            } else if (parser.getArma() != null){
-                lasciaArma(parser.getArma());
             }else{
                 System.out.println("Che oggetto vuoi lasciare?");
             }
+            
             //COMANDO PER GUARDARE GLI OGGETTI/ARMI NELL'INVENTARIO
         }else if(parser.getComando().containsCommand("inventario")){
             getUser().getInvetario().guardaInventario();
+            
             //COMANDO PER VISUALIZZARE I COMANDI DISPONIBILI
         }else if(parser.getComando().containsCommand("help")){
             mostraComandi();
+            
             //COMANDO PER UTILIZZARE DEGLI OGGETTI
         }else if(parser.getComando().containsCommand("usa")){
             if(parser.getObject()!= null){
-                if(getUser().getInvetario().containsObject(parser.getObject())){
-                    usaCuratore((Curatore) parser.getObject());
+                if(parser.getObject().getUsabile()){
+                    if (getUser().getInvetario().containsObject(parser.getObject())) {
+                        usaCuratore((Curatore) parser.getObject());
+                    } else {
+                        System.out.println("Non hai " + parser.getObject().getNome() + " nell'inventario.");
+                    } 
                 }else{
-                    System.out.println("Non hai "+parser.getObject().getNome()+" nell'inventario.");
+                    System.out.println("Non puoi usare questo oggetto.");
                 }
             }else{
-                System.out.println("Penso che non esiste l'oggetto che vuoi usare.");
+                System.out.println("Ma che scrivi?!");
             }
         }else if(parser.getComando().containsCommand("premi")){
-            //TODO
-        }else if(parser.getComando().containsCommand("combina")){
-            //TODO
+            if(parser.getObject() != null){
+                premiOggetto(parser.getObject());
+            }else{
+                System.out.println("Non capisco che oggetto vuoi premere.");
+            }
+        }else if(parser.getComando().containsCommand("ricarica")){
+            //TOOD
         }else if(parser.getComando().containsCommand("spara")){
             //TODO
         }
     }
     
+    /**
+     * Metodo per premere un oggetto, provoca un evento
+     * @param oggettoInput 
+     */
+    private void premiOggetto(GameObject oggettoInput){
+        if(getCurrentRoom().containsObject(oggettoInput)){
+            if(oggettoInput.isPushable()){
+                if (!oggettoInput.isPushed()) {
+                    oggettoInput.push();
+                    switch (oggettoInput.getNome()) {
+                        case "scarafaggio imbalsamato":
+                            //viene sbloccata la porta della sicurezza
+                            getCurrentRoom().getRoom("sud").sbloccaStanza();
+                            System.out.println("Stanza sbloccata: "+getCurrentRoom().getRoom("sud").getNomeStanza()+".");
+                            break;
+                    }
+                }else{
+                    System.out.println("L'oggetto è stato già premuto.");
+                }
+            }else{
+                System.out.println("L'oggetto non può essere premuto.");
+            }
+        }
+    }
+
     /**
      * Funzione che gestisce il movimento del player da una stanza all'altra
      * controlla se esiste una stanza nella direzione interessata,
@@ -310,7 +347,7 @@ public class HouseBreak extends GameComponents{
             System.out.println("Non esiste nessuna stanza nella direzione in cui ti vuoi muovere!");
         }
     }
-    
+
     /**
      * Fornisce in output l'ambientazione della stanza.
      */
@@ -327,32 +364,20 @@ public class HouseBreak extends GameComponents{
         if (this.getCurrentRoom().containsObject(oggettoInput)) {
             //Se esiste l'oggetto, controlla se il player
             //ha almeno uno slot libero
-            if (this.getUser().getInvetario().getSizeInvetory() > 0) {
-                getUser().getInvetario().addObject(oggettoInput);
-                this.getCurrentRoom().deleteObject(oggettoInput);
+            if(oggettoInput.isPickable()){
+                if (this.getUser().getInvetario().getSizeInvetory() > 0) {
+                    getUser().getInvetario().addObject(oggettoInput);
+                    this.getCurrentRoom().deleteObject(oggettoInput);
+                }
+            }else{
+                System.out.println("Non puoi prendere "+ oggettoInput.getNome()+".");
             }
+            
         }else{
-            System.out.println("Non esiste nessun oggetto con quel nome!");
+            System.out.println("Non esiste nessun oggetto con quel nome.");
         }
     }
     
-    /**
-     * Gestisce la raccolta dell'arma indicata
-     * dall'utente in input, viene inserita nell'inventario.
-     * @param armaInput - amra riconosciuta dal parser
-     */
-    private void raccogliArma(Weapon armaInput){
-        if (this.getCurrentRoom().containsWeapon(armaInput)){
-            //Se esiste l'arma, controlla se il player
-            //ha almeno uno slot libero
-            if(this.getUser().getInvetario().getSizeInvetory() > 0){
-                getUser().getInvetario().addArma(armaInput);
-                this.getCurrentRoom().deleteArma(armaInput);
-            }
-        }else{
-            System.out.println("Non esiste nessun'arma con quel nome!");
-        }
-    }
 
     /**
      * Elimina dall'inventario dell'utente l'oggetto indicato
@@ -372,20 +397,6 @@ public class HouseBreak extends GameComponents{
     }
     
     /**
-     * Elimina l'arma dall'inventario
-     * @param armaInput - arma riconosciuta da parser
-     */
-    private void lasciaArma(Weapon armaInput) {
-        //Controlla se esiste l'arma nell'inventario
-        if (getUser().getInvetario().containsArma(armaInput)) {
-            getUser().getInvetario().dropArma(armaInput);
-            getCurrentRoom().getArmi().add(armaInput);
-        } else {
-            System.out.println("Non hai un'arma con questo nome.");
-        }
-    }
-
-    /**
      * Mostra i comandi disponibili
      */
     private void mostraComandi(){
@@ -395,15 +406,22 @@ public class HouseBreak extends GameComponents{
         });
         System.out.println("+-------------------------------------------------------------------------------------------------------------+");
     }
-    
+
+    /**
+     * Metodo che permette di utilizzare un oggetto
+     * per incrementare la vita al giocatore
+     * @param oggettoCuratore - oggetto scelto dal giocatore
+     */
     private void usaCuratore(Curatore oggettoCuratore){
         if(getUser().getVita() < 100){
             getUser().aumentaVita(oggettoCuratore.getPuntiVita());
+            //Eliminazione oggetto dall'inventario
+            getUser().getInvetario().dropObject(oggettoCuratore);
             System.out.println("Vita attuale: "+ getUser().getVita());
         }else{
-            System.out.println("La tua vita è al 100%");
+            System.out.println("Non ti serve, la vita è al 100%");
         }
     }
-    
+  
 }
 

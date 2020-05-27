@@ -1,5 +1,4 @@
 GameComponents/GameComponents.class
-GameComponents/Int.class
 GameComponents/Room.class
 GameComponents/Inventory.class
 Game/Starter.class
