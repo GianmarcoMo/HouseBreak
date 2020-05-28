@@ -61,6 +61,9 @@ public class HouseBreak extends GameComponents{
         //Comando per utilizzare un oggetto
         Command usa = new Command(scan.nextLine());
         getCommand().add(usa);
+        //Comando per equipaggiare un'arma dall'inventario
+        Command equipaggia = new Command(scan.nextLine());
+        getCommand().add(equipaggia);
 
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le direzioni
@@ -205,13 +208,14 @@ public class HouseBreak extends GameComponents{
         //Inizializzo la pistola
         Weapon glock= new Weapon(scan.nextLine(),munizioniGlock);
         glock.setDanno(67);
-        glock.setRicaricabile();
+        glock.setEquipaggiabile();
         magazzino.getObject().add(glock);
         getObject().add(glock);
         
         //Inzializzo il coltello
         Weapon coltello= new Weapon(scan.nextLine(), null);
         coltello.setDanno(35);
+        coltello.setEquipaggiabile();
         cucina.getObject().add(coltello);
         getObject().add(coltello);
         
@@ -283,10 +287,104 @@ public class HouseBreak extends GameComponents{
             }else{
                 System.out.println("Non capisco che oggetto vuoi premere.");
             }
+        }else if(parser.getComando().containsCommand("equipaggia")){
+            if(parser.getObject() != null){
+                if(parser.getObject().getEquipaggiabile()){
+                    equipaggiaArma((Weapon)parser.getObject());
+                }
+            }else{
+                System.out.println("Devi inserire l'arma da equipaggiare!");
+            }
         }else if(parser.getComando().containsCommand("ricarica")){
-            //TOOD
+            if(parser.getObject() != null){
+                if(parser.getObject().getEquipaggiabile()){
+                    cercaArmaRicarica((Weapon) parser.getObject());
+                }else{
+                    System.out.println("Non puoi ricaricare quest'arma.");
+                }     
+            }else{
+                System.out.println("Arma inesistente.");
+            }
+           
         }else if(parser.getComando().containsCommand("spara")){
             //TODO
+        }
+    }
+    
+    /**
+     * Controlla se l'arma è equipaggiata
+     * @param armaInput - arma inserita in input dall'utente
+     */
+    private void cercaArmaRicarica(Weapon armaInput) {
+        //Controlla se l'arma inserita è equipaggiata
+        if (getUser().getArmaEquipaggiata() != null && getUser().getArmaEquipaggiata().containsObject(armaInput.getNome())) {
+            ricaricaArma();
+        }else{
+            System.out.println("Devi equipaggiare l'arma prima di ricaricarla.");
+        }
+    }
+    
+    /**
+     * Ricarica l'arma dell'utente,
+     * se ci sono delle munizioni nell'inventario
+     * o nella stanza
+     */
+    private void ricaricaArma() {
+        if (getUser().getArmaEquipaggiata().getTipoMunizioni() != null) {
+            if (getUser().getInvetario().containsObject(getUser().getArmaEquipaggiata().getTipoMunizioni())) {
+                int munizioniDaAumentare = (int) (Math.random() * 15);
+
+                while (munizioniDaAumentare < 3) {
+                    munizioniDaAumentare = (int) (Math.random() * 15);
+                }
+                
+                //ricarica l'arma
+                getUser().getArmaEquipaggiata().aumentaMunizioni(munizioniDaAumentare);
+                System.out.println("Arma ricaricata!");
+                System.out.println("Munizioni arma: "+getUser().getArmaEquipaggiata().getMunizioni());
+                //elimina le munizioni dall'inventario
+                getUser().getInvetario().dropObject(getUser().getArmaEquipaggiata().getTipoMunizioni());
+                //elimina le munizioni dalla stanza
+                getCurrentRoom().getObject().remove(getCurrentRoom().getObject().size()-1);
+
+                //Cerca le munizioni nella stanza
+            } else {
+                System.out.println("Non ci sono munizioni per quest'arma.");
+            }
+        }else{
+            System.out.println("Quest'arma non supporta munizioni.");
+        }
+    }
+    
+    
+    /**
+     * Permette di equipaggiare un arma inserita in input
+     * Se il giocatore ha già un'arma equipaggiata,
+     * viene effettuato il cambio
+     * @param armaInput arma inserita in input dall'utente e riconosciuta
+     * dal parser
+     */
+    private void equipaggiaArma(Weapon armaInput){
+        if(getUser().getArmaEquipaggiata() != null){
+            Weapon armaTemporanea = new Weapon();
+            armaTemporanea = getUser().getArmaEquipaggiata();
+            
+            if(getUser().getInvetario().containsObject(armaInput)){
+                getUser().setArmaEquipaggiata(armaInput);
+                getUser().getInvetario().dropObject(armaInput);
+                getUser().getInvetario().addObject(armaTemporanea);
+                System.out.println("Hai equipaggiato "+armaInput.getNome());
+            }else{
+                System.out.println("Non hai "+armaInput.getNome());
+            }
+        }else{
+            if(getUser().getInvetario().containsObject(armaInput)){
+                getUser().setArmaEquipaggiata(armaInput);
+                getUser().getInvetario().dropObject(armaInput);
+                System.out.println("Hai equipaggiato "+armaInput.getNome());
+            }else{
+                System.out.println("Non hai "+armaInput.getNome());
+            }
         }
     }
     
@@ -367,6 +465,7 @@ public class HouseBreak extends GameComponents{
             if(oggettoInput.isPickable()){
                 if (this.getUser().getInvetario().getSizeInvetory() > 0) {
                     getUser().getInvetario().addObject(oggettoInput);
+                    System.out.println("Hai raccolto: "+ oggettoInput.getNome());
                     this.getCurrentRoom().deleteObject(oggettoInput);
                 }
             }else{
@@ -389,9 +488,16 @@ public class HouseBreak extends GameComponents{
         if (getUser().getInvetario().containsObject(oggettoInput)) {
             //Eliminazione oggetto dall'inventario
             getUser().getInvetario().dropObject(oggettoInput);
+            System.out.println("Hai lasciato: "+ oggettoInput.getNome());
             //Inserisco l'oggetto alla stanza.
             getCurrentRoom().getObject().add(oggettoInput);
-        } else {
+            
+            //controlla se l'oggetto inserito è equipaggiato
+        } else if(getUser().getArmaEquipaggiata().containsObject(oggettoInput.getNome())){
+            getCurrentRoom().getObject().add(getUser().getArmaEquipaggiata());
+            System.out.println("Hai lasciato: "+ oggettoInput.getNome());
+            getUser().setArmaEquipaggiata(null);
+        }else {
             System.out.println("Non hai questo oggetto.");
         }
     }

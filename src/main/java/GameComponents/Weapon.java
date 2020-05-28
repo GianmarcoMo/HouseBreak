@@ -11,6 +11,13 @@ public class Weapon extends GameObject{
     private int danno;
     private GameObject tipoMunizioni = null;
     
+    public Weapon(){
+        this.munizioni = 0;
+        this.vita = 0;
+        this.danno = 0;
+        this.tipoMunizioni = null;
+    }
+    
     public Weapon(String lineaInput, GameObject munizioni){
         this.munizioni=0;
         this.vita=100;
@@ -90,7 +97,7 @@ public class Weapon extends GameObject{
         return this.danno;
     }
 
-    public String getTipoMunizioni(){
-        return this.tipoMunizioni.toString();
+    public GameObject getTipoMunizioni(){
+        return this.tipoMunizioni;
     }
 }

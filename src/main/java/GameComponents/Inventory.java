@@ -30,13 +30,11 @@ public class Inventory {
     //aggiunge un singolo oggetto all'inventario
     public void addObject(GameObject object){
         this.objectsUser.add(this.objectsUser.size(), object);
-        System.out.println("Hai raccolto: "+ object.getNome());
         this.decementaSizeInventory();
     }
 
     public void dropObject(GameObject object){
         this.objectsUser.remove(this.getIndexObject(object));
-        System.out.println("Hai lasciato: "+ object.getNome());
         this.incrementaSizeInvetory();
     }
     

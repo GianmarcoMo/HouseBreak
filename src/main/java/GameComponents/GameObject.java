@@ -18,7 +18,7 @@ public class GameObject implements Input {
     
     private boolean usabile = false;
     
-    private boolean ricaricabile = false;
+    private boolean equipaggiabile = false;
 
     //indica se l'oggetto può essere aperto
     private boolean openable = false;
@@ -64,12 +64,12 @@ public class GameObject implements Input {
     }
     
     //imposta se l'oggetto è ricaricabile
-    public void setRicaricabile(){
-        this.ricaricabile = true;
+    public void setEquipaggiabile(){
+        this.equipaggiabile = true;
     }
     
-    public boolean getRicaricabile(){
-        return this.ricaricabile;
+    public boolean getEquipaggiabile(){
+        return this.equipaggiabile;
     }
     
     public String getNome(){

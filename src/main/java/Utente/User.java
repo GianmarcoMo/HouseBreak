@@ -1,6 +1,7 @@
 package Utente;
 
 import GameComponents.Inventory;
+import GameComponents.Weapon;
 
 public class User {
     private String username;
@@ -8,6 +9,7 @@ public class User {
     private int vita;
     private boolean bloccato;
     private final Inventory inventario;
+    private Weapon armaEquipaggiata;
     
     public User(){
         username=null;
@@ -30,6 +32,19 @@ public class User {
     
     public String getEmail(){
         return this.email;
+    }
+    
+    public void setArmaEquipaggiata(Weapon armaInput){
+        this.armaEquipaggiata = armaInput;
+    }
+    
+    public void lasciaArmaEquipaggiata(){
+        System.out.println("Hai lasciato l'arma.");
+        this.armaEquipaggiata = null;
+    }
+    
+    public Weapon getArmaEquipaggiata(){
+        return this.armaEquipaggiata;
     }
 
     public Inventory getInvetario(){
