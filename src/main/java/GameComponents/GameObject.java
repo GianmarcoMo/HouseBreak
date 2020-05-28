@@ -127,7 +127,7 @@ public class GameObject implements Input {
     //effettua un controllo anche nella lista alias
     public boolean containsObject(String objectInput){
         //controllo principale
-        if(this.name.toString().equals(objectInput)){
+        if(this.name.toString().contains(objectInput)){
             return true;
         }else{ //se il nome non è uguale, cerca negli alias
             return this.containsAlias(objectInput);
@@ -135,7 +135,7 @@ public class GameObject implements Input {
     }
     
     public boolean containsAlias(String aliasInput){
-        return alias.stream().anyMatch((oggetto) -> (oggetto.equals(aliasInput)));
+        return alias.stream().anyMatch((oggetto) -> (oggetto.contains(aliasInput)));
     }
 
     @Override

@@ -56,7 +56,7 @@ public final class Command implements Input{
     //controlla anche la lista degli alias
     public boolean containsCommand(String command){
         //Controllo principale
-        if(this.nome.toString().equals(command)){
+        if(this.nome.toString().contains(command)){
             return true;
         }else{ //Se non esiste, controlla la lista degli alias
             return this.containsAlias(command);

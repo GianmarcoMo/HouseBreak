@@ -9,4 +9,5 @@ esci . Esci dal gioco. . quit exit esci end Esci End muori ammazzati ucciditi mo
 lascia . Rimuovi un oggetto dall'inventario. . rimuovi elimina abbandona estrai .
 help . Mostra i comandi presenti nel gioco. . aiuto comandi istruzioni regole .
 usa . Ti permette di usare un oggetto, come benda o soda. . curati bevi utilizza .
-equipaggia . Equipaggia un arma scelta dall'inventario . indossa equi equ ind .
+equipaggia . Equipaggia un arma scelta dall'inventario. . indossa equi equ ind .
+taglia . Taglia qualcosa con lo strumento adatto. . rompi sfascia spacca .

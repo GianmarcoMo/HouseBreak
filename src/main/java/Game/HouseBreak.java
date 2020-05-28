@@ -64,6 +64,9 @@ public class HouseBreak extends GameComponents{
         //Comando per equipaggiare un'arma dall'inventario
         Command equipaggia = new Command(scan.nextLine());
         getCommand().add(equipaggia);
+        //Comando per tagliare
+        Command taglia = new Command(scan.nextLine());
+        getCommand().add(taglia);
 
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le direzioni
@@ -87,9 +90,9 @@ public class HouseBreak extends GameComponents{
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/rooms.dat")));
         
         //Stanza prigioniero
-        Room prigioniero = new Room(scan.nextLine());
-        getRoom().add(prigioniero);
-        prigioniero.setUltimoAmbiente(prigioniero.getAmbienteNord().toString());
+        Room prigione = new Room(scan.nextLine());
+        getRoom().add(prigione);
+        prigione.setUltimoAmbiente(prigione.getAmbienteNord().toString());
         
         //Stanza corridoio
         Room corridoio = new Room(scan.nextLine());
@@ -125,10 +128,10 @@ public class HouseBreak extends GameComponents{
         getRoom().add(uscita);
         
         //Confini stanza prigioniero
-        prigioniero.setConfini("nord", corridoio);
+        prigione.setConfini("nord", corridoio);
         
         //confini stanza corridoio
-        corridoio.setConfini("sud", prigioniero);
+        corridoio.setConfini("sud", prigione);
         corridoio.setConfini("est", magazzino);
         corridoio.setConfini("ovest", cucina);
         
@@ -152,7 +155,7 @@ public class HouseBreak extends GameComponents{
         sicurezza.setConfini("nord", salone);
         
         //Stanza iniziale.
-        setStanzaCorrente(prigioniero);
+        setStanzaCorrente(prigione);
         
         //TODO DEVI INSERIRE GLI OGGETTI
         
@@ -183,6 +186,11 @@ public class HouseBreak extends GameComponents{
         GameObject munizioniGlock= new GameObject(scan.nextLine());
         getObject().add(munizioniGlock);
         bagno.getObject().add(munizioniGlock);
+        
+        //Corda per legare il giocatore
+        GameObject corda = new GameObject(scan.nextLine());
+        getObject().add(corda);
+        getUser().getInvetario().addObject(corda);
         
         //----------------------------------------------------------
         //--- OGGETTI CURATORI
@@ -219,8 +227,15 @@ public class HouseBreak extends GameComponents{
         cucina.getObject().add(coltello);
         getObject().add(coltello);
         
+        //coltellino del giocatore
+        Weapon coltellino = new Weapon(scan.nextLine(), null);
+        coltellino.setDanno(15);
+        coltellino.setEquipaggiabile();
+        getObject().add(coltellino);
+        getUser().getInvetario().addObject(coltellino);
+        
         //Blocco il giocatore
-        //getUser().bloccaGiocatore();
+        getUser().bloccaGiocatore();
         scan.close();
 
     }
@@ -279,7 +294,7 @@ public class HouseBreak extends GameComponents{
                     System.out.println("Non puoi usare questo oggetto.");
                 }
             }else{
-                System.out.println("Ma che scrivi?!");
+                System.out.println("Che vuoi usare?");
             }
         }else if(parser.getComando().containsCommand("premi")){
             if(parser.getObject() != null){
@@ -305,9 +320,37 @@ public class HouseBreak extends GameComponents{
             }else{
                 System.out.println("Arma inesistente.");
             }
-           
+        }else if(parser.getComando().containsCommand("taglia")){
+            if(parser.getObject() != null){
+                tagliaOggetto(parser.getObject());
+            }else{
+                System.out.println("Cosa vuoi tagliare?");
+            }
         }else if(parser.getComando().containsCommand("spara")){
             //TODO
+        }
+    }
+    
+    //========================================================
+    private void tagliaOggetto(GameObject oggettoInput) {
+        switch (oggettoInput.getNome()) {
+            case "corda":
+                if (getUser().getInvetario().containsObject(oggettoInput)) {
+                    if (getUser().getArmaEquipaggiata() != null) {
+                        if (getUser().getArmaEquipaggiata().containsObject("coltellino")) {
+                            getUser().sbloccaGiocatore();
+                            getUser().getInvetario().dropObject(oggettoInput);
+                            System.out.println("Hai tagliato la corda!");
+                            System.out.println("Il coltellino si è rotto!");
+                            getUser().setArmaEquipaggiata(null);
+                        } else {
+                            System.out.println("Non puoi tagliare la corda.");
+                        }
+                    }else{
+                        System.out.println("Devi equipaggiare qualcosa per tagliare!");
+                    }
+                }
+                break;
         }
     }
     
@@ -344,9 +387,6 @@ public class HouseBreak extends GameComponents{
                 System.out.println("Munizioni arma: "+getUser().getArmaEquipaggiata().getMunizioni());
                 //elimina le munizioni dall'inventario
                 getUser().getInvetario().dropObject(getUser().getArmaEquipaggiata().getTipoMunizioni());
-                //elimina le munizioni dalla stanza
-                getCurrentRoom().getObject().remove(getCurrentRoom().getObject().size()-1);
-
                 //Cerca le munizioni nella stanza
             } else {
                 System.out.println("Non ci sono munizioni per quest'arma.");
