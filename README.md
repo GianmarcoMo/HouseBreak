@@ -1,4 +1,4 @@
-# HouseBreak ![CI](https://github.com/GianmarcoMo/HouseBreak/workflows/CI/badge.svg?branch=master)
+# HouseBreak ![Java CI with Maven](https://github.com/GianmarcoMo/HouseBreak/workflows/Java%20CI%20with%20Maven/badge.svg?branch=master)
 
 Era un caldo giorno di Agosto quando Will viene colpito dietro la testa davanti al supermarket e perde i sensi. 
 
