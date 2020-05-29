@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
+import java.util.ArrayList;
 
 public class HouseBreak extends GameComponents {
 
@@ -68,6 +69,9 @@ public class HouseBreak extends GameComponents {
         //Comando per tagliare
         Command taglia = new Command(scan.nextLine());
         getCommand().add(taglia);
+        //Comando per cercare nell'inventario dei nemici
+        Command cerca = new Command(scan.nextLine());
+        getCommand().add(cerca);
 
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le direzioni
@@ -162,9 +166,10 @@ public class HouseBreak extends GameComponents {
         //TODO DEVI INSERIRE GLI OGGETTI
         //----------------------------------------------------------
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));
-        //oggetto iphone
-        GameObject iphone = new GameObject(scan.nextLine());
-        getObject().add(iphone);
+        //oggetto tessera
+        GameObject tessera = new GameObject(scan.nextLine());
+        getObject().add(tessera);
+        magazzino.getNemico().getInvetario().addObject(tessera);
 
         //oggetto rivista
         GameObject rivista = new GameObject(scan.nextLine());
@@ -191,13 +196,12 @@ public class HouseBreak extends GameComponents {
         //Corda per legare il giocatore
         GameObject corda = new GameObject(scan.nextLine());
         getObject().add(corda);
-        getUser().getInvetario().addObject(corda);
+        //getUser().getInvetario().addObject(corda);
         
         //Munizioni arma nemico
         GameObject munizioniUzi = new GameObject(scan.nextLine());
         getObject().add(munizioniUzi);
         magazzino.getNemico().getInvetario().addObject(munizioniUzi);
-        magazzino.getNemico().getInvetario().addObject(iphone);
 
         //----------------------------------------------------------
         //--- OGGETTI CURATORI
@@ -239,7 +243,7 @@ public class HouseBreak extends GameComponents {
         coltellino.setDanno(15);
         coltellino.setEquipaggiabile();
         getObject().add(coltellino);
-        getUser().getInvetario().addObject(coltellino);
+        //getUser().getInvetario().addObject(coltellino);
         
         //Uzi per il nemico nel magazzino
         Weapon uzi = new Weapon(scan.nextLine(), munizioniUzi);
@@ -250,7 +254,7 @@ public class HouseBreak extends GameComponents {
         magazzino.getNemico().setArmaEquipaggiata(uzi);
 
         //Blocco il giocatore
-        getUser().bloccaGiocatore();
+        //getUser().bloccaGiocatore();
         scan.close();
 
     }
@@ -261,14 +265,16 @@ public class HouseBreak extends GameComponents {
         if (parser.getComando().containsCommand("vai")) {
             if (parser.getDirezione() != null) {
                 movimentoPlayer(parser.getDirezione().getDirezione());
+                if(getCurrentRoom().nemico()){
+                    System.out.println("Attento c'è un nemico! Ammazzalo prima che lui ammazzi te!! ");
+                }
             } else {
                 System.out.println("Nessuna direzione inserita.");
             }
 
             //COMANDO PER GUARDARE LA STANZA
         } else if (parser.getComando().containsCommand("osserva")) {
-            if (getCurrentRoom().nemico()) {
-                System.out.println("Attento c'è un nemico! Ammazzalo prima che lui ammazzi te!! ");
+            if (getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                 getCurrentRoom().getNemico().attaccaConPugni(getUser());
                 attaccoNemico();
                 guardaStanza();
@@ -282,7 +288,7 @@ public class HouseBreak extends GameComponents {
         } else if (parser.getComando().containsCommand("raccogli")) {
             //OGGETTO
             if (parser.getObject() != null) {
-                if (getCurrentRoom().nemico()) {
+                if (getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                     getCurrentRoom().getNemico().attaccaConPugni(getUser());
                     attaccoNemico();
                     raccogliOggetto(parser.getObject());
@@ -299,7 +305,7 @@ public class HouseBreak extends GameComponents {
             if (parser.getObject() != null) {
                 //Controlla che l'utente non è bloccato
                 if (!getUser().bloccato()) {
-                    if (getCurrentRoom().nemico()) {
+                    if (getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                         getCurrentRoom().getNemico().attaccaConPugni(getUser());
                         attaccoNemico();
                         lasciaOggetto(parser.getObject());
@@ -313,7 +319,7 @@ public class HouseBreak extends GameComponents {
 
             //COMANDO PER GUARDARE GLI OGGETTI/ARMI NELL'INVENTARIO
         } else if (parser.getComando().containsCommand("inventario")) {
-            if (getCurrentRoom().nemico()) {
+            if (getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                 getCurrentRoom().getNemico().attaccaConPugni(getUser());
                 attaccoNemico();
                 getUser().getInvetario().guardaInventario();
@@ -330,7 +336,7 @@ public class HouseBreak extends GameComponents {
             if (parser.getObject() != null) {
                 //Controlla che l'utente non è bloccato
                 if (!getUser().bloccato()) {
-                    if (getCurrentRoom().nemico()) {
+                    if (getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                         getCurrentRoom().getNemico().attaccaConPugni(getUser());
                         attaccoNemico();
                         usaCuratore((Curatore) parser.getObject());
@@ -344,7 +350,7 @@ public class HouseBreak extends GameComponents {
         } else if (parser.getComando().containsCommand("premi")) {
             if (parser.getObject() != null) {
                 if (!getUser().bloccato()) {
-                    if(getCurrentRoom().nemico()) {
+                    if(getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                         getCurrentRoom().getNemico().attaccaConPugni(getUser());
                         attaccoNemico();
                         premiOggetto(parser.getObject());
@@ -358,7 +364,7 @@ public class HouseBreak extends GameComponents {
         } else if (parser.getComando().containsCommand("equipaggia")) {
             if (parser.getObject() != null) {
                 //Il nemico attacca il giocatore
-                if (getCurrentRoom().nemico()) {
+                if (getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                     getCurrentRoom().getNemico().attaccaConPugni(getUser());
                     attaccoNemico();
                     if (parser.getObject().getEquipaggiabile()) {
@@ -381,7 +387,7 @@ public class HouseBreak extends GameComponents {
                 //Controlla che l'utente non è bloccato
                 if (!getUser().bloccato()) {
                     //Il nemico attacca il giocatore
-                    if (getCurrentRoom().nemico()) {
+                    if (getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0) {
                         getCurrentRoom().getNemico().attaccaConPugni(getUser());
                         attaccoNemico();
                         cercaArmaRicarica((Weapon) parser.getObject());
@@ -395,7 +401,7 @@ public class HouseBreak extends GameComponents {
             //Comando per tagliare
         } else if (parser.getComando().containsCommand("taglia")) {
             if (parser.getObject() != null) {
-                if(getCurrentRoom().nemico()){
+                if(getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0){
                     getCurrentRoom().getNemico().attaccaConPugni(getUser());
                     attaccoNemico();
                     tagliaOggetto(parser.getObject());
@@ -408,7 +414,7 @@ public class HouseBreak extends GameComponents {
         } else if (parser.getComando().containsCommand("spara")) {
             if(!getUser().bloccato()){
                 if(getUser().getArmaEquipaggiata()!= null){
-                    if(getCurrentRoom().nemico()){
+                    if(getCurrentRoom().nemico() ){
                         if (getCurrentRoom().getNemico().getVita() > 0) {
                             //Il giocatore attacca il nemico con l'arma
                             getUser().attaccaConArma(getCurrentRoom().getNemico());
@@ -438,13 +444,49 @@ public class HouseBreak extends GameComponents {
                     } else {
                         System.out.println("A chi attacchiamo? Alla mosca? Non c'è nessuno!");
                     }
-                    
+                }
+            }
+        }else if (parser.getComando().containsCommand("cerca")){
+            if(!getUser().bloccato()){
+                //Controlla se esiste un nemico nella stanza
+                if(getCurrentRoom().nemico()){
+                    //Controlla se il nemico è morto
+                    if(getCurrentRoom().getNemico().getVita() == 0){
+                        if(getCurrentRoom().getNemico().getInvetario().getObjects().size() > 0){
+                            estraiOggetti(getCurrentRoom().getNemico().getInvetario());
+                            System.out.println("Oggetti del cadavere inseriti nella stanza.");
+                        }else{
+                            System.out.println("L'inventario del cadavere è vuoto!");
+                        }
+                    } else { //Se il nemico non è morto, attacca
+                        System.out.println("Devi prima amazzare il nemico prima di cercare nel suo inventario!!");
+                        //Il nemico attacca l'utente
+                        getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                        attaccoNemico();
+                    }
+                }else{
+                    System.out.println("In questa stanza non c'è nessuno.");
                 }
             }
         }
     }
 
     //========================================================
+    /**
+     * Estra gli oggetti del cadavere dall'inventario
+     * inserendoli nella stanza.
+     * @param inventarioCadavere 
+     */
+    private void estraiOggetti(Inventory inventarioCadavere){
+        for (int i = 0; i < inventarioCadavere.getObjects().size(); i++) {
+            getCurrentRoom().getObject().add(inventarioCadavere.getObjects().get(i));
+            inventarioCadavere.getObjects().remove(i);
+        }
+    }
+    /**
+     * Notifica che l'utente ha attacco il nemico
+     * informando la vita del nemico.
+     */
     private void attaccoUtente(){
         System.out.println("Hai attacco il nemico!");
         if(getCurrentRoom().getNemico().getVita()>0){
@@ -454,6 +496,10 @@ public class HouseBreak extends GameComponents {
         }
     }
    
+    /**
+     * Notifica l'utente che è stato attaccato dal nemico
+     * informando della vita rimasta.
+     */
     private void attaccoNemico() {
         //Il nemico attacca il giocatore con l'arma
         System.out.println("Il nemico ti ha attaccato! ");
@@ -513,7 +559,7 @@ public class HouseBreak extends GameComponents {
 
     /**
      * Ricarica l'arma dell'utente, se ci sono delle munizioni nell'inventario o
-     * nella stanza
+     * nella stanza.
      */
     private void ricaricaArma() {
         if (getUser().getArmaEquipaggiata().getTipoMunizioni() != null) {
@@ -689,7 +735,7 @@ public class HouseBreak extends GameComponents {
     }
 
     /**
-     * Mostra i comandi disponibili
+     * Mostra i comandi disponibili.
      */
     private void mostraComandi() {
         System.out.println("+------------------------------------ Comandi House Break --------------------------------------+");

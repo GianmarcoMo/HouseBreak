@@ -13,6 +13,10 @@ public class Inventory {
         size=2;
     }
     
+    public ArrayList<GameObject> getObjects(){
+        return this.objectsUser;
+    }
+    
     public void guardaInventario(){
         if (objectsUser.size() >= 1) {
             if (objectsUser.size() >= 1) {
@@ -55,7 +59,7 @@ public class Inventory {
     }
     
     public int getSizeInvetory(){
-        if(this.size>0){
+        if(this.size > 0){
             return this.size;
         }else{
             System.out.println("Inventario pieno! Elimina qualcosa!");
