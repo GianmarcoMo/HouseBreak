@@ -1,6 +1,7 @@
 package Game;
 
 import GameComponents.*;
+import Utente.User;
 //import Utente.*;
 
 import java.io.BufferedReader;
@@ -9,12 +10,12 @@ import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
 
-public class HouseBreak extends GameComponents{
+public class HouseBreak extends GameComponents {
 
     @Override
     public void inizializzazione() throws IOException {
         Scanner scan;
-        
+
         /*
          * specifio la cartella dove sono situati i vari files per i comandi, oggetti
          * ecc..
@@ -71,138 +72,144 @@ public class HouseBreak extends GameComponents{
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le direzioni
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/direzioni.dat")));
-        
+
         //Direzione nord
-        Direzione nord= new Direzione(scan.nextLine());
+        Direzione nord = new Direzione(scan.nextLine());
         getDirezione().add(nord);
         //direzione sud
-        Direzione sud= new Direzione(scan.nextLine());
+        Direzione sud = new Direzione(scan.nextLine());
         getDirezione().add(sud);
         //Direzione est
-        Direzione est= new Direzione(scan.nextLine());
+        Direzione est = new Direzione(scan.nextLine());
         getDirezione().add(est);
         //Direzione ovest
-        Direzione ovest= new Direzione(scan.nextLine());
+        Direzione ovest = new Direzione(scan.nextLine());
         getDirezione().add(ovest);
-        
+
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le stanze
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsolutePath() + "/rooms.dat")));
-        
+
         //Stanza prigioniero
         Room prigione = new Room(scan.nextLine());
         getRoom().add(prigione);
         prigione.setUltimoAmbiente(prigione.getAmbienteNord().toString());
-        
+
         //Stanza corridoio
         Room corridoio = new Room(scan.nextLine());
         getRoom().add(corridoio);
-        
+
         //Stanza magazzino
         Room magazzino = new Room(scan.nextLine());
         magazzino.aggiungiNemico(); //inserisco nemico nella stanza
+        getNemici().add(magazzino.getNemico());
         getRoom().add(magazzino);
-        
+
         //Stanza Cucina
         Room cucina = new Room(scan.nextLine());
         getRoom().add(cucina);
-        
+
         //stanza bagno
         Room bagno = new Room(scan.nextLine());
-        bagno.aggiungiNemico(); //inserisco nemico nella stanza
+        //bagno.aggiungiNemico(); //inserisco nemico nella stanza
         getRoom().add(bagno);
-        
+
         //stanza salone
         Room salone = new Room(scan.nextLine());
-        salone.aggiungiNemico(); //inserisco nemico nella stanza
+        //salone.aggiungiNemico(); //inserisco nemico nella stanza
         getRoom().add(salone);
-        
+
         //stanza sicurezza
         Room sicurezza = new Room(scan.nextLine());
         sicurezza.bloccaStanza(); //blocca la stanza
         getRoom().add(sicurezza);
-        
+
         //uscita
-        Room uscita= new Room(scan.nextLine());
+        Room uscita = new Room(scan.nextLine());
         uscita.bloccaStanza(); //blocca la porta d'uscita.
         getRoom().add(uscita);
-        
+
         //Confini stanza prigioniero
         prigione.setConfini("nord", corridoio);
-        
+
         //confini stanza corridoio
         corridoio.setConfini("sud", prigione);
         corridoio.setConfini("est", magazzino);
         corridoio.setConfini("ovest", cucina);
-        
+
         //confini stanza magazzino
         magazzino.setConfini("ovest", corridoio);
-        
+
         //confini stanza cucina
         cucina.setConfini("nord", bagno);
         cucina.setConfini("est", corridoio);
-        
+
         //Confini stanza bagno
         bagno.setConfini("est", salone);
         bagno.setConfini("sud", cucina);
-        
+
         //Confini stanza salone
         salone.setConfini("est", uscita);
         salone.setConfini("sud", sicurezza);
         salone.setConfini("ovest", bagno);
-        
+
         //confini stanza sicurezza
         sicurezza.setConfini("nord", salone);
-        
+
         //Stanza iniziale.
         setStanzaCorrente(prigione);
-        
+
         //TODO DEVI INSERIRE GLI OGGETTI
-        
         //----------------------------------------------------------
-        scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));                
+        scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));
         //oggetto iphone
-        GameObject iphone= new GameObject(scan.nextLine());
+        GameObject iphone = new GameObject(scan.nextLine());
         getObject().add(iphone);
-        
+
         //oggetto rivista
-        GameObject rivista= new GameObject(scan.nextLine());
+        GameObject rivista = new GameObject(scan.nextLine());
         getObject().add(rivista);
         salone.getObject().add(rivista);
-        
+
         //oggetto carta
-        GameObject carta= new GameObject(scan.nextLine());
+        GameObject carta = new GameObject(scan.nextLine());
         getObject().add(carta);
         bagno.getObject().add(carta);
-        
+
         //oggetto scarafaggio
-        GameObject scarafaggio= new GameObject(scan.nextLine());
+        GameObject scarafaggio = new GameObject(scan.nextLine());
         getObject().add(scarafaggio);
         scarafaggio.setPushable();
         scarafaggio.deletePickable();
         salone.getObject().add(scarafaggio);
-        
+
         //Munizioni per la pistola
-        GameObject munizioniGlock= new GameObject(scan.nextLine());
+        GameObject munizioniGlock = new GameObject(scan.nextLine());
         getObject().add(munizioniGlock);
-        bagno.getObject().add(munizioniGlock);
-        
+        magazzino.getObject().add(munizioniGlock);
+
         //Corda per legare il giocatore
         GameObject corda = new GameObject(scan.nextLine());
         getObject().add(corda);
         getUser().getInvetario().addObject(corda);
         
+        //Munizioni arma nemico
+        GameObject munizioniUzi = new GameObject(scan.nextLine());
+        getObject().add(munizioniUzi);
+        magazzino.getNemico().getInvetario().addObject(munizioniUzi);
+        magazzino.getNemico().getInvetario().addObject(iphone);
+
         //----------------------------------------------------------
         //--- OGGETTI CURATORI
-        scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/curatori.dat")));
-        
+        scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/curatori.dat")));
+
         //Oggetto benda
         Curatore benda = new Curatore(scan.nextLine());
-        benda.setPuntiVita(45);
+        benda.setPuntiVita(50);
         benda.setUsabile();
         getObject().add(benda);
-        magazzino.getObject().add(benda);
-        
+        bagno.getObject().add(benda);
+
         //oggetto soda
         Curatore soda = new Curatore(scan.nextLine());
         soda.setPuntiVita(25);
@@ -210,23 +217,23 @@ public class HouseBreak extends GameComponents{
         getObject().add(soda);
         cucina.getObject().add(soda);
         //----------------------------------------------------------
-        
-        scan= new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
-        
+
+        scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
+
         //Inizializzo la pistola
-        Weapon glock= new Weapon(scan.nextLine(),munizioniGlock);
+        Weapon glock = new Weapon(scan.nextLine(), munizioniGlock);
         glock.setDanno(67);
         glock.setEquipaggiabile();
         magazzino.getObject().add(glock);
         getObject().add(glock);
-        
+
         //Inzializzo il coltello
-        Weapon coltello= new Weapon(scan.nextLine(), null);
+        Weapon coltello = new Weapon(scan.nextLine(), null);
         coltello.setDanno(35);
         coltello.setEquipaggiabile();
         cucina.getObject().add(coltello);
         getObject().add(coltello);
-        
+
         //coltellino del giocatore
         Weapon coltellino = new Weapon(scan.nextLine(), null);
         coltellino.setDanno(15);
@@ -234,6 +241,14 @@ public class HouseBreak extends GameComponents{
         getObject().add(coltellino);
         getUser().getInvetario().addObject(coltellino);
         
+        //Uzi per il nemico nel magazzino
+        Weapon uzi = new Weapon(scan.nextLine(), munizioniUzi);
+        uzi.setDanno(25);
+        uzi.aumentaMunizioni(20);
+        uzi.setEquipaggiabile();
+        getObject().add(uzi);
+        magazzino.getNemico().setArmaEquipaggiata(uzi);
+
         //Blocco il giocatore
         getUser().bloccaGiocatore();
         scan.close();
@@ -243,95 +258,218 @@ public class HouseBreak extends GameComponents{
     @Override
     public void onUpdate(final Parser parser) {
         //COMANDO MOVIMENTO
-        if(parser.getComando().containsCommand("vai")){
+        if (parser.getComando().containsCommand("vai")) {
             if (parser.getDirezione() != null) {
-                this.movimentoPlayer(parser.getDirezione().getDirezione());
-            }else{
+                movimentoPlayer(parser.getDirezione().getDirezione());
+            } else {
                 System.out.println("Nessuna direzione inserita.");
             }
-            
+
             //COMANDO PER GUARDARE LA STANZA
-        }else if(parser.getComando().containsCommand("osserva")){
-            this.guardaStanza();
-            this.getCurrentRoom().getDescrizioneOggetti();
-            
-            //COMANDO PER RACCOGLIERE OGGETTI
-        }else if(parser.getComando().containsCommand("raccogli")){
-            //OGGETTO
-            if(parser.getObject() != null){
-                raccogliOggetto(parser.getObject());
-            }else{
-                System.out.println("Che oggetto vuoi prendere?");
+        } else if (parser.getComando().containsCommand("osserva")) {
+            if (getCurrentRoom().nemico()) {
+                System.out.println("Attento c'è un nemico! Ammazzalo prima che lui ammazzi te!! ");
+                getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                attaccoNemico();
+                guardaStanza();
+                getCurrentRoom().getDescrizioneOggetti();
+            } else {
+                guardaStanza();
+                getCurrentRoom().getDescrizioneOggetti();
             }
-            
-            //COMANDO PER LASCIARE UN OGGETTO/ARMA
-        }else if(parser.getComando().containsCommand("lascia")){
+
+            //COMANDO PER RACCOGLIERE OGGETTI
+        } else if (parser.getComando().containsCommand("raccogli")) {
             //OGGETTO
             if (parser.getObject() != null) {
-                lasciaOggetto(parser.getObject());
-            }else{
+                if (getCurrentRoom().nemico()) {
+                    getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                    attaccoNemico();
+                    raccogliOggetto(parser.getObject());
+                } else {
+                    raccogliOggetto(parser.getObject());
+                }
+            } else {
+                System.out.println("Che oggetto vuoi prendere?");
+            }
+
+            //COMANDO PER LASCIARE UN OGGETTO/ARMA
+        } else if (parser.getComando().containsCommand("lascia")) {
+            //OGGETTO
+            if (parser.getObject() != null) {
+                //Controlla che l'utente non è bloccato
+                if (!getUser().bloccato()) {
+                    if (getCurrentRoom().nemico()) {
+                        getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                        attaccoNemico();
+                        lasciaOggetto(parser.getObject());
+                    }else{
+                        lasciaOggetto(parser.getObject());
+                    }
+                }
+            } else {
                 System.out.println("Che oggetto vuoi lasciare?");
             }
-            
+
             //COMANDO PER GUARDARE GLI OGGETTI/ARMI NELL'INVENTARIO
-        }else if(parser.getComando().containsCommand("inventario")){
-            getUser().getInvetario().guardaInventario();
-            
-            //COMANDO PER VISUALIZZARE I COMANDI DISPONIBILI
-        }else if(parser.getComando().containsCommand("help")){
-            mostraComandi();
-            
-            //COMANDO PER UTILIZZARE DEGLI OGGETTI
-        }else if(parser.getComando().containsCommand("usa")){
-            if(parser.getObject()!= null){
-                if(parser.getObject().getUsabile()){
-                    if (getUser().getInvetario().containsObject(parser.getObject())) {
-                        usaCuratore((Curatore) parser.getObject());
-                    } else {
-                        System.out.println("Non hai " + parser.getObject().getNome() + " nell'inventario.");
-                    } 
-                }else{
-                    System.out.println("Non puoi usare questo oggetto.");
-                }
+        } else if (parser.getComando().containsCommand("inventario")) {
+            if (getCurrentRoom().nemico()) {
+                getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                attaccoNemico();
+                getUser().getInvetario().guardaInventario();
             }else{
+                getUser().getInvetario().guardaInventario();
+            }
+
+            //COMANDO PER VISUALIZZARE I COMANDI DISPONIBILI
+        } else if (parser.getComando().containsCommand("help")) {
+            mostraComandi();
+
+            //COMANDO PER UTILIZZARE DEGLI OGGETTI
+        } else if (parser.getComando().containsCommand("usa")) {
+            if (parser.getObject() != null) {
+                //Controlla che l'utente non è bloccato
+                if (!getUser().bloccato()) {
+                    if (getCurrentRoom().nemico()) {
+                        getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                        attaccoNemico();
+                        usaCuratore((Curatore) parser.getObject());
+                    }else{
+                        usaCuratore((Curatore) parser.getObject());
+                    }
+                }
+            } else {
                 System.out.println("Che vuoi usare?");
             }
-        }else if(parser.getComando().containsCommand("premi")){
-            if(parser.getObject() != null){
-                premiOggetto(parser.getObject());
-            }else{
+        } else if (parser.getComando().containsCommand("premi")) {
+            if (parser.getObject() != null) {
+                if (!getUser().bloccato()) {
+                    if(getCurrentRoom().nemico()) {
+                        getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                        attaccoNemico();
+                        premiOggetto(parser.getObject());
+                    }else{
+                        premiOggetto(parser.getObject());
+                    }
+                }
+            } else {
                 System.out.println("Non capisco che oggetto vuoi premere.");
             }
-        }else if(parser.getComando().containsCommand("equipaggia")){
-            if(parser.getObject() != null){
-                if(parser.getObject().getEquipaggiabile()){
-                    equipaggiaArma((Weapon)parser.getObject());
+        } else if (parser.getComando().containsCommand("equipaggia")) {
+            if (parser.getObject() != null) {
+                //Il nemico attacca il giocatore
+                if (getCurrentRoom().nemico()) {
+                    getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                    attaccoNemico();
+                    if (parser.getObject().getEquipaggiabile()) {
+                        equipaggiaArma((Weapon) parser.getObject());
+                    }else{
+                        System.out.println("Non puoi equipaggiare questo oggetto!");
+                    }
+                } else {
+                    if (parser.getObject().getEquipaggiabile()) {
+                        equipaggiaArma((Weapon) parser.getObject());
+                    }else{
+                        System.out.println("Non puoi equipaggiare questo oggetto!");
+                    }
                 }
-            }else{
+            } else {
                 System.out.println("Devi inserire l'arma da equipaggiare!");
             }
-        }else if(parser.getComando().containsCommand("ricarica")){
-            if(parser.getObject() != null){
-                if(parser.getObject().getEquipaggiabile()){
-                    cercaArmaRicarica((Weapon) parser.getObject());
-                }else{
-                    System.out.println("Non puoi ricaricare quest'arma.");
-                }     
-            }else{
-                System.out.println("Arma inesistente.");
+        } else if (parser.getComando().containsCommand("ricarica")) {
+            if (parser.getObject() != null) {
+                //Controlla che l'utente non è bloccato
+                if (!getUser().bloccato()) {
+                    //Il nemico attacca il giocatore
+                    if (getCurrentRoom().nemico()) {
+                        getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                        attaccoNemico();
+                        cercaArmaRicarica((Weapon) parser.getObject());
+                    } else {
+                        cercaArmaRicarica((Weapon) parser.getObject());
+                    }
+                }
+            } else {
+                System.out.println("Arma errata o non l'hai inserita.");
             }
-        }else if(parser.getComando().containsCommand("taglia")){
-            if(parser.getObject() != null){
-                tagliaOggetto(parser.getObject());
-            }else{
+            //Comando per tagliare
+        } else if (parser.getComando().containsCommand("taglia")) {
+            if (parser.getObject() != null) {
+                if(getCurrentRoom().nemico()){
+                    getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                    attaccoNemico();
+                    tagliaOggetto(parser.getObject());
+                }else{
+                    tagliaOggetto(parser.getObject());
+                }
+            } else {
                 System.out.println("Cosa vuoi tagliare?");
             }
-        }else if(parser.getComando().containsCommand("spara")){
-            //TODO
+        } else if (parser.getComando().containsCommand("spara")) {
+            if(!getUser().bloccato()){
+                if(getUser().getArmaEquipaggiata()!= null){
+                    if(getCurrentRoom().nemico()){
+                        if (getCurrentRoom().getNemico().getVita() > 0) {
+                            //Il giocatore attacca il nemico con l'arma
+                            getUser().attaccaConArma(getCurrentRoom().getNemico());
+                            attaccoUtente();
+                            //Il nemico attacca l'utente
+                            getCurrentRoom().getNemico().attaccaConArma(getUser());
+                            attaccoNemico();
+                        }else{
+                            System.out.println("Il nemico è morto! Non sprecare colpi");
+                        }
+
+                    }else{
+                        System.out.println("A chi attacchiamo? Alla mosca? Non c'è nessuno!");
+                    }
+                } else {
+                    if (getCurrentRoom().nemico()) {
+                        if (getCurrentRoom().getNemico().getVita() > 0) {
+                            //Il giocatore attacca il nemico con l'arma
+                            getUser().attaccaConPugni(getCurrentRoom().getNemico());
+                            attaccoUtente();
+                            //Il nemico attacca l'utente
+                            getCurrentRoom().getNemico().attaccaConPugni(getUser());
+                            attaccoNemico();
+                        } else {
+                            System.out.println("Il nemico è morto! Non sprecare colpi");
+                        }
+                    } else {
+                        System.out.println("A chi attacchiamo? Alla mosca? Non c'è nessuno!");
+                    }
+                    
+                }
+            }
+        }
+    }
+
+    //========================================================
+    private void attaccoUtente(){
+        System.out.println("Hai attacco il nemico!");
+        if(getCurrentRoom().getNemico().getVita()>0){
+            System.out.println("Vita del nemico: "+getCurrentRoom().getNemico().getVita());
+        }else{
+            System.out.println("Nemico morto!");
+        }
+    }
+   
+    private void attaccoNemico() {
+        //Il nemico attacca il giocatore con l'arma
+        System.out.println("Il nemico ti ha attaccato! ");
+        if (getUser().getVita() > 0) {
+            System.out.println("Vita attuale: " + getUser().getVita());
+        } else {
+            System.out.println("\nSei morto!");
+            System.exit(0);
         }
     }
     
-    //========================================================
+    /**
+     * Metodo per tagliare un oggetto
+     * con uno strumento
+     * @param oggettoInput oggetto da tagliare 
+     */
     private void tagliaOggetto(GameObject oggettoInput) {
         switch (oggettoInput.getNome()) {
             case "corda":
@@ -346,31 +484,36 @@ public class HouseBreak extends GameComponents{
                         } else {
                             System.out.println("Non puoi tagliare la corda.");
                         }
-                    }else{
+                    } else {
                         System.out.println("Devi equipaggiare qualcosa per tagliare!");
                     }
                 }
                 break;
         }
     }
-    
+
     /**
      * Controlla se l'arma è equipaggiata
+     *
      * @param armaInput - arma inserita in input dall'utente
      */
     private void cercaArmaRicarica(Weapon armaInput) {
-        //Controlla se l'arma inserita è equipaggiata
-        if (getUser().getArmaEquipaggiata() != null && getUser().getArmaEquipaggiata().containsObject(armaInput.getNome())) {
-            ricaricaArma();
-        }else{
-            System.out.println("Devi equipaggiare l'arma prima di ricaricarla.");
+        if (armaInput.getEquipaggiabile()) {
+            //Controlla se l'arma inserita è equipaggiata
+            if (getUser().getArmaEquipaggiata() != null && getUser().getArmaEquipaggiata().containsObject(armaInput.getNome())) {
+                ricaricaArma();
+            } else {
+                System.out.println("Devi equipaggiare l'arma prima di ricaricarla.");
+            }
+        } else {
+            System.out.println("Non puoi ricaricare quest'arma.");
         }
+
     }
-    
+
     /**
-     * Ricarica l'arma dell'utente,
-     * se ci sono delle munizioni nell'inventario
-     * o nella stanza
+     * Ricarica l'arma dell'utente, se ci sono delle munizioni nell'inventario o
+     * nella stanza
      */
     private void ricaricaArma() {
         if (getUser().getArmaEquipaggiata().getTipoMunizioni() != null) {
@@ -380,74 +523,75 @@ public class HouseBreak extends GameComponents{
                 while (munizioniDaAumentare < 3) {
                     munizioniDaAumentare = (int) (Math.random() * 15);
                 }
-                
+
                 //ricarica l'arma
                 getUser().getArmaEquipaggiata().aumentaMunizioni(munizioniDaAumentare);
                 System.out.println("Arma ricaricata!");
-                System.out.println("Munizioni arma: "+getUser().getArmaEquipaggiata().getMunizioni());
+                System.out.println("Munizioni arma: " + getUser().getArmaEquipaggiata().getMunizioni());
                 //elimina le munizioni dall'inventario
                 getUser().getInvetario().dropObject(getUser().getArmaEquipaggiata().getTipoMunizioni());
                 //Cerca le munizioni nella stanza
             } else {
                 System.out.println("Non ci sono munizioni per quest'arma.");
             }
-        }else{
+        } else {
             System.out.println("Quest'arma non supporta munizioni.");
         }
     }
-    
-    
+
     /**
-     * Permette di equipaggiare un arma inserita in input
-     * Se il giocatore ha già un'arma equipaggiata,
-     * viene effettuato il cambio
-     * @param armaInput arma inserita in input dall'utente e riconosciuta
-     * dal parser
+     * Permette di equipaggiare un arma inserita in input Se il giocatore ha già
+     * un'arma equipaggiata, viene effettuato il cambio
+     *
+     * @param armaInput arma inserita in input dall'utente e riconosciuta dal
+     * parser
      */
-    private void equipaggiaArma(Weapon armaInput){
-        if(getUser().getArmaEquipaggiata() != null){
+    private void equipaggiaArma(Weapon armaInput) {
+        if (getUser().getArmaEquipaggiata() != null) {
             Weapon armaTemporanea = new Weapon();
             armaTemporanea = getUser().getArmaEquipaggiata();
-            
-            if(getUser().getInvetario().containsObject(armaInput)){
+
+            if (getUser().getInvetario().containsObject(armaInput)) {
                 getUser().setArmaEquipaggiata(armaInput);
                 getUser().getInvetario().dropObject(armaInput);
                 getUser().getInvetario().addObject(armaTemporanea);
-                System.out.println("Hai equipaggiato "+armaInput.getNome());
-            }else{
-                System.out.println("Non hai "+armaInput.getNome());
+                System.out.println("Hai equipaggiato " + armaInput.getNome());
+            } else {
+                System.out.println("Non hai " + armaInput.getNome());
             }
-        }else{
-            if(getUser().getInvetario().containsObject(armaInput)){
+        } else {
+            if (getUser().getInvetario().containsObject(armaInput)) {
                 getUser().setArmaEquipaggiata(armaInput);
                 getUser().getInvetario().dropObject(armaInput);
-                System.out.println("Hai equipaggiato "+armaInput.getNome());
-            }else{
-                System.out.println("Non hai "+armaInput.getNome());
+                System.out.println("Hai equipaggiato " + armaInput.getNome());
+            } else {
+                System.out.println("Non hai " + armaInput.getNome());
             }
         }
     }
-    
+
     /**
      * Metodo per premere un oggetto, provoca un evento
-     * @param oggettoInput 
+     *
+     * @param oggettoInput
      */
-    private void premiOggetto(GameObject oggettoInput){
-        if(getCurrentRoom().containsObject(oggettoInput)){
-            if(oggettoInput.isPushable()){
+    private void premiOggetto(GameObject oggettoInput) {
+        if (getCurrentRoom().containsObject(oggettoInput)) {
+            if (oggettoInput.isPushable()) {
                 if (!oggettoInput.isPushed()) {
                     oggettoInput.push();
                     switch (oggettoInput.getNome()) {
                         case "scarafaggio imbalsamato":
                             //viene sbloccata la porta della sicurezza
                             getCurrentRoom().getRoom("sud").sbloccaStanza();
-                            System.out.println("Stanza sbloccata: "+getCurrentRoom().getRoom("sud").getNomeStanza()+".");
+                            System.out.println("Stanza sbloccata: " + getCurrentRoom().getRoom("sud").getNomeStanza() + ".");
+                            System.out.println("La stanza si trova alla tua destra.");
                             break;
                     }
-                }else{
+                } else {
                     System.out.println("L'oggetto è stato già premuto.");
                 }
-            }else{
+            } else {
                 System.out.println("L'oggetto non può essere premuto.");
             }
         }
@@ -455,8 +599,9 @@ public class HouseBreak extends GameComponents{
 
     /**
      * Funzione che gestisce il movimento del player da una stanza all'altra
-     * controlla se esiste una stanza nella direzione interessata,
-     * controlla se e' bloccata, e agisce di conseguenza.
+     * controlla se esiste una stanza nella direzione interessata, controlla se
+     * e' bloccata, e agisce di conseguenza.
+     *
      * @param direzioneInput - direzione inserita in input
      */
     private void movimentoPlayer(String direzioneInput) {
@@ -476,10 +621,11 @@ public class HouseBreak extends GameComponents{
 
                     getCurrentRoom().setUltimoAmbiente(getCurrentRoom().getAmbienteRoom(getBussola()
                             .getPosizioneUtente(direzioneInput)).toString());
-                    
+
                     getBussola().spostamentoInput(getBussola()
                             .getPosizioneUtente(direzioneInput));
                 }
+                getCurrentRoom().nemico();
             }
         } else {
             System.out.println("Non esiste nessuna stanza nella direzione in cui ti vuoi muovere!");
@@ -489,34 +635,34 @@ public class HouseBreak extends GameComponents{
     /**
      * Fornisce in output l'ambientazione della stanza.
      */
-    private void guardaStanza(){
+    private void guardaStanza() {
         System.out.println(this.getCurrentRoom().getUltimoAmbiente());
     }
 
     /**
-     * Gestisce la raccolta dell'oggetto indicato
-     * dall'utente in input, viene inserito nell'inventario
+     * Gestisce la raccolta dell'oggetto indicato dall'utente in input, viene
+     * inserito nell'inventario
+     *
      * @param oggettoInput - oggetto riconosciuto dal parser
      */
     private void raccogliOggetto(GameObject oggettoInput) {
         if (this.getCurrentRoom().containsObject(oggettoInput)) {
             //Se esiste l'oggetto, controlla se il player
             //ha almeno uno slot libero
-            if(oggettoInput.isPickable()){
+            if (oggettoInput.isPickable()) {
                 if (this.getUser().getInvetario().getSizeInvetory() > 0) {
                     getUser().getInvetario().addObject(oggettoInput);
-                    System.out.println("Hai raccolto: "+ oggettoInput.getNome());
+                    System.out.println("Hai raccolto: " + oggettoInput.getNome());
                     this.getCurrentRoom().deleteObject(oggettoInput);
                 }
-            }else{
-                System.out.println("Non puoi prendere "+ oggettoInput.getNome()+".");
+            } else {
+                System.out.println("Non puoi prendere " + oggettoInput.getNome() + ".");
             }
-            
-        }else{
+
+        } else {
             System.out.println("Non esiste nessun oggetto con quel nome.");
         }
     }
-    
 
     /**
      * Elimina dall'inventario dell'utente l'oggetto indicato
@@ -528,46 +674,53 @@ public class HouseBreak extends GameComponents{
         if (getUser().getInvetario().containsObject(oggettoInput)) {
             //Eliminazione oggetto dall'inventario
             getUser().getInvetario().dropObject(oggettoInput);
-            System.out.println("Hai lasciato: "+ oggettoInput.getNome());
+            System.out.println("Hai lasciato: " + oggettoInput.getNome());
             //Inserisco l'oggetto alla stanza.
             getCurrentRoom().getObject().add(oggettoInput);
-            
+
             //controlla se l'oggetto inserito è equipaggiato
-        } else if(getUser().getArmaEquipaggiata().containsObject(oggettoInput.getNome())){
+        } else if (getUser().getArmaEquipaggiata().containsObject(oggettoInput.getNome())) {
             getCurrentRoom().getObject().add(getUser().getArmaEquipaggiata());
-            System.out.println("Hai lasciato: "+ oggettoInput.getNome());
+            System.out.println("Hai lasciato: " + oggettoInput.getNome());
             getUser().setArmaEquipaggiata(null);
-        }else {
+        } else {
             System.out.println("Non hai questo oggetto.");
         }
     }
-    
+
     /**
      * Mostra i comandi disponibili
      */
-    private void mostraComandi(){
+    private void mostraComandi() {
         System.out.println("+------------------------------------ Comandi House Break --------------------------------------+");
-        getCommand().forEach((comando) ->{
-            System.out.println(" | "+comando.getNomeComando()+" \t"+comando.getDescrizioneComando());
+        getCommand().forEach((comando) -> {
+            System.out.println(" | " + comando.getNomeComando() + " \t" + comando.getDescrizioneComando());
         });
         System.out.println("+-------------------------------------------------------------------------------------------------------------+");
     }
 
     /**
-     * Metodo che permette di utilizzare un oggetto
-     * per incrementare la vita al giocatore
+     * Metodo che permette di utilizzare un oggetto per incrementare la vita al
+     * giocatore
+     *
      * @param oggettoCuratore - oggetto scelto dal giocatore
      */
-    private void usaCuratore(Curatore oggettoCuratore){
-        if(getUser().getVita() < 100){
-            getUser().aumentaVita(oggettoCuratore.getPuntiVita());
-            //Eliminazione oggetto dall'inventario
-            getUser().getInvetario().dropObject(oggettoCuratore);
-            System.out.println("Vita attuale: "+ getUser().getVita());
-        }else{
-            System.out.println("Non ti serve, la vita è al 100%");
+    private void usaCuratore(Curatore oggettoCuratore) {
+        if (oggettoCuratore.getUsabile()) {
+            if (getUser().getInvetario().containsObject(oggettoCuratore)) {
+                if (getUser().getVita() < 100) {
+                    getUser().aumentaVita(oggettoCuratore.getPuntiVita());
+                    //Eliminazione oggetto dall'inventario
+                    getUser().getInvetario().dropObject(oggettoCuratore);
+                    System.out.println("Vita attuale: " + getUser().getVita());
+                } else {
+                    System.out.println("Non ti serve, la vita è al 100%");
+                }
+            } else {
+                System.out.println("Non hai " + oggettoCuratore.getNome() + " nell'inventario.");
+            }
+        } else {
+            System.out.println("Non puoi usare questo oggetto.");
         }
     }
-  
 }
-

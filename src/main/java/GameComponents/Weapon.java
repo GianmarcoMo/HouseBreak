@@ -39,7 +39,7 @@ public class Weapon extends GameObject{
     }
 
     public void attacca(){
-        if(getVita() > 0){
+        if(this.getVita() > 0 && this.munizioni > 0){
             //diminuisce le munizioni, se esistono
             this.munizioni-=1;
             //diminuisce la vita
@@ -79,6 +79,10 @@ public class Weapon extends GameObject{
     }
 
     private int getVita(){
+        if(vita == 0){
+            System.out.println("Arma rotta! Inutilizzabile!");
+            return 0;
+        }
         if(vita > 50){
             return this.vita;
         }else{ 

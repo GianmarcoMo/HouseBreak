@@ -28,6 +28,9 @@ public abstract class GameComponents {
 
     private final Bussola bussolaUtente = new Bussola();
     
+    //Lista dei nemici nel gioco
+    private final ArrayList<User> nemici = new ArrayList<>();
+    
     //Setting della stanza corrente per il giocatore
     private Room stanzaCorrente=null;
 
@@ -65,6 +68,10 @@ public abstract class GameComponents {
     
     public ArrayList<Curatore> getCuratori(){
         return this.curatori;
+    }
+    
+    public ArrayList<User> getNemici(){
+        return this.nemici;
     }
     
     public abstract void inizializzazione() throws Exception;

@@ -1,6 +1,7 @@
 package GameComponents;
 
 import java.util.ArrayList;
+import Utente.User;
 import Utils.EditorParola;
 /**
  *
@@ -31,7 +32,7 @@ public class Room implements Input{
     //viene mostrato ultimoAmbiente che coincide con la direzione del giocatore.
     private String ultimoAmbiente;
     
-    private boolean nemico;
+    private User nemico = null;
     
     //lista di stanza confinanti con quella attuale
     //divise in base alla loro direzione
@@ -51,7 +52,6 @@ public class Room implements Input{
         this.ambienteEst= new StringBuilder();
         this.ambienteOvest= new StringBuilder();
         this.ambienteSud= new StringBuilder();
-        this.nemico=false;
         this.objects= new ArrayList<>();
     }
     
@@ -64,14 +64,17 @@ public class Room implements Input{
         this.ambienteOvest= new StringBuilder();
         this.ambienteSud= new StringBuilder();
         this.ultimoAmbiente=null;
-        this.nemico=false;
         this.objects= new ArrayList<>();
         acquisizoneInputFile(lineaFile);
     }
     
     //Aggiunge un nemico alla stanza
     public void aggiungiNemico(){
-        this.nemico=true;
+        this.nemico = new User();
+    }
+    
+    public User getNemico(){
+        return this.nemico;
     }
     
     public void setUltimoAmbiente(String ambienteInput){
@@ -105,20 +108,12 @@ public class Room implements Input{
         return this.bloccata;
     }
     
-    //elimina nemico dalla stanza
-    //usato quandno viene ammazzato dal giocatore
-    public void eliminaNemico(){
-        this.nemico=false;
-    }
-    
     //controlla se in questa stanza c'è un nemico
     //Avvisa l'utente.
     public boolean nemico(){
-        if(nemico){
-            System.out.println("Attento c'è un nemico! Ammazzalo prima che lui ammazzi te!! ");
+        if(nemico != null){
             return true;
         }else{
-            System.out.println("Non ci sono nemici in questa stanza!");
             return false;
         }
     }
