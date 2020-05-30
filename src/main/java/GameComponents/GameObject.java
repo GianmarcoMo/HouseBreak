@@ -16,15 +16,17 @@ public class GameObject implements Input {
 
     private final ArrayList<String> alias;
     
+    //Tipo curatore
+    private boolean curatore = false;
+    
+    //tipo usabile
     private boolean usabile = false;
     
+    //Tipo equipaggiabile
     private boolean equipaggiabile = false;
 
     //indica se l'oggetto può essere aperto
     private boolean openable = false;
-
-    //indica se l'oggetto è aperto 
-    private boolean open = false;
 
     //indica se l'oggetto può essere raccolto
     private boolean pickable = true;
@@ -54,77 +56,143 @@ public class GameObject implements Input {
     public void setAlias(String aliasInput){
         alias.add(aliasInput);
     }
+    
     //Imposta se l'oggetto è usabile
+    public void setCuratore(){
+        this.curatore = true;
+    }
+    
+    /**
+     * Imposta l'oggetto usabile.
+     */
     public void setUsabile(){
         this.usabile = true;
     }
     
+    /**
+     * Indica se l'oggetto è
+     * usabile o no
+     * @return boolean 
+     */
     public boolean getUsabile(){
         return this.usabile;
     }
     
-    //imposta se l'oggetto è ricaricabile
+    /**
+     * Comunica se un oggetto è
+     * di tipo curatore
+     * @return boolean
+     */
+    public boolean getCuratore(){
+        return this.curatore;
+    }
+    
+    /**
+     * Imposta l'oggetto equipaggiabile.
+     */
     public void setEquipaggiabile(){
         this.equipaggiabile = true;
     }
     
+    /**
+     * Comunica se un oggetto 
+     * è di tipo equipaggiabile
+     * @return boolean 
+     */
     public boolean getEquipaggiabile(){
         return this.equipaggiabile;
     }
     
+    /**
+     * Ritona il nome dell'oggetto
+     * @return String
+     */
     public String getNome(){
         return this.name.toString();
     }
     
+    /**
+     * Ritorna la descrizione dell'oggetto
+     * @return 
+     */
     public String getDescrizione(){
         return this.descrizione.toString();
     }
-    //Setta l'oggetto pushable, può essere premuto
+    /**
+     * Setta l'oggetto pushable, 
+     * può essere premuto.
+     */
     public void setPushable(){
         this.pushable=true;
     }
 
-    //restituisce vero o false se l'oggetto può essere premuto
+    /**
+     * restituisce vero o false 
+     * se l'oggetto può essere premuto.
+     */
     public boolean isPushable(){
         return this.pushable;
     }
-    //restituisce vero o falso se l'oggetto è stato premuto
+    
+    /**
+     * restituisce vero o falso se l'oggetto è stato premuto.
+     */
     public boolean isPushed(){
         return this.push;
     }
     
-    //preme l'oggetto
+    /**
+     * preme l'oggetto.
+     */
     public void push(){
         this.push=true;
     }
 
-    //setta l'oggetto apribile
+    /**
+     * setta l'oggetto apribile.
+     */
     public void setOpenable(){
         this.openable=true;
     }
-    //restituisce vero o falso se l'oggetto può essere apribile
+    
+    /**
+     * restituisce vero o falso 
+     * se l'oggetto può essere apribile.
+     */
     public boolean isOpenable(){
         return this.openable;
     }
-    //restituisce vero o falso se l'oggetto è aperto
-    public boolean isOpen(){
-        return this.open;
-    }
 
+    /**
+     * Setta l'oggetto su pickable,
+     * ovvero , può essere preso.
+     */
     public void setPickable(){
         this.pickable=true;
     }
     
+    /**
+     * L'oggetto non può essere preso.
+     */
     public void deletePickable(){
         this.pickable=false;
     }
 
+    /**
+     * Indica se l'oggetto può essere preso
+     * o no
+     * @return boolean 
+     */
     public boolean isPickable(){
         return this.pickable;
     }
     
-    //Controlla se esiste l'oggetto inserito in input
-    //effettua un controllo anche nella lista alias
+    /**
+     * Controlla se esiste l'oggetto inserito in input
+     * effettua un controllo anche nella lista alias
+     * @param objectInput nome dell'oggetto in input
+     * @return boolean
+     */
     public boolean containsObject(String objectInput){
         //controllo principale
         if(this.name.toString().contains(objectInput)){
@@ -134,6 +202,12 @@ public class GameObject implements Input {
         }
     }
     
+    /**
+     * Controlla se il nome dell'oggetto in input
+     * è presente negli alias.
+     * @param aliasInput nome oggetto in input
+     * @return boolean
+     */
     public boolean containsAlias(String aliasInput){
         return alias.stream().anyMatch((oggetto) -> (oggetto.contains(aliasInput)));
     }

@@ -66,10 +66,6 @@ public abstract class GameComponents {
         return this.objects;
     }
     
-    public ArrayList<Curatore> getCuratori(){
-        return this.curatori;
-    }
-    
     public ArrayList<User> getNemici(){
         return this.nemici;
     }

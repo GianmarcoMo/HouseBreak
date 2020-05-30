@@ -192,7 +192,7 @@ public class Room implements Input{
     public boolean containsObject(GameObject oggettoInput){
         //controlla gli oggetti dell'arrayList objects e controlla se
         //e' uguale all'oggetto in input restituendo un boolean
-        return objects.stream().anyMatch((elemento) -> (elemento==oggettoInput));
+        return objects.stream().anyMatch((elemento) -> (elemento.containsObject(oggettoInput.getNome())));
     }
     
     public StringBuilder getNomeStanza(){
