@@ -1,4 +1,6 @@
+GuiInterface/LogoFrame$1.class
 GameComponents/GameComponents.class
+GuiInterface/LogoFrame$2.class
 GameComponents/Room.class
 GameComponents/Inventory.class
 Game/Starter.class
@@ -9,6 +11,7 @@ GameComponents/Weapon.class
 GameComponents/Command.class
 GameComponents/Input.class
 Utente/User.class
+GuiInterface/LogoFrame.class
 Game/Parser.class
 GameComponents/GameObject.class
 GameComponents/Direzione.class
