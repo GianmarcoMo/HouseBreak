@@ -65,9 +65,4 @@ public class Starter {
             }
         }
     }
-
-    public static void main(String[] args){
-        Starter gioco= new Starter(new HouseBreak());
-        gioco.run();
-    }
 }

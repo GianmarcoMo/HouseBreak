@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package GuiInterface;
-import Game.HouseBreak;
-import Game.Starter;
 import java.util.Timer;
 import java.util.TimerTask;
 /**
@@ -30,28 +28,34 @@ public class LogoFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        j_panel1 = new javax.swing.JPanel();
+        panelloLogo = new javax.swing.JPanel();
         show_image = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(47, 54, 64));
+        setLocation(new java.awt.Point(400, 350));
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
-        j_panel1.setBackground(new java.awt.Color(47, 54, 64));
+        panelloLogo.setBackground(new java.awt.Color(47, 54, 64));
 
         show_image.setIcon(new javax.swing.ImageIcon("/home/burritos/HouseBreak/resources/images/logo.png")); // NOI18N
 
-        javax.swing.GroupLayout j_panel1Layout = new javax.swing.GroupLayout(j_panel1);
-        j_panel1.setLayout(j_panel1Layout);
-        j_panel1Layout.setHorizontalGroup(
-            j_panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(j_panel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelloLogoLayout = new javax.swing.GroupLayout(panelloLogo);
+        panelloLogo.setLayout(panelloLogoLayout);
+        panelloLogoLayout.setHorizontalGroup(
+            panelloLogoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelloLogoLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(show_image, javax.swing.GroupLayout.PREFERRED_SIZE, 1185, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        j_panel1Layout.setVerticalGroup(
-            j_panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(j_panel1Layout.createSequentialGroup()
+        panelloLogoLayout.setVerticalGroup(
+            panelloLogoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelloLogoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(show_image, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -60,17 +64,21 @@ public class LogoFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(j_panel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelloLogo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(j_panel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelloLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 2, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -88,37 +96,32 @@ public class LogoFrame extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(LogoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(LogoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(LogoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(LogoFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
+        
         Timer timer = new Timer();
-        LogoFrame test = new LogoFrame();
+        LogoFrame logoFrame = new LogoFrame();
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                test.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            logoFrame.setVisible(true);
         });
+        
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                test.setVisible(false);
-                //System.exit(0);
-                Starter gioco= new Starter(new HouseBreak());
-                gioco.run();
+                logoFrame.setVisible(false);
+                LoginRegisterForm loginRegForm = new LoginRegisterForm();
+                loginRegForm.setVisible(true);
             }
-        }, 1700);
+        }, 2000);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private static javax.swing.JPanel j_panel1;
+    private static javax.swing.JPanel panelloLogo;
     private javax.swing.JLabel show_image;
     // End of variables declaration//GEN-END:variables
 }
