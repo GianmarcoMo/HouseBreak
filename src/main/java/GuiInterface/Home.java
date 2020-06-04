@@ -9,11 +9,11 @@ import Game.*;
  *
  * @author burritos
  */
-public class LoginRegisterForm extends javax.swing.JFrame {
+public class Home extends javax.swing.JFrame {
     /**
      * Creates new form LoginRegisterForm
      */
-    public LoginRegisterForm() {
+    public Home() {
         initComponents();        
     }
 
@@ -45,11 +45,6 @@ public class LoginRegisterForm extends javax.swing.JFrame {
         loginButton.setBackground(new java.awt.Color(34, 167, 240));
         loginButton.setForeground(new java.awt.Color(255, 255, 255));
         loginButton.setText("Login");
-        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                loginButtonMouseClicked(evt);
-            }
-        });
         loginButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 loginButtonActionPerformed(evt);
@@ -62,7 +57,7 @@ public class LoginRegisterForm extends javax.swing.JFrame {
 
         labelRegister.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         labelRegister.setForeground(new java.awt.Color(255, 255, 255));
-        labelRegister.setText("No? Nessun problema.");
+        labelRegister.setText("No? Nessun problema!");
 
         registerButton.setBackground(new java.awt.Color(240, 52, 52));
         registerButton.setForeground(new java.awt.Color(255, 255, 255));
@@ -117,13 +112,13 @@ public class LoginRegisterForm extends javax.swing.JFrame {
                 .addComponent(labelLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(labelRegister)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(labelGuest)
-                .addContainerGap(122, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -134,18 +129,20 @@ public class LoginRegisterForm extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelloLoginRegister, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelloLoginRegister, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        LoginForm loginForm = new LoginForm(this);
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        RegisterForm registerForm =  new RegisterForm(this);
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void startGame(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startGame
@@ -155,12 +152,6 @@ public class LoginRegisterForm extends javax.swing.JFrame {
         Starter gioco= new Starter(new HouseBreak());
         gioco.run();
     }//GEN-LAST:event_startGame
-
-    private void loginButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginButtonMouseClicked
-        this.setVisible(false);
-        LoginForm loginForm = null;
-        loginForm = new LoginForm(this);
-    }//GEN-LAST:event_loginButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -179,8 +170,9 @@ public class LoginRegisterForm extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(LoginRegisterForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
         
     }

@@ -68,9 +68,7 @@ public class LogoFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(panelloLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 2, Short.MAX_VALUE))
+            .addComponent(panelloLogo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -114,7 +112,7 @@ public class LogoFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 logoFrame.setVisible(false);
-                LoginRegisterForm loginRegForm = new LoginRegisterForm();
+                Home loginRegForm = new Home();
                 loginRegForm.setVisible(true);
             }
         }, 2000);

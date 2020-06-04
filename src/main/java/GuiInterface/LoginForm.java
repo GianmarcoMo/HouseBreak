@@ -12,14 +12,16 @@ import java.awt.Color;
  * @author burritos
  */
 public class LoginForm extends javax.swing.JFrame {
-    LoginRegisterForm formPrecedente = null;
+    Home formPrecedente = null;
     /**
      * Creates new form LoginForm
+     * @param formInput form contente i test di login e registrazione
      */
-    public LoginForm(LoginRegisterForm formInput) {
+    public LoginForm(Home formInput) {
         this.formPrecedente = formInput;
         initComponents();
         this.setVisible(true);
+        labelError.setVisible(false);
     }
 
     /**
@@ -40,22 +42,24 @@ public class LoginForm extends javax.swing.JFrame {
         loginButton = new javax.swing.JButton();
         labelLogo = new javax.swing.JLabel();
         labelLogin = new javax.swing.JLabel();
+        labelError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(700, 500));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(47, 54, 64));
 
         goBackButton.setBackground(new java.awt.Color(47, 54, 64));
-        goBackButton.setFont(new java.awt.Font("Ubuntu Light", 1, 36)); // NOI18N
+        goBackButton.setFont(new java.awt.Font("URW Gothic L", 1, 36)); // NOI18N
         goBackButton.setForeground(new java.awt.Color(255, 255, 255));
         goBackButton.setText("<-");
         goBackButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         goBackButton.setBorderPainted(false);
         goBackButton.setContentAreaFilled(false);
-        goBackButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                goBackButtonMouseClicked(evt);
+        goBackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goBackButtonActionPerformed(evt);
             }
         });
 
@@ -84,7 +88,16 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
 
+        loginButton.setBackground(new java.awt.Color(34, 167, 240));
+        loginButton.setFont(new java.awt.Font("Ubuntu Mono", 0, 24)); // NOI18N
+        loginButton.setForeground(new java.awt.Color(255, 255, 255));
         loginButton.setText("Login");
+        loginButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
 
         labelLogo.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         labelLogo.setForeground(new java.awt.Color(255, 255, 255));
@@ -94,32 +107,34 @@ public class LoginForm extends javax.swing.JFrame {
         labelLogin.setForeground(new java.awt.Color(34, 167, 240));
         labelLogin.setText("Login");
 
+        labelError.setForeground(new java.awt.Color(255, 51, 51));
+        labelError.setText("Devi inserire tutti i dati.");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(loginButton)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(labelPassword)
-                                    .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(labelLogo)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(labelEmailInput)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(labelLogin)))
-                                .addGap(24, 24, 24))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(goBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(16, 16, 16)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelError)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelPassword)
+                    .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(goBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(labelLogo))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelEmailInput)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(labelLogin)))
+                        .addGap(24, 24, 24)))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -127,11 +142,12 @@ public class LoginForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addComponent(goBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(14, 14, 14)
+                        .addGap(8, 8, 8)
                         .addComponent(labelEmailInput))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(18, 18, 18)
                         .addComponent(labelLogo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelLogin)))
@@ -142,7 +158,9 @@ public class LoginForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(loginButton)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loginButton)
+                    .addComponent(labelError))
                 .addGap(0, 28, Short.MAX_VALUE))
         );
 
@@ -170,10 +188,20 @@ public class LoginForm extends javax.swing.JFrame {
         passwordInput.setForeground(Color.black);
     }//GEN-LAST:event_passwordInputMouseClicked
 
-    private void goBackButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_goBackButtonMouseClicked
-        this.setVisible(false);
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        if(inputEmail.getText().equals("") || passwordInput.getPassword().length < 8){
+            labelError.setVisible(true);
+        }else if(!inputEmail.getText().equals("") && passwordInput.getPassword().length >=8){
+            labelError.setVisible(false);
+        }
+
+    }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void goBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackButtonActionPerformed
+        //chiuse il form
+        this.dispose();
         this.formPrecedente.setVisible(true);
-    }//GEN-LAST:event_goBackButtonMouseClicked
+    }//GEN-LAST:event_goBackButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -208,6 +236,7 @@ public class LoginForm extends javax.swing.JFrame {
     private javax.swing.JTextField inputEmail;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelEmailInput;
+    private javax.swing.JLabel labelError;
     private javax.swing.JLabel labelLogin;
     private javax.swing.JLabel labelLogo;
     private javax.swing.JLabel labelPassword;
