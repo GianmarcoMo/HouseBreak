@@ -112,7 +112,7 @@ public class LogoFrame extends javax.swing.JFrame {
             @Override
             public void run() {
                 logoFrame.setVisible(false);
-                Home loginRegForm = new Home();
+                HomeForm loginRegForm = new HomeForm();
                 loginRegForm.setVisible(true);
             }
         }, 2000);

@@ -12,12 +12,12 @@ import java.awt.Color;
  * @author burritos
  */
 public class RegisterForm extends javax.swing.JFrame {
-    Home formPrecedente = null;
+    HomeForm formPrecedente = null;
     /**
      * Creates new form RegisterForm
      * @param formInput form precedente, utilizzato per tornare indietro
      */
-    public RegisterForm(Home formInput) {
+    public RegisterForm(HomeForm formInput) {
         formPrecedente = formInput;
         initComponents();
         this.setVisible(true);

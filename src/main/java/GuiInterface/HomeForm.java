@@ -9,11 +9,11 @@ import Game.*;
  *
  * @author burritos
  */
-public class Home extends javax.swing.JFrame {
+public class HomeForm extends javax.swing.JFrame {
     /**
      * Creates new form LoginRegisterForm
      */
-    public Home() {
+    public HomeForm() {
         initComponents();        
     }
 
@@ -85,30 +85,29 @@ public class Home extends javax.swing.JFrame {
         panelloLoginRegisterLayout.setHorizontalGroup(
             panelloLoginRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelloLoginRegisterLayout.createSequentialGroup()
+                .addContainerGap(27, Short.MAX_VALUE)
                 .addGroup(panelloLoginRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelloLoginRegisterLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(logo, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE))
-                    .addGroup(panelloLoginRegisterLayout.createSequentialGroup()
-                        .addGap(81, 81, 81)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelloLoginRegisterLayout.createSequentialGroup()
                         .addGroup(panelloLoginRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labelRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelloLoginRegisterLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(labelGuest)
-                .addGap(105, 105, 105))
+                            .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelloLoginRegisterLayout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(labelGuest)
+                                .addGap(35, 35, 35)))
+                        .addGap(71, 71, 71))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelloLoginRegisterLayout.createSequentialGroup()
+                        .addComponent(logo, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28))))
         );
         panelloLoginRegisterLayout.setVerticalGroup(
             panelloLoginRegisterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelloLoginRegisterLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
+                .addGap(19, 19, 19)
                 .addComponent(logo)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -118,7 +117,7 @@ public class Home extends javax.swing.JFrame {
                 .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(labelGuest)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -170,8 +169,10 @@ public class Home extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(HomeForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         

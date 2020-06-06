@@ -12,12 +12,12 @@ import java.awt.Color;
  * @author burritos
  */
 public class LoginForm extends javax.swing.JFrame {
-    Home formPrecedente = null;
+    HomeForm formPrecedente = null;
     /**
      * Creates new form LoginForm
      * @param formInput form contente i test di login e registrazione
      */
-    public LoginForm(Home formInput) {
+    public LoginForm(HomeForm formInput) {
         this.formPrecedente = formInput;
         initComponents();
         this.setVisible(true);
@@ -39,13 +39,13 @@ public class LoginForm extends javax.swing.JFrame {
         inputEmail = new javax.swing.JTextField();
         labelPassword = new javax.swing.JLabel();
         passwordInput = new javax.swing.JPasswordField();
-        loginButton = new javax.swing.JButton();
         labelLogo = new javax.swing.JLabel();
         labelLogin = new javax.swing.JLabel();
         labelError = new javax.swing.JLabel();
+        loginButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setLocation(new java.awt.Point(700, 500));
+        setLocation(new java.awt.Point(700, 400));
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(47, 54, 64));
@@ -88,17 +88,6 @@ public class LoginForm extends javax.swing.JFrame {
             }
         });
 
-        loginButton.setBackground(new java.awt.Color(34, 167, 240));
-        loginButton.setFont(new java.awt.Font("Ubuntu Mono", 0, 24)); // NOI18N
-        loginButton.setForeground(new java.awt.Color(255, 255, 255));
-        loginButton.setText("Login");
-        loginButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        loginButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginButtonActionPerformed(evt);
-            }
-        });
-
         labelLogo.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         labelLogo.setForeground(new java.awt.Color(255, 255, 255));
         labelLogo.setText("HouseBreak");
@@ -110,6 +99,16 @@ public class LoginForm extends javax.swing.JFrame {
         labelError.setForeground(new java.awt.Color(255, 51, 51));
         labelError.setText("Devi inserire tutti i dati.");
 
+        loginButton.setBackground(new java.awt.Color(34, 167, 240));
+        loginButton.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        loginButton.setForeground(new java.awt.Color(255, 255, 255));
+        loginButton.setText("Login");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -117,10 +116,10 @@ public class LoginForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(labelError)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(labelPassword)
                     .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -159,9 +158,9 @@ public class LoginForm extends javax.swing.JFrame {
                 .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(loginButton)
-                    .addComponent(labelError))
-                .addGap(0, 28, Short.MAX_VALUE))
+                    .addComponent(labelError)
+                    .addComponent(loginButton))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -188,20 +187,22 @@ public class LoginForm extends javax.swing.JFrame {
         passwordInput.setForeground(Color.black);
     }//GEN-LAST:event_passwordInputMouseClicked
 
-    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        if(inputEmail.getText().equals("") || passwordInput.getPassword().length < 8){
-            labelError.setVisible(true);
-        }else if(!inputEmail.getText().equals("") && passwordInput.getPassword().length >=8){
-            labelError.setVisible(false);
-        }
-
-    }//GEN-LAST:event_loginButtonActionPerformed
-
     private void goBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackButtonActionPerformed
         //chiuse il form
         this.dispose();
         this.formPrecedente.setVisible(true);
     }//GEN-LAST:event_goBackButtonActionPerformed
+
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        if (inputEmail.getText().equals("") || passwordInput.getPassword().length < 8) {
+            labelError.setVisible(true);
+        } else if (!inputEmail.getText().equals("") && passwordInput.getPassword().length >= 8) {
+            labelError.setVisible(false);
+            ChoiceFrame scelta = new ChoiceFrame();
+            this.dispose();
+            scelta.setVisible(true);
+        }
+    }//GEN-LAST:event_loginButtonActionPerformed
 
     /**
      * @param args the command line arguments
