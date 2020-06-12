@@ -6,6 +6,12 @@
 package GuiInterface;
 
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  *
@@ -209,6 +215,14 @@ public class RegisterForm extends javax.swing.JFrame {
             labelError.setVisible(true);
         }else if(!inputEmail.getText().equals("") && !inputUsername.getText().equals("") || inputPassword.getPassword().length >= 8){
             labelError.setVisible(false);
+            try {
+                //Creazione table, se non esiste
+                creazioneTableRegistrazione();
+                //Inserimento dati utente nella table
+                inserimentoUtente();
+            } catch (SQLException ex) {
+                System.out.println(ex);
+            }
         }
     }//GEN-LAST:event_buttonRegistrazioneActionPerformed
 
@@ -255,6 +269,80 @@ public class RegisterForm extends javax.swing.JFrame {
         //</editor-fold>
         
         //</editor-fold>
+    }
+    
+    private void creazioneTableRegistrazione() throws SQLException{
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            //Inserimento table se non esiste
+            try (Statement stm1 = conn.createStatement()) {
+                stm1.executeUpdate("CREATE TABLE IF NOT EXISTS Utente (email varchar(70) PRIMARY KEY,"
+                            + "username varchar(70) not null, password char(30) not null)");
+                stm1.close();
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    private void inserimentoUtente() throws SQLException{
+        try {
+            if(!datiUguali()){
+                Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+                try (PreparedStatement userDate = conn.prepareStatement("INSERT INTO Utente VALUES (?, ?, ?)")) {
+                    userDate.setString(1, inputEmail.getText());
+                    userDate.setString(2, inputUsername.getText());
+                    userDate.setString(3, convertiPassword(inputPassword.getPassword()));
+                    userDate.executeUpdate();
+                    
+                    userDate.close();
+                    conn.close();
+                    
+                    this.dispose();
+                    //Reindirizzamento  alla scelta Singleplayer/ multiplayer
+                    ChoiceFrame choice = new ChoiceFrame();
+                    choice.setVisible(true);
+                }
+            }else{
+                labelError.setText("Email/Username già utilizzati.");
+                labelError.setVisible(true);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    private Boolean datiUguali() throws SQLException{
+        Boolean risultatoB= false;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            ResultSet risultato;
+            try (PreparedStatement queryDati = conn.prepareStatement("SELECT count(email) FROM Utente WHERE email='"+inputEmail.getText()+"' "
+                    + "or username='"+ inputUsername.getText()+"'")) {
+                risultato = queryDati.executeQuery();
+                while(risultato.next()){
+                    if(risultato.getInt(1)==1){
+                        risultatoB=true;
+                    }
+                }
+                conn.close();
+                risultato.close();
+                queryDati.close();
+            }
+            return risultatoB;
+        }catch( SQLException ex){
+            System.out.println(ex);
+        }
+        return false;
+    }
+    
+    private String convertiPassword(char[] passwordInput){
+        StringBuilder password = new StringBuilder();
+        
+        for (int i =0; i < passwordInput.length ; i++){
+            password.append(passwordInput[i]);
+        }
+        return password.toString();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

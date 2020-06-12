@@ -2,6 +2,7 @@ package Utente;
 
 import GameComponents.Inventory;
 import GameComponents.Weapon;
+import GameComponents.Bussola;
 
 public class User {
     private String username;
@@ -11,6 +12,8 @@ public class User {
     private String stato = "amico";
     private final Inventory inventario;
     private Weapon armaEquipaggiata;
+    private final Bussola bussolaUtente = new Bussola();
+    
     
     public User(){
         username=null;
@@ -127,6 +130,11 @@ public class User {
         }else{
             System.out.println("Il nemico è morto!");
         }
+    }
+    
+        
+    public Bussola getBussola(){
+        return bussolaUtente;
     }
 
 }

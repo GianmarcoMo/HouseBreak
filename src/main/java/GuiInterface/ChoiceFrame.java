@@ -10,7 +10,6 @@ package GuiInterface;
  * @author burritos
  */
 public class ChoiceFrame extends javax.swing.JFrame {
-
     /**
      * Creates new form ChoiceFframe
      */
@@ -33,6 +32,7 @@ public class ChoiceFrame extends javax.swing.JFrame {
         singlePlayerButton = new javax.swing.JButton();
         multipllayerButton = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        goBackButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(600, 400));
@@ -67,6 +67,19 @@ public class ChoiceFrame extends javax.swing.JFrame {
             }
         });
 
+        goBackButton.setBackground(new java.awt.Color(47, 54, 64));
+        goBackButton.setFont(new java.awt.Font("URW Gothic L", 1, 36)); // NOI18N
+        goBackButton.setForeground(new java.awt.Color(255, 255, 255));
+        goBackButton.setText("<-");
+        goBackButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        goBackButton.setBorderPainted(false);
+        goBackButton.setContentAreaFilled(false);
+        goBackButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                goBackButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -74,7 +87,9 @@ public class ChoiceFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(92, 92, 92)
+                        .addContainerGap()
+                        .addComponent(goBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
                         .addComponent(show_image)
                         .addGap(127, 127, 127)
                         .addComponent(show_image1))
@@ -91,10 +106,13 @@ public class ChoiceFrame extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(show_image)
-                    .addComponent(show_image1))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(show_image)
+                            .addComponent(show_image1)))
+                    .addComponent(goBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(singlePlayerButton)
@@ -127,6 +145,13 @@ public class ChoiceFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_singlePlayerButtonActionPerformed
 
+    private void goBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackButtonActionPerformed
+        //Chiuse il frame
+        this.dispose();
+        HomeForm home = new HomeForm();
+        home.setVisible(true);
+    }//GEN-LAST:event_goBackButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -157,6 +182,7 @@ public class ChoiceFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton goBackButton;
     private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton multipllayerButton;

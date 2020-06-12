@@ -6,6 +6,9 @@
 package GuiInterface;
 
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  *
@@ -198,9 +201,14 @@ public class LoginForm extends javax.swing.JFrame {
             labelError.setVisible(true);
         } else if (!inputEmail.getText().equals("") && passwordInput.getPassword().length >= 8) {
             labelError.setVisible(false);
-            ChoiceFrame scelta = new ChoiceFrame();
-            this.dispose();
-            scelta.setVisible(true);
+            try {
+                Connection conn = DriverManager.getConnection("jdbc:h2:~/test","sa", "");
+            } catch (SQLException ex) {
+                System.out.println("Nessuna connessione al database");
+            }
+            //ChoiceFrame scelta = new ChoiceFrame();
+            //this.dispose();
+            //scelta.setVisible(true);
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 

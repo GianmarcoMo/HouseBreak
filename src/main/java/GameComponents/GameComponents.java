@@ -20,13 +20,8 @@ public abstract class GameComponents {
     //Contiene tutti gli oggetti del gioco
     private final ArrayList<GameObject> objects = new ArrayList<>();
 
-    //Contiene tutti gli oggetti curatori
-    private final ArrayList<Curatore> curatori = new ArrayList<>();
-
     //Contiene le direzioni per muoversi
     private final ArrayList<Direzione> direzioni = new ArrayList<>();
-
-    private final Bussola bussolaUtente = new Bussola();
     
     //Lista dei nemici nel gioco
     private final ArrayList<User> nemici = new ArrayList<>();
@@ -54,10 +49,6 @@ public abstract class GameComponents {
         return this.rooms;
     }
     
-    public Bussola getBussola(){
-        return bussolaUtente;
-    }
-    
     public void setStanzaCorrente(Room stanzaInput){
         this.stanzaCorrente=stanzaInput;
     }
@@ -73,6 +64,5 @@ public abstract class GameComponents {
     public abstract void inizializzazione() throws Exception;
     
     public abstract void onUpdate(Parser parser);
-    
-    
+
 }

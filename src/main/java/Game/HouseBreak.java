@@ -646,22 +646,22 @@ public class HouseBreak extends GameComponents {
     private void movimentoPlayer(String direzioneInput) {
         //La stanza è appena illuminata da una candela, e tu sei ammanettato al termosifone, trova il modo di liberarti! 
         //Hai un coltellino svizzero nella tasca, e davanti a te c'è una porta.
-        if (getCurrentRoom().getRoom(getBussola()
+        if (getCurrentRoom().getRoom(getUser().getBussola()
                 .getPosizioneUtente(direzioneInput)) != null) {
             //Se esiste la stanza esiste, controlla se il giocatore è bloccato
             if (!getUser().bloccato()) {
                 //Se la stanza esiste, controlla se è bloccata
-                if (!getCurrentRoom().getRoom(getBussola()
+                if (!getCurrentRoom().getRoom(getUser().getBussola()
                         .getPosizioneUtente(direzioneInput)).bloccata()) {
 
-                    setStanzaCorrente(getCurrentRoom().getRoom(getBussola()
+                    setStanzaCorrente(getCurrentRoom().getRoom(getUser().getBussola()
                             .getPosizioneUtente(direzioneInput)));
                     System.out.println(getCurrentRoom().getDescrizioneStanza());
 
-                    getCurrentRoom().setUltimoAmbiente(getCurrentRoom().getAmbienteRoom(getBussola()
+                    getCurrentRoom().setUltimoAmbiente(getCurrentRoom().getAmbienteRoom(getUser().getBussola()
                             .getPosizioneUtente(direzioneInput)).toString());
 
-                    getBussola().spostamentoInput(getBussola()
+                    getUser().getBussola().spostamentoInput(getUser().getBussola()
                             .getPosizioneUtente(direzioneInput));
                 }
                 getCurrentRoom().nemico();
