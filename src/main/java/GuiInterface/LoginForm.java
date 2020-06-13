@@ -5,6 +5,7 @@
  */
 package GuiInterface;
 
+import Utente.User;
 import Utils.DatabaseInteract;
 import java.awt.Color;
 import java.sql.Connection;
@@ -192,8 +193,9 @@ public class LoginForm extends javax.swing.JFrame {
         } else if (!inputEmail.getText().equals("") && passwordInput.getPassword().length >= 8) {
             labelError.setVisible(false);
             try {
-                if(databaseManger.controlloDatiLogin(inputEmail.getText(), passwordInput.getPassword())){
-                    ChoiceFrame scelta = new ChoiceFrame();
+                User giocatoreLogin = new User();
+                if(databaseManger.controlloDatiLogin(inputEmail.getText(), passwordInput.getPassword(), giocatoreLogin)){
+                    ChoiceFrame scelta = new ChoiceFrame(giocatoreLogin);
                     this.dispose();
                     scelta.setVisible(true);
                 }else{

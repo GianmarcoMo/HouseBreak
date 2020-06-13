@@ -7,6 +7,7 @@ package GuiInterface;
 
 import Game.HouseBreak;
 import Game.Starter;
+import Utente.User;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -14,15 +15,14 @@ import javax.swing.table.DefaultTableModel;
  * @author burritos
  */
 public class SalvataggiForm extends javax.swing.JFrame {
-    ChoiceFrame formPrecedente = null;
+    User giocatore = null;
     /**
      * Creates new form Salvataggi
-     * @param inputForm form per tornare indietro
-     * //da cambiare con form per singleplayer mutliplayer
+     * @param giocatoreAttuale giocatore della sessione
      */
-    public SalvataggiForm(ChoiceFrame inputForm) {
-        formPrecedente = inputForm;
+    public SalvataggiForm(User giocatoreAttuale) {
         initComponents();
+        giocatore = giocatoreAttuale;
         this.setVisible(true);
     }
 
@@ -67,22 +67,30 @@ public class SalvataggiForm extends javax.swing.JFrame {
         tabellaSalvataggi.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         tabellaSalvataggi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"2020.06.05", "Cucina", "54"},
-                {"2020.05.25", "Prigione", "100"},
-                {"2020.06.01", "Salone", "65"}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "DATA", "STANZA", "VITA"
+                "CODICE", "DATA", "STANZA", "VITA"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tabellaSalvataggi.setToolTipText("");
         tabellaSalvataggi.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         tabellaSalvataggi.setGridColor(new java.awt.Color(204, 204, 204));
         tabellaSalvataggi.setSelectionBackground(new java.awt.Color(255, 102, 102));
@@ -118,7 +126,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
 
         caricaButton1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         caricaButton1.setText("Nuova partita");
-        caricaButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        caricaButton1.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         caricaButton1.setBorderPainted(false);
         caricaButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -144,8 +152,9 @@ public class SalvataggiForm extends javax.swing.JFrame {
                             .addComponent(labelData)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(caricaButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGap(18, 18, 18)
+                            .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(9, 9, 9))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
         pannelloSalvataggioLayout.setVerticalGroup(
@@ -182,7 +191,8 @@ public class SalvataggiForm extends javax.swing.JFrame {
     private void goBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackButtonActionPerformed
         //chiuse il form
         this.dispose();
-        this.formPrecedente.setVisible(true);
+        ChoiceFrame scelte = new ChoiceFrame(giocatore);
+        scelte.setVisible(true);
     }//GEN-LAST:event_goBackButtonActionPerformed
 
     private void tabellaSalvataggiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabellaSalvataggiMouseClicked
@@ -206,8 +216,9 @@ public class SalvataggiForm extends javax.swing.JFrame {
         Starter gioco= new Starter(new HouseBreak());
         gioco.run();
     }//GEN-LAST:event_caricaButton1ActionPerformed
+    
     private void addElementiTable(){
-                //Aggiunge elementi
+        //Aggiunge elementi
         DefaultTableModel model;
         model = (DefaultTableModel) tabellaSalvataggi.getModel();
         model.addRow(new Object[]{"ciao","stazna","40"});

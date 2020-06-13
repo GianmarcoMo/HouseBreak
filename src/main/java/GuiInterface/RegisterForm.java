@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import Utente.User;
 import Utils.DatabaseInteract;
 
 /**
@@ -210,6 +211,16 @@ public class RegisterForm extends javax.swing.JFrame {
                 creazioneTableRegistrazione();
                 //Inserimento dati utente nella table
                 inserimentoUtente();
+                
+                this.dispose();
+                //inizializzazione dell'utente con email e password
+                User giocatore = new User();
+                giocatore.setEmail(inputEmail.getText());
+                giocatore.setUsername(inputUsername.getText());
+                
+                //Reindirizzamento  alla scelta Singleplayer/ multiplayer
+                ChoiceFrame choice = new ChoiceFrame(giocatore);
+                choice.setVisible(true);
             } catch (SQLException ex) {
                 System.out.println(ex);
             }
@@ -270,14 +281,8 @@ public class RegisterForm extends javax.swing.JFrame {
                     userDate.setString(2, inputUsername.getText());
                     userDate.setString(3, databaseManager.convertiPassword(inputPassword.getPassword()));
                     userDate.executeUpdate();
-                    
                     userDate.close();
                     conn.close();
-                    
-                    this.dispose();
-                    //Reindirizzamento  alla scelta Singleplayer/ multiplayer
-                    ChoiceFrame choice = new ChoiceFrame();
-                    choice.setVisible(true);
                 }
             }else{
                 labelError.setText("Email/Username già utilizzati.");

@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import Utente.User;
 
 /**
  *
@@ -44,16 +45,18 @@ public class DatabaseInteract {
         return password.toString();
     }
 
-    public Boolean controlloDatiLogin(String email, char[] passwordInput) throws SQLException{
+    public Boolean controlloDatiLogin(String email, char[] passwordInput, User giocatoreLogin) throws SQLException{
         Boolean risultatoB = false;
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
             ResultSet risultato;
-            try(PreparedStatement userDate = conn.prepareStatement("SELECT COUNT(email) FROM Utente WHERE email='"
+            try(PreparedStatement userDate = conn.prepareStatement("SELECT username FROM Utente WHERE email='"
                     +email+"' AND password='"+convertiPassword(passwordInput)+"';")){
                 risultato = userDate.executeQuery();
                 while(risultato.next()){
-                    if(risultato.getInt(1)==1){
+                    if(!risultato.getString(1).equals("")){
+                        giocatoreLogin.setEmail(email);
+                        giocatoreLogin.setUsername(risultato.getString(1));
                         risultatoB=true;
                     }
                 }
