@@ -4,10 +4,8 @@ GuiInterface/LogoFrame$2.class
 GuiInterface/RegisterForm$2.class
 GuiInterface/LoginForm.class
 GuiInterface/SalvataggiForm$2.class
-GuiInterface/LoginForm$3.class
 GuiInterface/SalvataggiForm$4.class
 GuiInterface/ChoiceFrame$1.class
-GuiInterface/RegisterForm$5.class
 Game/HouseBreak.class
 GuiInterface/SalvataggiForm$1.class
 GameComponents/Input.class
@@ -24,7 +22,7 @@ GameComponents/Room.class
 GuiInterface/LoginForm$1.class
 GameComponents/Inventory.class
 GuiInterface/HomeForm$1.class
-GuiInterface/RegisterForm$3.class
+Utils/DatabaseInteract.class
 GuiInterface/RegisterForm.class
 GuiInterface/HomeForm.class
 Game/Starter.class
@@ -32,8 +30,6 @@ Utils/EditorParola.class
 GameComponents/Bussola.class
 GuiInterface/SalvataggiForm$3.class
 GuiInterface/LoginForm$2.class
-GuiInterface/RegisterForm$4.class
-GuiInterface/LoginForm$4.class
 GameComponents/Weapon.class
 GameComponents/Command.class
 GuiInterface/SalvataggiForm.class

@@ -5,13 +5,12 @@
  */
 package GuiInterface;
 
-import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import Utils.DatabaseInteract;
 
 /**
  *
@@ -83,42 +82,33 @@ public class RegisterForm extends javax.swing.JFrame {
         labelUsername.setForeground(new java.awt.Color(255, 255, 255));
         labelUsername.setText("Username");
 
+        inputUsername.setBackground(new java.awt.Color(65, 75, 88));
         inputUsername.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         inputUsername.setForeground(new java.awt.Color(204, 204, 204));
         inputUsername.setText("Username");
+        inputUsername.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         inputUsername.setMargin(new java.awt.Insets(3, 6, 3, 6));
-        inputUsername.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                inputUsernameMouseClicked(evt);
-            }
-        });
 
         labelEmail.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         labelEmail.setForeground(new java.awt.Color(255, 255, 255));
         labelEmail.setText("Email");
 
+        inputEmail.setBackground(new java.awt.Color(65, 75, 88));
         inputEmail.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         inputEmail.setForeground(new java.awt.Color(204, 204, 204));
         inputEmail.setText("Email");
+        inputEmail.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         inputEmail.setMargin(new java.awt.Insets(3, 6, 3, 6));
-        inputEmail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                inputEmailMouseClicked(evt);
-            }
-        });
 
         labelPassword.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         labelPassword.setForeground(new java.awt.Color(255, 255, 255));
         labelPassword.setText("Password");
 
+        inputPassword.setBackground(new java.awt.Color(65, 75, 88));
         inputPassword.setForeground(new java.awt.Color(204, 204, 204));
         inputPassword.setText("Password");
+        inputPassword.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         inputPassword.setMargin(new java.awt.Insets(3, 6, 3, 6));
-        inputPassword.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                inputPasswordMouseClicked(evt);
-            }
-        });
 
         buttonRegistrazione.setBackground(new java.awt.Color(240, 52, 52));
         buttonRegistrazione.setFont(new java.awt.Font("Ubuntu Mono", 0, 24)); // NOI18N
@@ -180,16 +170,16 @@ public class RegisterForm extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(labelUsername)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(inputUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelEmail)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(inputPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelRegistrazioneLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(buttonRegistrazione)
                     .addComponent(labelError))
@@ -225,21 +215,6 @@ public class RegisterForm extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_buttonRegistrazioneActionPerformed
-
-    private void inputUsernameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputUsernameMouseClicked
-        inputUsername.setText("");
-        inputUsername.setForeground(Color.black);
-    }//GEN-LAST:event_inputUsernameMouseClicked
-
-    private void inputEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputEmailMouseClicked
-        inputEmail.setText("");
-        inputEmail.setForeground(Color.black);
-    }//GEN-LAST:event_inputEmailMouseClicked
-
-    private void inputPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputPasswordMouseClicked
-        inputPassword.setText("");
-        inputPassword.setForeground(Color.black);
-    }//GEN-LAST:event_inputPasswordMouseClicked
 
     private void goBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackButtonActionPerformed
         //Chiuse il frame
@@ -286,13 +261,14 @@ public class RegisterForm extends javax.swing.JFrame {
     }
     
     private void inserimentoUtente() throws SQLException{
+        DatabaseInteract databaseManager = new DatabaseInteract();
         try {
-            if(!datiUguali()){
+            if(!databaseManager.utenteEsistente(inputEmail.getText(),inputUsername.getText())){
                 Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
                 try (PreparedStatement userDate = conn.prepareStatement("INSERT INTO Utente VALUES (?, ?, ?)")) {
                     userDate.setString(1, inputEmail.getText());
                     userDate.setString(2, inputUsername.getText());
-                    userDate.setString(3, convertiPassword(inputPassword.getPassword()));
+                    userDate.setString(3, databaseManager.convertiPassword(inputPassword.getPassword()));
                     userDate.executeUpdate();
                     
                     userDate.close();
@@ -310,39 +286,6 @@ public class RegisterForm extends javax.swing.JFrame {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-    }
-    
-    private Boolean datiUguali() throws SQLException{
-        Boolean risultatoB= false;
-        try{
-            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
-            ResultSet risultato;
-            try (PreparedStatement queryDati = conn.prepareStatement("SELECT count(email) FROM Utente WHERE email='"+inputEmail.getText()+"' "
-                    + "or username='"+ inputUsername.getText()+"'")) {
-                risultato = queryDati.executeQuery();
-                while(risultato.next()){
-                    if(risultato.getInt(1)==1){
-                        risultatoB=true;
-                    }
-                }
-                conn.close();
-                risultato.close();
-                queryDati.close();
-            }
-            return risultatoB;
-        }catch( SQLException ex){
-            System.out.println(ex);
-        }
-        return false;
-    }
-    
-    private String convertiPassword(char[] passwordInput){
-        StringBuilder password = new StringBuilder();
-        
-        for (int i =0; i < passwordInput.length ; i++){
-            password.append(passwordInput[i]);
-        }
-        return password.toString();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

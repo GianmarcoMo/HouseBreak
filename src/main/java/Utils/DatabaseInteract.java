@@ -1,0 +1,70 @@
+package Utils;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ *
+ * @author Moresi Gianmarco
+ */
+public class DatabaseInteract {
+    public Boolean utenteEsistente(String emailInput, String usernameInput) throws SQLException{
+        Boolean risultatoB= false;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            ResultSet risultato;
+            try (PreparedStatement queryDati = conn.prepareStatement("SELECT count(email) FROM Utente WHERE email='"+emailInput+"' "
+                    + "or username='"+ usernameInput+"'")) {
+                risultato = queryDati.executeQuery();
+                while(risultato.next()){
+                    if(risultato.getInt(1)==1){
+                        risultatoB=true;
+                    }
+                }
+                conn.close();
+                risultato.close();
+                queryDati.close();
+            }
+            return risultatoB;
+        }catch( SQLException ex){
+            System.out.println(ex);
+        }
+        return false;
+    }
+    
+    public String convertiPassword(char[] passwordInput){
+        StringBuilder password = new StringBuilder();
+        
+        for (int i =0; i < passwordInput.length ; i++){
+            password.append(passwordInput[i]);
+        }
+        return password.toString();
+    }
+
+    public Boolean controlloDatiLogin(String email, char[] passwordInput) throws SQLException{
+        Boolean risultatoB = false;
+        try {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            ResultSet risultato;
+            try(PreparedStatement userDate = conn.prepareStatement("SELECT COUNT(email) FROM Utente WHERE email='"
+                    +email+"' AND password='"+convertiPassword(passwordInput)+"';")){
+                risultato = userDate.executeQuery();
+                while(risultato.next()){
+                    if(risultato.getInt(1)==1){
+                        risultatoB=true;
+                    }
+                }
+                risultato.close();
+                conn.close();
+                userDate.close();
+            }
+            return risultatoB;
+        } catch (SQLException ex) {
+            System.out.println("Nessuna connessione al database");
+        }
+        return false;
+    }
+}

@@ -5,10 +5,15 @@
  */
 package GuiInterface;
 
+import Utils.DatabaseInteract;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -70,26 +75,20 @@ public class LoginForm extends javax.swing.JFrame {
         labelEmailInput.setForeground(new java.awt.Color(255, 255, 255));
         labelEmailInput.setText("Email");
 
+        inputEmail.setBackground(new java.awt.Color(65, 75, 88));
         inputEmail.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        inputEmail.setForeground(new java.awt.Color(153, 153, 153));
+        inputEmail.setForeground(new java.awt.Color(204, 204, 204));
         inputEmail.setText("Email input");
-        inputEmail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                inputEmailMouseClicked(evt);
-            }
-        });
+        inputEmail.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         labelPassword.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         labelPassword.setForeground(new java.awt.Color(255, 255, 255));
         labelPassword.setText("Password");
 
+        passwordInput.setBackground(new java.awt.Color(65, 75, 88));
         passwordInput.setForeground(new java.awt.Color(204, 204, 204));
         passwordInput.setText("Password");
-        passwordInput.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                passwordInputMouseClicked(evt);
-            }
-        });
+        passwordInput.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
         labelLogo.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         labelLogo.setForeground(new java.awt.Color(255, 255, 255));
@@ -154,16 +153,16 @@ public class LoginForm extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelLogin)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(inputEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelPassword)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(passwordInput, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelError)
-                    .addComponent(loginButton))
-                .addContainerGap(44, Short.MAX_VALUE))
+                    .addComponent(loginButton)
+                    .addComponent(labelError))
+                .addGap(27, 27, 27))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,16 +179,6 @@ public class LoginForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void inputEmailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inputEmailMouseClicked
-        inputEmail.setText("");
-        inputEmail.setForeground(Color.black);
-    }//GEN-LAST:event_inputEmailMouseClicked
-
-    private void passwordInputMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_passwordInputMouseClicked
-        passwordInput.setText("");
-        passwordInput.setForeground(Color.black);
-    }//GEN-LAST:event_passwordInputMouseClicked
-
     private void goBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_goBackButtonActionPerformed
         //chiuse il form
         this.dispose();
@@ -197,21 +186,37 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_goBackButtonActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        DatabaseInteract databaseManger = new DatabaseInteract();
         if (inputEmail.getText().equals("") || passwordInput.getPassword().length < 8) {
             labelError.setVisible(true);
         } else if (!inputEmail.getText().equals("") && passwordInput.getPassword().length >= 8) {
             labelError.setVisible(false);
             try {
-                Connection conn = DriverManager.getConnection("jdbc:h2:~/test","sa", "");
+                if(databaseManger.controlloDatiLogin(inputEmail.getText(), passwordInput.getPassword())){
+                    ChoiceFrame scelta = new ChoiceFrame();
+                    this.dispose();
+                    scelta.setVisible(true);
+                }else{
+                    labelError.setText("Email/Password errata.");
+                    labelError.setVisible(true);
+                }
             } catch (SQLException ex) {
-                System.out.println("Nessuna connessione al database");
+                System.out.println(ex);
             }
-            //ChoiceFrame scelta = new ChoiceFrame();
-            //this.dispose();
-            //scelta.setVisible(true);
+
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 
+    
+    private String convertiPassword(char[] passwordInput){
+        StringBuilder password = new StringBuilder();
+        
+        for (int i =0; i < passwordInput.length ; i++){
+            password.append(passwordInput[i]);
+        }
+        return password.toString();
+    }
+    
     /**
      * @param args the command line arguments
      */
