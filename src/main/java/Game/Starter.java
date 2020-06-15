@@ -1,17 +1,18 @@
 package Game;
 
 import GameComponents.*;
+import Utente.User;
 //import Utente.User;
 import java.util.Scanner;
 
 public class Starter {
     private GameComponents gioco;
 
-    public Starter(GameComponents giocoInput){
+    public Starter(GameComponents giocoInput, User giocatoreAttuale){
         this.gioco= giocoInput;
         try{
             //inizializzazione delle componenti del gioco
-            this.gioco.inizializzazione();
+            this.gioco.inizializzazione(giocatoreAttuale);
         }catch(Exception error){
             System.err.println(error);
         }

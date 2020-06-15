@@ -1,17 +1,146 @@
 package Game;
 
 import GameComponents.*;
+import Utente.User;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
 
 public class HouseBreak extends GameComponents {
+    private int idSalvataggio = 0;
+    private int idGameComponents = 0;
+    private int idPlayerStats = 0;
+
+    public int getIdSalvataggio(){
+        return this.idSalvataggio;
+    }
+    
+    public void setIdSalvataggio(int id){
+        this.idSalvataggio = id;
+    }
+    
+    public int getIdGameComponents(){
+        return this.idGameComponents;
+    }
+    
+    public void setIdGameComponents(int id){
+        this.idGameComponents = id;
+    }
+    
+    public int getIdPlayerStats(){
+        return this.idPlayerStats;
+    }
+    
+    public void setIdPlayerStats(int id){
+        this.idPlayerStats = id;
+    }
+    
+    public Boolean primoSalvataggio(){
+        return this.idSalvataggio==0;
+    }
+    
+    public void salvaPartita() throws SQLException{
+        if(primoSalvataggio()){
+            inserimentoDatiUtente();
+        }else{
+
+        }
+    }
+    
+    private void inserimentoDatiUtente() throws SQLException{
+        int id= (int) (Math.random()*2000);
+        Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+        //genera un id inesistente
+        while(inventarioEsistente(id)){
+            id= (int) (Math.random()*2000);
+        }
+        
+        //inserimento oggetti inventario 
+        for(int i=0; i<getUser().getInvetario().getObjects().size(); i++){
+            PreparedStatement inserimentoOggetto;
+            inserimentoOggetto = conn.prepareStatement("INSERT INTO Inventario VALUES (?, ?)");
+            inserimentoOggetto.setInt(1, id);
+            inserimentoOggetto.setString(2, getUser().getInvetario().getObjects().get(i).getNome());
+            inserimentoOggetto.executeUpdate();
+            inserimentoOggetto.close();
+        }
+        
+        //Inserimento dati utente (vita ecc...)
+        PreparedStatement inserimentoDatiUtente;
+        inserimentoDatiUtente = conn.prepareStatement("INSERT INTO StatsUtente VALUES (?, ?, ?, ?, ?, ?);");
+        inserimentoDatiUtente.setInt(1, id);
+        inserimentoDatiUtente.setInt(2, getUser().getVita());
+        inserimentoDatiUtente.setInt(3, id);
+        if(getUser().getArmaEquipaggiata()!= null){
+            inserimentoDatiUtente.setString(4, getUser().getArmaEquipaggiata().getNome());  
+            inserimentoDatiUtente.setInt(6, getUser().getArmaEquipaggiata().getMunizioni());
+        }else{
+            inserimentoDatiUtente.setString(4, null);
+            inserimentoDatiUtente.setInt(6, 0);
+        }
+        
+        //Se è bloccato, 1
+        if(getUser().bloccato()){
+            inserimentoDatiUtente.setInt(5, 1);
+            //sennò 0
+        }else{
+            inserimentoDatiUtente.setInt(5, 0);
+        }
+        inserimentoDatiUtente.executeUpdate();
+        inserimentoDatiUtente.close();
+        
+        //INSERIMENTO DATI DEL SALVATAGGIO
+        PreparedStatement inserimentoDatiSalvataggio;
+        
+        java.sql.Date sqlGiorno = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+        
+        inserimentoDatiSalvataggio = conn.prepareStatement("INSERT INTO Salvataggio VALUES (?, ?, ?, ?)");
+        inserimentoDatiSalvataggio.setInt(1, id+1);
+        inserimentoDatiSalvataggio.setString(2, getUser().getEmail());
+        inserimentoDatiSalvataggio.setInt(3, id);
+        inserimentoDatiSalvataggio.setDate(4, sqlGiorno);
+        inserimentoDatiSalvataggio.executeUpdate();
+        inserimentoDatiSalvataggio.close();
+        
+        conn.close();
+    }
+        
+    private Boolean inventarioEsistente(int id){
+        Boolean risultatoB;
+        try{
+            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            ResultSet risultato;
+            try(PreparedStatement inventario = conn.prepareStatement("SELECT Count(codInventario) FROM Inventario WHERE codInventario="+id+";")){
+                risultato = inventario.executeQuery();
+                if(risultato.next()){
+                    risultatoB = risultato.getInt(1)>=1;
+                }else{
+                    risultatoB = false;
+                }
+
+                conn.close();
+                inventario.close();
+                risultato.close();
+            }
+            return risultatoB;
+        }catch(SQLException ex){
+            System.out.println(ex);
+        }
+        return false;
+    }
+    
 
     @Override
-    public void inizializzazione() throws IOException {
+    public void inizializzazione(User giocatoreAttuale) throws IOException {
         Scanner scan;
 
         /*
@@ -69,6 +198,9 @@ public class HouseBreak extends GameComponents {
         //Comando per cercare nell'inventario dei nemici
         Command cerca = new Command(scan.nextLine());
         getCommand().add(cerca);
+        //Comando per salvare la partita del giocatore
+        Command salva = new Command(scan.nextLine());
+        getCommand().add(salva);
 
         //----------------------------------------------------------
         //nuovo scanner per acquisizione da file per le direzioni
@@ -262,6 +394,8 @@ public class HouseBreak extends GameComponents {
 
         //Blocco il giocatore
         getUser().bloccaGiocatore();
+        getUser().setEmail(giocatoreAttuale.getEmail());
+        getUser().setUsername(giocatoreAttuale.getUsername());
         scan.close();
     }
 
@@ -460,6 +594,13 @@ public class HouseBreak extends GameComponents {
                 }else{
                     System.out.println("In questa stanza non c'è nessuno.");
                 }
+            }
+        }else if(parser.getComando().containsCommand("salva")){
+            System.out.println("Id: "+this.getIdSalvataggio());
+            try {
+                this.salvaPartita();
+            } catch (SQLException ex) {
+                System.out.println(ex);
             }
         }
     }

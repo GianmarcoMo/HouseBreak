@@ -1,4 +1,3 @@
-GuiInterface/ChoiceFrame$3.class
 GuiInterface/HomeForm$2.class
 GuiInterface/LogoFrame$2.class
 GuiInterface/RegisterForm$2.class
@@ -6,7 +5,6 @@ GuiInterface/LoginForm.class
 GuiInterface/SalvataggiForm$2.class
 GuiInterface/SalvataggiForm$4.class
 GuiInterface/ChoiceFrame$1.class
-Game/HouseBreak.class
 GuiInterface/SalvataggiForm$1.class
 GameComponents/Input.class
 Utente/User.class
@@ -18,6 +16,7 @@ GameComponents/GameComponents.class
 GuiInterface/ChoiceFrame.class
 GuiInterface/ChoiceFrame$2.class
 GuiInterface/HomeForm$3.class
+Game/Salvataggio.class
 GameComponents/Room.class
 GuiInterface/LoginForm$1.class
 GameComponents/Inventory.class

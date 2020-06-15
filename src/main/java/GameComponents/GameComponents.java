@@ -10,6 +10,7 @@ import Utente.User;
 public abstract class GameComponents {
 
     private final User utente = new User();
+    
 
     //Contiene tutte le stanze del gioco
     private final ArrayList<Room> rooms = new ArrayList<>();
@@ -61,7 +62,7 @@ public abstract class GameComponents {
         return this.nemici;
     }
     
-    public abstract void inizializzazione() throws Exception;
+    public abstract void inizializzazione(User giocatore) throws Exception;
     
     public abstract void onUpdate(Parser parser);
 

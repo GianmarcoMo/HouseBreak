@@ -207,8 +207,6 @@ public class RegisterForm extends javax.swing.JFrame {
         }else if(!inputEmail.getText().equals("") && !inputUsername.getText().equals("") || inputPassword.getPassword().length >= 8){
             labelError.setVisible(false);
             try {
-                //Creazione table, se non esiste
-                creazioneTableRegistrazione();
                 //Inserimento dati utente nella table
                 inserimentoUtente();
                 
@@ -255,20 +253,6 @@ public class RegisterForm extends javax.swing.JFrame {
         //</editor-fold>
         
         //</editor-fold>
-    }
-    
-    private void creazioneTableRegistrazione() throws SQLException{
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
-            //Inserimento table se non esiste
-            try (Statement stm1 = conn.createStatement()) {
-                stm1.executeUpdate("CREATE TABLE IF NOT EXISTS Utente (email varchar(70) PRIMARY KEY,"
-                            + "username varchar(70) not null, password char(30) not null)");
-                stm1.close();
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
     }
     
     private void inserimentoUtente() throws SQLException{

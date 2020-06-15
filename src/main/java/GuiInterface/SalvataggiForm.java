@@ -213,7 +213,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
         //nascono il form per il login e registrazione
         this.setVisible(false);
         
-        Starter gioco= new Starter(new HouseBreak());
+        Starter gioco= new Starter(new HouseBreak(),this.giocatore);
         gioco.run();
     }//GEN-LAST:event_caricaButton1ActionPerformed
     

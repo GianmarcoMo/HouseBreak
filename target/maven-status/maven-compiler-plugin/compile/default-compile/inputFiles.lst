@@ -1,12 +1,14 @@
 /home/burritos/HouseBreak/src/main/java/GameComponents/Room.java
 /home/burritos/HouseBreak/src/main/java/GameComponents/Command.java
 /home/burritos/HouseBreak/src/main/java/Utente/User.java
+/home/burritos/HouseBreak/src/main/java/Utils/DatabaseInteract.java
 /home/burritos/HouseBreak/src/main/java/GameComponents/Bussola.java
 /home/burritos/HouseBreak/src/main/java/Utils/EditorParola.java
 /home/burritos/HouseBreak/src/main/java/GameComponents/Input.java
 /home/burritos/HouseBreak/src/main/java/GameComponents/Weapon.java
 /home/burritos/HouseBreak/src/main/java/GameComponents/Curatore.java
 /home/burritos/HouseBreak/src/main/java/Game/Parser.java
+/home/burritos/HouseBreak/src/main/java/Game/Salvataggio.java
 /home/burritos/HouseBreak/src/main/java/GuiInterface/LogoFrame.java
 /home/burritos/HouseBreak/src/main/java/GuiInterface/LoginForm.java
 /home/burritos/HouseBreak/src/main/java/GuiInterface/ChoiceFrame.java
