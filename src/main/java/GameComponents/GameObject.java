@@ -25,9 +25,6 @@ public class GameObject implements Input {
     //Tipo equipaggiabile
     private boolean equipaggiabile = false;
 
-    //indica se l'oggetto può essere aperto
-    private boolean openable = false;
-
     //indica se l'oggetto può essere raccolto
     private boolean pickable = true;
 
@@ -146,21 +143,6 @@ public class GameObject implements Input {
      */
     public void push(){
         this.push=true;
-    }
-
-    /**
-     * setta l'oggetto apribile.
-     */
-    public void setOpenable(){
-        this.openable=true;
-    }
-    
-    /**
-     * restituisce vero o falso 
-     * se l'oggetto può essere apribile.
-     */
-    public boolean isOpenable(){
-        return this.openable;
     }
 
     /**

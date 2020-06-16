@@ -51,17 +51,33 @@ public final class Bussola {
     public String getAvanti(){
         return this.avanti;
     }
+    
+    public void setAvanti(String avantiInput){
+        this.avanti = avantiInput;
+    }
 
     public String getGiu(){
         return this.giu;
+    }
+    
+    public void setGiu(String giuInput){
+        this.giu = giuInput;
     }
 
     public String getDestra(){
         return this.destra;
     }
+    
+    public void setDestra(String destraInput){
+        this.destra = destraInput;
+    }
 
     public String getSinistra(){
         return this.sinistra;
+    }
+    
+    public void setSinistra(String sinistraInput){
+        this.sinistra = sinistraInput;
     }
     
     public void spostamentoInput(String direzioneInput){
