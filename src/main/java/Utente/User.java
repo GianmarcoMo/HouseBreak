@@ -70,7 +70,7 @@ public class User {
     //controlla se il giocatore è bloccato
     public boolean bloccato(){
         if(this.bloccato) {
-            System.out.println("Sei bloccato! Cerca il modo di liberarti!");
+            
             return this.bloccato;
         }else{
             return this.bloccato;

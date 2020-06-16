@@ -5,6 +5,7 @@
  */
 package GuiInterface;
 import Game.*;
+import Utente.User;
 /**
  *
  * @author burritos
@@ -147,8 +148,7 @@ public class HomeForm extends javax.swing.JFrame {
     private void startGame(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startGame
         //nascono il form per il login e registrazione
         this.setVisible(false);
-        
-        Starter gioco= new Starter(new HouseBreak());
+        Starter gioco= new Starter(new HouseBreak(), new User());
         gioco.run();
     }//GEN-LAST:event_startGame
 

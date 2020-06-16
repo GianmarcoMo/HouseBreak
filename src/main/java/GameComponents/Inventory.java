@@ -62,7 +62,6 @@ public class Inventory {
         if(this.size > 0){
             return this.size;
         }else{
-            System.out.println("Inventario pieno! Elimina qualcosa!");
             return this.size;
         }
     }
