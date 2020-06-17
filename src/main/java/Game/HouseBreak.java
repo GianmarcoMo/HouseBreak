@@ -482,7 +482,9 @@ public class HouseBreak extends GameComponents {
         }else if(parser.getComando().containsCommand("salva")){
             Salvataggio salvataggio = new Salvataggio(this);
             try {
+                System.out.println("Salvataggio in corso... Attendere...");
                 salvataggio.salvaPartita();
+                System.out.println("\b\b\b\b\b");
                 System.out.println("Partita salvata con successo!");
             } catch (SQLException ex) {
                 System.out.println(ex);

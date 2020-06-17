@@ -5,6 +5,7 @@ GuiInterface/LoginForm.class
 GuiInterface/SalvataggiForm$2.class
 GuiInterface/SalvataggiForm$4.class
 GuiInterface/ChoiceFrame$1.class
+Game/HouseBreak.class
 GuiInterface/SalvataggiForm$1.class
 GameComponents/Input.class
 Utente/User.class

@@ -4,51 +4,31 @@
  * and open the template in the editor.
  */
 package Game;
+import GameComponents.GameObject;
+import Utente.User;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
 /**
  *
- * @author burritos
+ * @author Moresi Gianmarco
  */
 public class Salvataggio {
     HouseBreak giocoCorrente;
+    private int idSalvataggio = 0;
     
     public Salvataggio(HouseBreak gioco){
         this.giocoCorrente = gioco;
     }
-    
-    private int idSalvataggio = 0;
-    private int idGameComponents = 0;
-    private int idPlayerStats = 0;
 
     public int getIdSalvataggio(){
         return this.idSalvataggio;
-    }
-    
-    public void setIdSalvataggio(int id){
-        this.idSalvataggio = id;
-    }
-    
-    public int getIdGameComponents(){
-        return this.idGameComponents;
-    }
-    
-    public void setIdGameComponents(int id){
-        this.idGameComponents = id;
-    }
-    
-    public int getIdPlayerStats(){
-        return this.idPlayerStats;
-    }
-    
-    public void setIdPlayerStats(int id){
-        this.idPlayerStats = id;
     }
     
     public Boolean primoSalvataggio(){
@@ -63,56 +43,61 @@ public class Salvataggio {
         }
     }
     
-    private void inserimentoInventario(Connection conn, int idInventario) throws SQLException{
+    private void inserimentoInventario(Connection conn, int idInventario, ArrayList<GameObject> inventario) throws SQLException{
         PreparedStatement inserimentoOggetto;
         //inserimento codice inventario
         inserimentoOggetto = conn.prepareStatement("INSERT INTO Inventario VALUES (?)");
-        inserimentoOggetto.setInt(1, idInventario);
+        if(idInventario == 0){
+            inserimentoOggetto.setNull(1, java.sql.Types.INTEGER);
+        }else{
+            inserimentoOggetto.setInt(1, idInventario);
+        }
         inserimentoOggetto.executeUpdate();
+        inserimentoOggetto.close();
 
         //inserimento oggetti inventario
-        for(int i=0; i< this.giocoCorrente.getUser().getInvetario().getObjects().size(); i++){
+        for(int i=0; i< inventario.size(); i++){
             //inserimento oggetto inventario
             inserimentoOggetto = conn.prepareStatement("INSERT INTO OggettoInventario VALUES (?,?, ?, ?, ?, ?, ?, ?)");
             inserimentoOggetto.setInt(1, idInventario);
-            inserimentoOggetto.setString(2, this.giocoCorrente.getUser().getInvetario().getObjects().get(i).getNome());
+            inserimentoOggetto.setString(2, inventario.get(i).getNome());
             //IMPOSTA SE L'OGGETTO È CURATORE
-            if(this.giocoCorrente.getUser().getInvetario().getObjects().get(i).getCuratore()){
+            if(inventario.get(i).getCuratore()){
                 inserimentoOggetto.setInt(3, 1);
             }else{
                 inserimentoOggetto.setInt(3, 0);
             }
             
             //IMPOSTA SE L'OGGETTO È USABILE
-            if(this.giocoCorrente.getUser().getInvetario().getObjects().get(i).getUsabile()){
+            if(inventario.get(i).getUsabile()){
                 inserimentoOggetto.setInt(4, 1);
             }else{
                 inserimentoOggetto.setInt(4, 0);
             }
             
             //IMPOSTA SE  L'OGGETTO È EQUIPAGGIABILE
-            if(this.giocoCorrente.getUser().getInvetario().getObjects().get(i).getEquipaggiabile()){
+            if(inventario.get(i).getEquipaggiabile()){
                 inserimentoOggetto.setInt(5, 1);
             }else{
                 inserimentoOggetto.setInt(5, 0);
             }
             
             //imposta se l'oggetto può essere preso
-            if(this.giocoCorrente.getUser().getInvetario().getObjects().get(i).isPickable()){
+            if(inventario.get(i).isPickable()){
                 inserimentoOggetto.setInt(6, 1);
             }else{
                 inserimentoOggetto.setInt(6, 0);
             }
             
             //imposta se l'oggetto è premibile
-            if(this.giocoCorrente.getUser().getInvetario().getObjects().get(i).isPushable()){
+            if(inventario.get(i).isPushable()){
                 inserimentoOggetto.setInt(7, 1);
             }else{
                 inserimentoOggetto.setInt(7, 0);
             }
             
             //imposta se l'oggetto è stato premuto
-            if(this.giocoCorrente.getUser().getInvetario().getObjects().get(i).isPushed()){
+            if(inventario.get(i).isPushed()){
                 inserimentoOggetto.setInt(8, 1);
             }else{
                 inserimentoOggetto.setInt(8, 0);
@@ -124,20 +109,25 @@ public class Salvataggio {
         }
     }
     
-    private void inserimentoStats(Connection conn, int idStats, int idInventario, int idBussola) throws SQLException{
+    private void inserimentoStats(Connection conn, int idStats, int idInventario, int idBussola, User utente, String stanzaCorrente, int idSalvataggio) throws SQLException{
         //Inserimento dati utente (vita ecc...)
         PreparedStatement inserimentoDatiUtente;
-        inserimentoDatiUtente = conn.prepareStatement("INSERT INTO StatsUtente VALUES (?, ?, ?, ?, ?, ?, ?);");
+        inserimentoDatiUtente = conn.prepareStatement("INSERT INTO StatsUtente VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);");
         //inserimento id
         inserimentoDatiUtente.setInt(1, idStats);
         //inserimento vita
-        inserimentoDatiUtente.setInt(2, this.giocoCorrente.getUser().getVita());
+        inserimentoDatiUtente.setInt(2, utente.getVita());
         //inserimento inventario
-        inserimentoDatiUtente.setInt(3, idInventario);
+        if(idInventario==0){
+            inserimentoDatiUtente.setNull(3, java.sql.Types.INTEGER);
+        }else{
+            inserimentoDatiUtente.setInt(3, idInventario);
+        }
+        
         //Inserimento arma equipaggiata
-        if(this.giocoCorrente.getUser().getArmaEquipaggiata()!= null){
-            inserimentoDatiUtente.setString(4, this.giocoCorrente.getUser().getArmaEquipaggiata().getNome());
-            inserimentoDatiUtente.setInt(6, this.giocoCorrente.getUser().getArmaEquipaggiata().getMunizioni());
+        if(utente.getArmaEquipaggiata()!= null){
+            inserimentoDatiUtente.setString(4, utente.getArmaEquipaggiata().getNome());
+            inserimentoDatiUtente.setInt(6, utente.getArmaEquipaggiata().getMunizioni());
         }else{
             inserimentoDatiUtente.setString(4, null);
             inserimentoDatiUtente.setInt(6, 0);
@@ -145,14 +135,21 @@ public class Salvataggio {
 
         //Inserimento utente bloccato
         //Se è bloccato, 1
-        if(this.giocoCorrente.getUser().bloccato()){
+        if(utente.bloccato()){
             inserimentoDatiUtente.setInt(5, 1);
             //sennò 0
         }else{
             inserimentoDatiUtente.setInt(5, 0);
         }
         
-        inserimentoDatiUtente.setInt(7, idBussola);
+        if(idBussola==0){
+            inserimentoDatiUtente.setNull(7, java.sql.Types.INTEGER);
+        }else{
+            inserimentoDatiUtente.setInt(7, idBussola);
+        }
+        
+        inserimentoDatiUtente.setString(8, stanzaCorrente);
+        inserimentoDatiUtente.setInt(9, idSalvataggio);
         inserimentoDatiUtente.executeUpdate();
         inserimentoDatiUtente.close();
     }
@@ -168,7 +165,11 @@ public class Salvataggio {
         //inserimento email utente
         inserimentoDatiSalvataggio.setString(2, this.giocoCorrente.getUser().getEmail());
         //inserimento id stats utente
-        inserimentoDatiSalvataggio.setInt(3, idStats);
+        if(idStats == 0){
+            inserimentoDatiSalvataggio.setNull(3, java.sql.Types.INTEGER);
+        }else{
+            inserimentoDatiSalvataggio.setInt(3, idStats);
+        }
         //inserimento data creazione salvataggio
         inserimentoDatiSalvataggio.setDate(4, sqlGiorno);
         inserimentoDatiSalvataggio.executeUpdate();
@@ -188,14 +189,108 @@ public class Salvataggio {
         inserimentoBussola.close();
     }
     
-    private void inserimentoPartita() throws SQLException{        
+    private void inserimentoStanze(int idSalvataggio) throws SQLException{
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+            ArrayList<Integer> stanzaNemico = new ArrayList<>();
+            
+            //Cicla su tutte le stanze del gioco
+            for(int i = 0; i< giocoCorrente.getRoom().size(); i++){
+                //Aggiunge l'indice della stanza dove è presente il nemico
+                if(giocoCorrente.getRoom().get(i).nemico()){
+                    stanzaNemico.add(i);
+                }
+                
+                int idInventarioStanza = 0;
+                //INSERIMENTO INVENTARIO STANZA
+                if(giocoCorrente.getRoom().get(i).getObject().size()>0){
+                    idInventarioStanza = (int)(Math.random()*2000);
+                    while(codiceEsistente("codInventario", "Inventario", "codInventario", idInventarioStanza)){
+                        idInventarioStanza = (int)(Math.random()*2000);
+                    }
+                    //inserimento inventario
+                    inserimentoInventario(conn, idInventarioStanza, giocoCorrente.getRoom().get(i).getObject());
+                }
+                                
+                PreparedStatement inserimentoStanza;
+                inserimentoStanza = conn.prepareStatement("INSERT INTO Stanza VALUES (?, ?, ?);");
+                inserimentoStanza.setString(1, giocoCorrente.getRoom().get(i).getNomeStanza().toString());
+                if(idInventarioStanza==0){
+                    inserimentoStanza.setNull(2, java.sql.Types.INTEGER);
+                }else{
+                    inserimentoStanza.setInt(2, idInventarioStanza);
+                }
+                
+                inserimentoStanza.setInt(3, idSalvataggio);
+                inserimentoStanza.executeUpdate();
+                inserimentoStanza.close();
+            }
+            
+            System.out.println("\b\b\b\b\b");
+            System.out.println("Inserimento nemici...");
+            // INSERIMENTO DATI NEMICI
+            for(int k=0; k<stanzaNemico.size(); k++){
+                int idInventarioNemico = 0;
+                //generazione id stats nemico
+                int idStatsNemico = 0;
+                
+                //Se il nemico ha qualcosa nell'inventario, crea l'inventario
+                if(giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNemico().getInvetario().getObjects().size()>0){
+                    idInventarioNemico =(int)(Math.random()*2000);
+                    while(codiceEsistente("codInventario", "Inventario", "codInventario", idInventarioNemico)){
+                        idInventarioNemico = (int)(Math.random()*2000);
+                    }
+
+                    inserimentoInventario(conn, idInventarioNemico, giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNemico().getInvetario().getObjects());
+                }
+                
+                while(codiceEsistente("codStats", "StatsUtente", "codStats", idStatsNemico) && idStatsNemico==0){
+                    idStatsNemico= (int)(Math.random()*2000);
+                }
+                inserimentoStats(conn, idStatsNemico, idInventarioNemico, 0, giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNemico(), giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNomeStanza().toString(), idSalvataggio);
+            }
+        }
+    }
+    
+    private void inserimentoStatsSalvataggio(int codStats) throws SQLException{
+        try(Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")){
+            PreparedStatement updateSalvataggio ;
+            updateSalvataggio = conn.prepareStatement("UPDATE Salvataggio SET codStatsUtente = ? WHERE codSalvataggio = ?;");
+            updateSalvataggio.setInt(1, codStats);
+            updateSalvataggio.setInt(2, idSalvataggio);
+            updateSalvataggio.executeUpdate();
+            updateSalvataggio.close();
+            conn.close();
+        }catch(SQLException ex){
+            System.out.println(ex);
+        }
+    }
+    
+    private void inserimentoPartita() throws SQLException{        
+        System.out.println("Connessione al database...");
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+            int codSalvataggio= (int) (Math.random()*2000);
+            //genera un id inesistente
+            while(codiceEsistente("codSalvataggio", "Salvataggio", "codSalvataggio", codSalvataggio)){
+                codSalvataggio= (int) (Math.random()*2000);
+            }
+            this.idSalvataggio = codSalvataggio;
+            System.out.println("\b\b\b\b\b");
+            System.out.println("Inserimento dati salvataggio...");
+            inserimentoSalvataggio(conn, 0, idSalvataggio);
+            
+            System.out.println("\b\b\b\b\b");
+            System.out.println("Inserimento stanze...");
+            //INSERIMENTO STANZE
+            inserimentoStanze(idSalvataggio);
+            
             int idInventario= (int) (Math.random()*2000);
             //genera un id inesistente
             while(codiceEsistente("codInventario", "Inventario", "codInventario", idInventario)){
                 idInventario= (int) (Math.random()*2000);
             }
-            inserimentoInventario(conn, idInventario);
+            System.out.println("\b\b\b\b\b");
+            System.out.println("Inserimento dati inventario....");
+            inserimentoInventario(conn, idInventario, giocoCorrente.getUser().getInvetario().getObjects());
             
             int idBussola = (int) (Math.random()*2000);
             while(codiceEsistente("codBussola", "Bussola", "codBussola", idBussola)){
@@ -208,14 +303,13 @@ public class Salvataggio {
             while(codiceEsistente("codStats", "StatsUtente", "codStats", idStats)){
                 idStats= (int) (Math.random()*2000);
             }
-            inserimentoStats(conn, idStats, idInventario, idBussola);
+            System.out.println("\b\b\b\b\b");
+            System.out.println("Inserimento dati giocatore...");
+            inserimentoStats(conn, idStats, idInventario, idBussola, this.giocoCorrente.getUser(), this.giocoCorrente.getCurrentRoom().getNomeStanza().toString(), idSalvataggio);          
             
-            int codSalvataggio= (int) (Math.random()*2000);
-            //genera un id inesistente
-            while(codiceEsistente("codSalvataggio", "Salvataggio", "codSalvataggio", codSalvataggio)){
-                codSalvataggio= (int) (Math.random()*2000);
-            }
-            inserimentoSalvataggio(conn, idStats, codSalvataggio);
+            System.out.println("\b\b\b\b\b");
+            System.out.println("Chiusura in corso...");
+            inserimentoStatsSalvataggio(idStats);
         }
     }
 

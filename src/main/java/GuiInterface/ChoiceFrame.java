@@ -6,6 +6,9 @@
 package GuiInterface;
 
 import Utente.User;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -137,9 +140,14 @@ public class ChoiceFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void singlePlayerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_singlePlayerButtonActionPerformed
-        SalvataggiForm salvataggi = new SalvataggiForm(giocatore);
-        this.dispose();
-        salvataggi.setVisible(true);
+        SalvataggiForm salvataggi;
+        try {
+            salvataggi = new SalvataggiForm(giocatore);
+            this.dispose();
+            salvataggi.setVisible(true);
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        }
     }//GEN-LAST:event_singlePlayerButtonActionPerformed
 
     private void exitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitButtonActionPerformed

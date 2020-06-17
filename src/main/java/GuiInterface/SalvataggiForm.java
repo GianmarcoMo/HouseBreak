@@ -6,8 +6,15 @@
 package GuiInterface;
 
 import Game.HouseBreak;
+import Game.Salvataggio;
 import Game.Starter;
 import Utente.User;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,14 +23,40 @@ import javax.swing.table.DefaultTableModel;
  */
 public class SalvataggiForm extends javax.swing.JFrame {
     User giocatore = null;
+    //Contiene tutti gli id dei salvataggi di quell'utente
+    ArrayList<Integer> idSalvataggi = new ArrayList<>();
     /**
      * Creates new form Salvataggi
      * @param giocatoreAttuale giocatore della sessione
+     * @throws java.sql.SQLException
      */
-    public SalvataggiForm(User giocatoreAttuale) {
+    public SalvataggiForm(User giocatoreAttuale) throws SQLException {
         initComponents();
         giocatore = giocatoreAttuale;
+        inizializzaSalvataggi();
         this.setVisible(true);
+    }
+    
+    private void inizializzaSalvataggi()throws SQLException{
+        //SELECT s.codSalvataggio, s.dataCreazione, su.stanzaCorrente, su.vita FROM Salvataggio s, Utente u, StatsUtente su WHERE s.emailUtente="gianmarco@ya.it" AND su.codStats=s.codStatsUtente;        //connessione al db
+        try(Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")){
+            PreparedStatement querySalvataggio;
+            ResultSet risultato ;
+            querySalvataggio = conn.prepareStatement("SELECT s.codSalvataggio, s.dataCreazione, su.stanzaCorrente, su.vita FROM "
+                    + "Salvataggio s, Utente u, StatsUtente su WHERE s.emailUtente=? AND su.codStats=s.codStatsUtente;");
+            querySalvataggio.setString(1, giocatore.getEmail());
+            risultato = querySalvataggio.executeQuery();
+            while(risultato.next()){
+                idSalvataggi.add(risultato.getInt(1));
+                addElementiTable(risultato);
+            }
+            risultato.close();
+            querySalvataggio.close();
+            conn.close();
+            
+        }catch(SQLException ex){
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -39,7 +72,6 @@ public class SalvataggiForm extends javax.swing.JFrame {
         goBackButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabellaSalvataggi = new javax.swing.JTable();
-        labelData = new javax.swing.JLabel();
         caricaButton = new javax.swing.JButton();
         labelLogo = new javax.swing.JLabel();
         caricaButton1 = new javax.swing.JButton();
@@ -67,16 +99,14 @@ public class SalvataggiForm extends javax.swing.JFrame {
         tabellaSalvataggi.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         tabellaSalvataggi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "CODICE", "DATA", "STANZA", "VITA"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false
@@ -91,7 +121,6 @@ public class SalvataggiForm extends javax.swing.JFrame {
             }
         });
         tabellaSalvataggi.setToolTipText("");
-        tabellaSalvataggi.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR));
         tabellaSalvataggi.setGridColor(new java.awt.Color(204, 204, 204));
         tabellaSalvataggi.setSelectionBackground(new java.awt.Color(255, 102, 102));
         tabellaSalvataggi.setSelectionForeground(new java.awt.Color(255, 255, 255));
@@ -103,9 +132,6 @@ public class SalvataggiForm extends javax.swing.JFrame {
             }
         });
         jScrollPane2.setViewportView(tabellaSalvataggi);
-
-        labelData.setForeground(new java.awt.Color(255, 255, 255));
-        labelData.setText("jLabel1");
 
         caricaButton.setBackground(new java.awt.Color(47, 54, 64));
         caricaButton.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
@@ -126,7 +152,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
 
         caricaButton1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
         caricaButton1.setText("Nuova partita");
-        caricaButton1.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        caricaButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         caricaButton1.setBorderPainted(false);
         caricaButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,12 +171,10 @@ public class SalvataggiForm extends javax.swing.JFrame {
                         .addComponent(goBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(150, 150, 150)
                         .addComponent(labelLogo))
-                    .addGroup(pannelloSalvataggioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(pannelloSalvataggioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(pannelloSalvataggioLayout.createSequentialGroup()
                             .addGap(6, 6, 6)
-                            .addComponent(labelData)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(caricaButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -169,8 +193,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pannelloSalvataggioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(caricaButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelData))
+                    .addComponent(caricaButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
@@ -204,9 +227,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
 
     private void caricaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caricaButtonActionPerformed
         int row = tabellaSalvataggi.getSelectedRow();
-        String prova = tabellaSalvataggi.getModel().getValueAt(row, 1).toString();
-        labelData.setText(prova);
-
+        int idSalvataggioSelezionato = (int) tabellaSalvataggi.getModel().getValueAt(row, 0);
     }//GEN-LAST:event_caricaButtonActionPerformed
 
     private void caricaButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caricaButton1ActionPerformed
@@ -217,12 +238,11 @@ public class SalvataggiForm extends javax.swing.JFrame {
         gioco.run();
     }//GEN-LAST:event_caricaButton1ActionPerformed
     
-    private void addElementiTable(){
+    private void addElementiTable(ResultSet risultatoQuery) throws SQLException{
         //Aggiunge elementi
         DefaultTableModel model;
         model = (DefaultTableModel) tabellaSalvataggi.getModel();
-        model.addRow(new Object[]{"ciao","stazna","40"});
-        model.addRow(new Object[]{"data","Cazzo","12"});
+        model.addRow(new Object[]{risultatoQuery.getInt(1), risultatoQuery.getDate(2), risultatoQuery.getString(3), risultatoQuery.getInt(4)});
     }
     
     /**
@@ -259,7 +279,6 @@ public class SalvataggiForm extends javax.swing.JFrame {
     private javax.swing.JButton caricaButton1;
     private javax.swing.JButton goBackButton;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel labelData;
     private javax.swing.JLabel labelLogo;
     private javax.swing.JPanel pannelloSalvataggio;
     private javax.swing.JTable tabellaSalvataggi;
