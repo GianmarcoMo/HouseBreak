@@ -50,8 +50,15 @@ public class User {
         return this.email;
     }
     
+    public void setVita(int vita){
+        this.vita = vita;
+    }
+    
     public void setArmaEquipaggiata(Weapon armaInput){
-        this.armaEquipaggiata = armaInput;
+        if(armaInput==null)
+            this.armaEquipaggiata = null;
+        else
+            this.armaEquipaggiata = armaInput;
     }
     
     public void lasciaArmaEquipaggiata(){

@@ -2,6 +2,7 @@ package GameComponents;
 
 import java.util.ArrayList;
 import Game.Parser;
+import Game.Salvataggio;
 import Utente.User;
 /**
  *
@@ -62,7 +63,7 @@ public abstract class GameComponents {
         return this.nemici;
     }
     
-    public abstract void inizializzazione(User giocatore) throws Exception;
+    public abstract void inizializzazione(User giocatore, int idSalvataggioInput) throws Exception;
     
     public abstract void onUpdate(Parser parser);
 

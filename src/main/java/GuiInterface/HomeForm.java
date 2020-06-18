@@ -148,7 +148,7 @@ public class HomeForm extends javax.swing.JFrame {
     private void startGame(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startGame
         //nascono il form per il login e registrazione
         this.setVisible(false);
-        Starter gioco= new Starter(new HouseBreak(), new User());
+        Starter gioco= new Starter(new HouseBreak(), new User(), 0);
         gioco.run();
     }//GEN-LAST:event_startGame
 

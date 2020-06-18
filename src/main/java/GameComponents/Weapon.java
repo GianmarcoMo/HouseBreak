@@ -1,5 +1,4 @@
 package GameComponents;
-import java.lang.String;
 
 /**
  *
@@ -34,6 +33,9 @@ public class Weapon extends GameObject{
         this.danno = dannoInput;
     }
 
+    public void setMunizioni(int numeroMunizioni){
+        this.munizioni = numeroMunizioni;
+    }
     public void aumentaMunizioni(int numeroMunizioni){
         this.munizioni+=numeroMunizioni;
     }

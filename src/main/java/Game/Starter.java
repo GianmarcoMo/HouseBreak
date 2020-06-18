@@ -7,12 +7,14 @@ import java.util.Scanner;
 
 public class Starter {
     private GameComponents gioco;
-
-    public Starter(GameComponents giocoInput, User giocatoreAttuale){
+    private int idSalvataggio ;
+    public Starter(GameComponents giocoInput, User giocatoreAttuale, int idSalvataggioInput){
         this.gioco= giocoInput;
+        idSalvataggio = idSalvataggioInput;
+        
         try{
             //inizializzazione delle componenti del gioco
-            this.gioco.inizializzazione(giocatoreAttuale);
+            this.gioco.inizializzazione(giocatoreAttuale, idSalvataggio);
         }catch(Exception error){
             System.err.println(error);
         }
@@ -42,7 +44,9 @@ public class Starter {
         rooms e comandi saranno stati inizializzati nel gioco.
      */
     public void run(){
-        Story(); 
+        if(idSalvataggio==0)
+            Story(); 
+        
         //Scanner per input dell'utente.
         Scanner scan= new Scanner(System.in);
         

@@ -6,7 +6,6 @@
 package GuiInterface;
 
 import Game.HouseBreak;
-import Game.Salvataggio;
 import Game.Starter;
 import Utente.User;
 import java.sql.Connection;
@@ -25,6 +24,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
     User giocatore = null;
     //Contiene tutti gli id dei salvataggi di quell'utente
     ArrayList<Integer> idSalvataggi = new ArrayList<>();
+    int idSalvataggioScelto = 0;
     /**
      * Creates new form Salvataggi
      * @param giocatoreAttuale giocatore della sessione
@@ -74,7 +74,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
         tabellaSalvataggi = new javax.swing.JTable();
         caricaButton = new javax.swing.JButton();
         labelLogo = new javax.swing.JLabel();
-        caricaButton1 = new javax.swing.JButton();
+        nuovaPartita = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(600, 400));
@@ -150,13 +150,13 @@ public class SalvataggiForm extends javax.swing.JFrame {
         labelLogo.setForeground(new java.awt.Color(255, 255, 255));
         labelLogo.setText("Partite salvate");
 
-        caricaButton1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        caricaButton1.setText("Nuova partita");
-        caricaButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        caricaButton1.setBorderPainted(false);
-        caricaButton1.addActionListener(new java.awt.event.ActionListener() {
+        nuovaPartita.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        nuovaPartita.setText("Nuova partita");
+        nuovaPartita.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        nuovaPartita.setBorderPainted(false);
+        nuovaPartita.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                caricaButton1ActionPerformed(evt);
+                nuovaPartitaActionPerformed(evt);
             }
         });
 
@@ -174,8 +174,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
                     .addGroup(pannelloSalvataggioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 699, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(pannelloSalvataggioLayout.createSequentialGroup()
-                            .addGap(6, 6, 6)
-                            .addComponent(caricaButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nuovaPartita, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
                             .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(9, 9, 9))))
@@ -193,7 +192,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pannelloSalvataggioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(caricaButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nuovaPartita, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(54, Short.MAX_VALUE))
         );
 
@@ -228,15 +227,22 @@ public class SalvataggiForm extends javax.swing.JFrame {
     private void caricaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caricaButtonActionPerformed
         int row = tabellaSalvataggi.getSelectedRow();
         int idSalvataggioSelezionato = (int) tabellaSalvataggi.getModel().getValueAt(row, 0);
-    }//GEN-LAST:event_caricaButtonActionPerformed
-
-    private void caricaButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_caricaButton1ActionPerformed
+        
+        idSalvataggioScelto = idSalvataggioSelezionato;
         //nascono il form per il login e registrazione
         this.setVisible(false);
         
-        Starter gioco= new Starter(new HouseBreak(),this.giocatore);
+        Starter gioco= new Starter(new HouseBreak(),this.giocatore, idSalvataggioScelto);
         gioco.run();
-    }//GEN-LAST:event_caricaButton1ActionPerformed
+    }//GEN-LAST:event_caricaButtonActionPerformed
+
+    private void nuovaPartitaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuovaPartitaActionPerformed
+        //nascono il form per il login e registrazione
+        this.setVisible(false);
+        
+        Starter gioco= new Starter(new HouseBreak(),this.giocatore, 0);
+        gioco.run();
+    }//GEN-LAST:event_nuovaPartitaActionPerformed
     
     private void addElementiTable(ResultSet risultatoQuery) throws SQLException{
         //Aggiunge elementi
@@ -276,10 +282,10 @@ public class SalvataggiForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton caricaButton;
-    private javax.swing.JButton caricaButton1;
     private javax.swing.JButton goBackButton;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelLogo;
+    private javax.swing.JButton nuovaPartita;
     private javax.swing.JPanel pannelloSalvataggio;
     private javax.swing.JTable tabellaSalvataggi;
     // End of variables declaration//GEN-END:variables

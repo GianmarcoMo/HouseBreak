@@ -8,11 +8,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class HouseBreak extends GameComponents {  
     @Override
-    public void inizializzazione(User giocatoreAttuale) throws IOException {
+    public void inizializzazione(User giocatoreAttuale, int idSalvataggioInput) throws IOException, SQLException {       
         Scanner scan;
 
         /*
@@ -162,9 +166,6 @@ public class HouseBreak extends GameComponents {
         //confini stanza sicurezza
         sicurezza.setConfini("nord", salone);
 
-        //Stanza iniziale.
-        setStanzaCorrente(prigione);
-
         //TODO DEVI INSERIRE GLI OGGETTI
         //----------------------------------------------------------
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));
@@ -172,47 +173,38 @@ public class HouseBreak extends GameComponents {
         GameObject tessera = new GameObject(scan.nextLine());
         getObject().add(tessera);
         tessera.setUsabile();
-        magazzino.getNemico().getInvetario().addObject(tessera);
 
         //oggetto rivista
         GameObject rivista = new GameObject(scan.nextLine());
         getObject().add(rivista);
-        salone.getObject().add(rivista);
 
         //oggetto carta
         GameObject carta = new GameObject(scan.nextLine());
         getObject().add(carta);
-        bagno.getObject().add(carta);
 
         //oggetto scarafaggio
         GameObject scarafaggio = new GameObject(scan.nextLine());
         getObject().add(scarafaggio);
         scarafaggio.setPushable();
         scarafaggio.deletePickable();
-        salone.getObject().add(scarafaggio);
 
         //Munizioni per la pistola
         GameObject munizioniGlock = new GameObject(scan.nextLine());
         getObject().add(munizioniGlock);
-        magazzino.getObject().add(munizioniGlock);
 
         //Corda per legare il giocatore
         GameObject corda = new GameObject(scan.nextLine());
         getObject().add(corda);
-        getUser().getInvetario().addObject(corda);
         
         //Munizioni arma nemico
         GameObject munizioniUzi = new GameObject(scan.nextLine());
         getObject().add(munizioniUzi);
-        magazzino.getNemico().getInvetario().addObject(munizioniUzi);
         
         //Computer per la stanza della sicurezza
         GameObject computer = new GameObject(scan.nextLine());
         getObject().add(computer);
         computer.deletePickable();
         computer.setUsabile();
-        sicurezza.getObject().add(computer);
-
         //----------------------------------------------------------
         //--- OGGETTI CURATORI
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/curatori.dat")));
@@ -222,14 +214,12 @@ public class HouseBreak extends GameComponents {
         benda.setPuntiVita(50);
         benda.setCuratore();
         getObject().add(benda);
-        bagno.getObject().add(benda);
 
         //oggetto soda
         Curatore soda = new Curatore(scan.nextLine());
         soda.setPuntiVita(25);
         soda.setCuratore();
         getObject().add(soda);
-        cucina.getObject().add(soda);
         //----------------------------------------------------------
 
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/weapons.dat")));
@@ -238,14 +228,12 @@ public class HouseBreak extends GameComponents {
         Weapon glock = new Weapon(scan.nextLine(), munizioniGlock);
         glock.setDanno(67);
         glock.setEquipaggiabile();
-        magazzino.getObject().add(glock);
         getObject().add(glock);
 
         //Inzializzo il coltello
         Weapon coltello = new Weapon(scan.nextLine(), null);
         coltello.setDanno(35);
         coltello.setEquipaggiabile();
-        cucina.getObject().add(coltello);
         getObject().add(coltello);
 
         //coltellino del giocatore
@@ -253,7 +241,6 @@ public class HouseBreak extends GameComponents {
         coltellino.setDanno(15);
         coltellino.setEquipaggiabile();
         getObject().add(coltellino);
-        getUser().getInvetario().addObject(coltellino);
         
         //Uzi per il nemico nel magazzino
         Weapon uzi = new Weapon(scan.nextLine(), munizioniUzi);
@@ -261,16 +248,178 @@ public class HouseBreak extends GameComponents {
         uzi.aumentaMunizioni(20);
         uzi.setEquipaggiabile();
         getObject().add(uzi);
-        magazzino.getNemico().setArmaEquipaggiata(uzi);
-        sicurezza.getNemico().setArmaEquipaggiata(uzi);
 
-        //Blocco il giocatore
-        getUser().bloccaGiocatore();
         getUser().setEmail(giocatoreAttuale.getEmail());
         getUser().setUsername(giocatoreAttuale.getUsername());
         scan.close();
+        
+        if(idSalvataggioInput == 0){
+            //Stanza iniziale.
+            setStanzaCorrente(prigione);
+            //INSERIMENTO NORMALE
+            //ASSEGNAZIONE OGGETTI
+            getUser().getInvetario().addObject(coltellino);
+            getUser().getInvetario().addObject(corda);
+            
+            magazzino.getNemico().getInvetario().addObject(tessera);
+            magazzino.getNemico().getInvetario().addObject(munizioniUzi);
+            magazzino.getNemico().setArmaEquipaggiata(uzi);
+            sicurezza.getNemico().setArmaEquipaggiata(uzi);
+            
+            salone.getObject().add(rivista);
+            bagno.getObject().add(carta);
+            salone.getObject().add(scarafaggio);
+            magazzino.getObject().add(munizioniGlock);           
+            sicurezza.getObject().add(computer);
+            bagno.getObject().add(benda);
+            cucina.getObject().add(soda);
+            magazzino.getObject().add(glock);
+            cucina.getObject().add(coltello);
+            
+            //Blocco il giocatore
+            getUser().bloccaGiocatore();
+            
+        }else{
+            //INSERIMENTO STANZA CORRENTE
+            initStanzaCorrente(idSalvataggioInput);
+            //INSERIMENTO INVENTARIO UTENTE
+            initInventarioUtente(idSalvataggioInput);
+            //INSERIMENTO STATS UTENTE
+            initUtente(idSalvataggioInput);
+            //INSERIMENTO STANZA
+            initStanze(idSalvataggioInput);
+            System.out.println("Partita caricata, buon divertimento!");
+        }
+        
     }
 
+    private void initStanzaCorrente(int idSalvataggio)throws SQLException{
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+            PreparedStatement stanzaCorrente;
+            ResultSet nomeStanza;
+            stanzaCorrente = conn.prepareStatement("SELECT su.stanzaCorrente FROM Salvataggio s, StatsUtente su WHERE s.codSalvataggio = ? AND s.codStatsUtente= su.codStats");
+            stanzaCorrente.setInt(1, idSalvataggio);
+            nomeStanza = stanzaCorrente.executeQuery();
+            
+            if(nomeStanza.next()){
+                for (Room stanza : getRoom()) {
+                    if(stanza.equals(nomeStanza.getString(1))){
+                        setStanzaCorrente(stanza);
+                        break;
+                    }
+                }
+            }
+            
+            nomeStanza.close();
+            stanzaCorrente.close();
+            conn.close();
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+    }
+    
+    private void initInventarioUtente(int idSalvataggio)throws  SQLException{
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+            PreparedStatement oggettiInventario;
+            ResultSet oggetti;
+            oggettiInventario = conn.prepareStatement("SELECT o.nomeOggetto FROM Salvataggio s, StatsUtente su, Inventario i, OggettoInventario o WHERE s.codSalvataggio = ? AND s.codStatsUtente=su.codStats AND su.codInventario=i.codInventario ANd o.codInventario=i.codInventario");
+            oggettiInventario.setInt(1, idSalvataggio);
+            oggetti = oggettiInventario.executeQuery();
+            
+            //Per ogni risultato, cerca l'oggetto, lo restituisce e lo inserisce nell'inventario dell'utente.
+            while(oggetti.next()){
+                getUser().getInvetario().addObject(cercaOggetto(oggetti.getString(1)));
+            }
+            
+            
+            oggetti.close();
+            oggettiInventario.close();
+            conn.close();
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+    }
+    
+    private void initStanze(int idSalvataggio)throws SQLException{
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+            PreparedStatement stanze;
+            ResultSet risultatoStanze;
+            stanze = conn.prepareStatement("SELECT s.nomeStanza, o.nomeOggetto FROM Stanza s, Inventario i, OggettoInventario o WHERE s.codSalvataggio= ? AND s.codInventario = i.codInventario AND o.codInventario=i.codInventario");
+            stanze.setInt(1, idSalvataggio);
+            risultatoStanze = stanze.executeQuery();
+            
+            while(risultatoStanze.next()){
+                cercaStanza(risultatoStanze.getString(1)).getObject().add(cercaOggetto(risultatoStanze.getString(2)));
+            }
+            
+            risultatoStanze.close();
+            stanze.close();
+            conn.close();
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+    }
+    
+    private void initUtente(int idSalvataggio){
+        //SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, b.avanti, b.sinistra, b.destra, b.giu FROM Salvataggio s, StatsUtente su, Bussola b WHERE s.codSalvataggio=88 AND s.codSalvataggio=su.codSalvataggio AND s.codStatsUtente=su.codStats AND su.codBussola=b.codBussola 
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+            PreparedStatement statsUtente;
+            ResultSet risultatoStats;
+            statsUtente = conn.prepareStatement("SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, b.avanti, b.sinistra, b.destra, b.giu FROM Salvataggio s, StatsUtente su, Bussola b WHERE s.codSalvataggio=? AND s.codSalvataggio=su.codSalvataggio AND s.codStatsUtente=su.codStats AND su.codBussola=b.codBussola");
+            statsUtente.setInt(1, idSalvataggio);
+            risultatoStats = statsUtente.executeQuery();
+            
+            if(risultatoStats.next()){
+                //Inserimento vita
+                getUser().setVita(risultatoStats.getInt(1));
+                //Inserimento arma equipaggiata
+                getUser().setArmaEquipaggiata((Weapon)cercaOggetto(risultatoStats.getString(2)));
+                //Inserimento bloccato/sbloccato
+                if(risultatoStats.getInt(3)==1)
+                    getUser().bloccaGiocatore();
+                else
+                    getUser().sbloccaGiocatore();
+                if(getUser().getArmaEquipaggiata()!=null){
+                    //inserimento numero munizioni
+                    getUser().getArmaEquipaggiata().setMunizioni(risultatoStats.getInt(4));
+                }
+                
+                //Inserimento bussola
+                getUser().getBussola().setAvanti(risultatoStats.getString(5));
+                getUser().getBussola().setSinistra(risultatoStats.getString(6));
+                getUser().getBussola().setDestra(risultatoStats.getString(7));
+                getUser().getBussola().setGiu(risultatoStats.getString(8));
+            }
+            
+            risultatoStats.close();
+            statsUtente.close();
+            conn.close();
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+    }
+    
+    private Room cercaStanza(String nomeStanza){
+        int id=0;
+        for(Room stanza : getRoom()){
+            if(stanza.getNomeStanza().toString().equals(nomeStanza)){
+                return getRoom().get(id);
+            }
+            id++;
+        }
+        return null;
+    }
+    
+    private GameObject cercaOggetto(String nomeOggetto){
+        int id=0;
+        for(GameObject oggetto : getObject()){
+            if(oggetto.getNome().equals(nomeOggetto)){
+                return  getObject().get(id);
+            }
+            id++;
+        }
+        return null;
+    }
     @Override
     public void onUpdate(final Parser parser) {
         //COMANDO MOVIMENTO
@@ -704,7 +853,11 @@ public class HouseBreak extends GameComponents {
      * Fornisce in output l'ambientazione della stanza.
      */
     private void guardaStanza() {
-        System.out.println(this.getCurrentRoom().getUltimoAmbiente());
+        if(this.getCurrentRoom().getUltimoAmbiente()!=null){
+            System.out.println(this.getCurrentRoom().getUltimoAmbiente());
+        }else{
+            System.out.println(this.getCurrentRoom().getDescrizioneStanza());
+        }
     }
 
     /**

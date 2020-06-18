@@ -230,8 +230,8 @@ public class Room implements Input{
         }
     }
     
-    public int getId(){
-        return this.id;
+    public boolean equals(String nomeStanzaInput){
+        return this.nome.toString().equals(nomeStanzaInput);
     }
 
     @Override
