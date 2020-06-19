@@ -202,16 +202,6 @@ public class LoginForm extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_loginButtonActionPerformed
 
-    
-    private String convertiPassword(char[] passwordInput){
-        StringBuilder password = new StringBuilder();
-        
-        for (int i =0; i < passwordInput.length ; i++){
-            password.append(passwordInput[i]);
-        }
-        return password.toString();
-    }
-    
     /**
      * @param args the command line arguments
      */

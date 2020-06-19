@@ -15,7 +15,7 @@ public class DatabaseInteract {
     public Boolean utenteEsistente(String emailInput, String usernameInput) throws SQLException{
         Boolean risultatoB= false;
         try{
-            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");
             ResultSet risultato;
             try (PreparedStatement queryDati = conn.prepareStatement("SELECT count(email) FROM Utente WHERE email='"+emailInput+"' "
                     + "or username='"+ usernameInput+"'")) {
@@ -48,7 +48,7 @@ public class DatabaseInteract {
     public Boolean controlloDatiLogin(String email, char[] passwordInput, User giocatoreLogin) throws SQLException{
         Boolean risultatoB = false;
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");
             ResultSet risultato;
             try(PreparedStatement userDate = conn.prepareStatement("SELECT username FROM Utente WHERE email='"
                     +email+"' AND password='"+convertiPassword(passwordInput)+"';")){

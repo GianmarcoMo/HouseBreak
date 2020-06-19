@@ -102,9 +102,6 @@ public class Room implements Input{
     
     //restituisce se la porta è bloccata
     public boolean bloccata(){
-        if(bloccata){
-            System.out.println("La porta è bloccata! Cerca il modo di aprirla!");
-        }
         return this.bloccata;
     }
     

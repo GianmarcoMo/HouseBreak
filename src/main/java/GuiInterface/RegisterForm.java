@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import Utente.User;
 import Utils.DatabaseInteract;
 
@@ -259,7 +258,7 @@ public class RegisterForm extends javax.swing.JFrame {
         DatabaseInteract databaseManager = new DatabaseInteract();
         try {
             if(!databaseManager.utenteEsistente(inputEmail.getText(),inputUsername.getText())){
-                Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+                Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");
                 try (PreparedStatement userDate = conn.prepareStatement("INSERT INTO Utente VALUES (?, ?, ?)")) {
                     userDate.setString(1, inputEmail.getText());
                     userDate.setString(2, inputUsername.getText());

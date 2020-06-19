@@ -39,7 +39,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
     
     private void inizializzaSalvataggi()throws SQLException{
         //SELECT s.codSalvataggio, s.dataCreazione, su.stanzaCorrente, su.vita FROM Salvataggio s, Utente u, StatsUtente su WHERE s.emailUtente="gianmarco@ya.it" AND su.codStats=s.codStatsUtente;        //connessione al db
-        try(Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")){
+        try(Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")){
             PreparedStatement querySalvataggio;
             ResultSet risultato ;
             querySalvataggio = conn.prepareStatement("SELECT s.codSalvataggio, s.dataCreazione, su.stanzaCorrente, su.vita FROM "

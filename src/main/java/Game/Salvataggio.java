@@ -190,7 +190,7 @@ public class Salvataggio {
     }
     
     private void inserimentoStanze(int idSalvataggio) throws SQLException{
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             ArrayList<Integer> stanzaNemico = new ArrayList<>();
             
             //Cicla su tutte le stanze del gioco
@@ -202,7 +202,7 @@ public class Salvataggio {
                 
                 int idInventarioStanza = 0;
                 //INSERIMENTO INVENTARIO STANZA
-                if(giocoCorrente.getRoom().get(i).getObject().size()>0){
+                if(giocoCorrente.getRoom().get(i).getObject().size() >0){
                     idInventarioStanza = (int)(Math.random()*2000);
                     while(codiceEsistente("codInventario", "Inventario", "codInventario", idInventarioStanza)){
                         idInventarioStanza = (int)(Math.random()*2000);
@@ -212,7 +212,7 @@ public class Salvataggio {
                 }
                                 
                 PreparedStatement inserimentoStanza;
-                inserimentoStanza = conn.prepareStatement("INSERT INTO Stanza VALUES (?, ?, ?);");
+                inserimentoStanza = conn.prepareStatement("INSERT INTO Stanza VALUES (?, ?, ?, ?);");
                 inserimentoStanza.setString(1, giocoCorrente.getRoom().get(i).getNomeStanza().toString());
                 if(idInventarioStanza==0){
                     inserimentoStanza.setNull(2, java.sql.Types.INTEGER);
@@ -221,12 +221,17 @@ public class Salvataggio {
                 }
                 
                 inserimentoStanza.setInt(3, idSalvataggio);
+                if(giocoCorrente.getRoom().get(i).bloccata()){
+                    inserimentoStanza.setInt(4, 1);
+                }else{
+                    inserimentoStanza.setInt(4, 0);
+                }
                 inserimentoStanza.executeUpdate();
                 inserimentoStanza.close();
             }
             
             System.out.println("\b\b\b\b\b");
-            System.out.println("Inserimento nemici...");
+            System.out.print("Inserimento nemici...");
             // INSERIMENTO DATI NEMICI
             for(int k=0; k<stanzaNemico.size(); k++){
                 int idInventarioNemico = 0;
@@ -248,11 +253,12 @@ public class Salvataggio {
                 }
                 inserimentoStats(conn, idStatsNemico, idInventarioNemico, 0, giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNemico(), giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNomeStanza().toString(), idSalvataggio);
             }
+            System.out.print("Ok\n");
         }
     }
     
     private void inserimentoStatsSalvataggio(int codStats) throws SQLException{
-        try(Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")){
+        try(Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")){
             PreparedStatement updateSalvataggio ;
             updateSalvataggio = conn.prepareStatement("UPDATE Salvataggio SET codStatsUtente = ? WHERE codSalvataggio = ?;");
             updateSalvataggio.setInt(1, codStats);
@@ -267,7 +273,8 @@ public class Salvataggio {
     
     private void inserimentoPartita() throws SQLException{        
         System.out.println("Connessione al database...");
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
+            System.out.print("Ok\n");
             int codSalvataggio= (int) (Math.random()*2000);
             //genera un id inesistente
             while(codiceEsistente("codSalvataggio", "Salvataggio", "codSalvataggio", codSalvataggio)){
@@ -277,11 +284,13 @@ public class Salvataggio {
             System.out.println("\b\b\b\b\b");
             System.out.println("Inserimento dati salvataggio...");
             inserimentoSalvataggio(conn, 0, idSalvataggio);
+            System.out.print("Ok\n");
             
             System.out.println("\b\b\b\b\b");
             System.out.println("Inserimento stanze...");
             //INSERIMENTO STANZE
             inserimentoStanze(idSalvataggio);
+            System.out.print("Ok\n");
             
             int idInventario= (int) (Math.random()*2000);
             //genera un id inesistente
@@ -291,6 +300,7 @@ public class Salvataggio {
             System.out.println("\b\b\b\b\b");
             System.out.println("Inserimento dati inventario....");
             inserimentoInventario(conn, idInventario, giocoCorrente.getUser().getInvetario().getObjects());
+            System.out.print("Ok\n");
             
             int idBussola = (int) (Math.random()*2000);
             while(codiceEsistente("codBussola", "Bussola", "codBussola", idBussola)){
@@ -300,15 +310,16 @@ public class Salvataggio {
             
             int idStats= (int) (Math.random()*2000);
             //genera un id inesistente
-            while(codiceEsistente("codStats", "StatsUtente", "codStats", idStats)){
+            while(codiceEsistente("codStats", "StatsUtente", "codStats", idStats) && idStats==0){
                 idStats= (int) (Math.random()*2000);
             }
             System.out.println("\b\b\b\b\b");
             System.out.println("Inserimento dati giocatore...");
             inserimentoStats(conn, idStats, idInventario, idBussola, this.giocoCorrente.getUser(), this.giocoCorrente.getCurrentRoom().getNomeStanza().toString(), idSalvataggio);          
+            System.out.print("Ok\n");
             
             System.out.println("\b\b\b\b\b");
-            System.out.println("Chiusura in corso...");
+            System.out.println("Ritorno al gioco...");
             inserimentoStatsSalvataggio(idStats);
         }
     }
@@ -316,7 +327,7 @@ public class Salvataggio {
     private boolean codiceEsistente(String attributoCount, String tabellaInput, String attributoConfronto, int idInput) {
         Boolean risultatoB;
         try{
-            Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");
             ResultSet risultato;
             try(PreparedStatement inventario = conn.prepareStatement("SELECT Count("+attributoCount+") FROM "+tabellaInput+" WHERE "+attributoConfronto+"="+idInput+";")){
                 risultato = inventario.executeQuery();

@@ -7,8 +7,6 @@ package GuiInterface;
 
 import Utente.User;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

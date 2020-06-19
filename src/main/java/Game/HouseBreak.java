@@ -288,13 +288,14 @@ public class HouseBreak extends GameComponents {
             initUtente(idSalvataggioInput);
             //INSERIMENTO STANZA
             initStanze(idSalvataggioInput);
-            System.out.println("Partita caricata, buon divertimento!");
+            System.out.println("Partita caricata, buon divertimento!\n");
+            System.out.println(getCurrentRoom().getDescrizioneStanza());
         }
         
     }
 
     private void initStanzaCorrente(int idSalvataggio)throws SQLException{
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             PreparedStatement stanzaCorrente;
             ResultSet nomeStanza;
             stanzaCorrente = conn.prepareStatement("SELECT su.stanzaCorrente FROM Salvataggio s, StatsUtente su WHERE s.codSalvataggio = ? AND s.codStatsUtente= su.codStats");
@@ -319,7 +320,7 @@ public class HouseBreak extends GameComponents {
     }
     
     private void initInventarioUtente(int idSalvataggio)throws  SQLException{
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             PreparedStatement oggettiInventario;
             ResultSet oggetti;
             oggettiInventario = conn.prepareStatement("SELECT o.nomeOggetto FROM Salvataggio s, StatsUtente su, Inventario i, OggettoInventario o WHERE s.codSalvataggio = ? AND s.codStatsUtente=su.codStats AND su.codInventario=i.codInventario ANd o.codInventario=i.codInventario");
@@ -341,15 +342,20 @@ public class HouseBreak extends GameComponents {
     }
     
     private void initStanze(int idSalvataggio)throws SQLException{
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             PreparedStatement stanze;
             ResultSet risultatoStanze;
-            stanze = conn.prepareStatement("SELECT s.nomeStanza, o.nomeOggetto FROM Stanza s, Inventario i, OggettoInventario o WHERE s.codSalvataggio= ? AND s.codInventario = i.codInventario AND o.codInventario=i.codInventario");
+            stanze = conn.prepareStatement("SELECT s.nomeStanza, o.nomeOggetto, s.bloccata FROM Stanza s, Inventario i, OggettoInventario o WHERE s.codSalvataggio= ? AND s.codInventario = i.codInventario AND o.codInventario=i.codInventario");
             stanze.setInt(1, idSalvataggio);
             risultatoStanze = stanze.executeQuery();
             
+            Room stanzaSelezionata;
             while(risultatoStanze.next()){
-                cercaStanza(risultatoStanze.getString(1)).getObject().add(cercaOggetto(risultatoStanze.getString(2)));
+                stanzaSelezionata = cercaStanza(risultatoStanze.getString(1));
+                stanzaSelezionata.getObject().add(cercaOggetto(risultatoStanze.getString(2)));
+                if(risultatoStanze.getInt(3)==1){
+                    stanzaSelezionata.bloccaStanza();
+                }
             }
             
             risultatoStanze.close();
@@ -362,7 +368,7 @@ public class HouseBreak extends GameComponents {
     
     private void initUtente(int idSalvataggio){
         //SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, b.avanti, b.sinistra, b.destra, b.giu FROM Salvataggio s, StatsUtente su, Bussola b WHERE s.codSalvataggio=88 AND s.codSalvataggio=su.codSalvataggio AND s.codStatsUtente=su.codStats AND su.codBussola=b.codBussola 
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://sql2.freesqldatabase.com:3306/sql2347978","sql2347978", "fE6%xP5%")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             PreparedStatement statsUtente;
             ResultSet risultatoStats;
             statsUtente = conn.prepareStatement("SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, b.avanti, b.sinistra, b.destra, b.giu FROM Salvataggio s, StatsUtente su, Bussola b WHERE s.codSalvataggio=? AND s.codSalvataggio=su.codSalvataggio AND s.codStatsUtente=su.codStats AND su.codBussola=b.codBussola");
@@ -424,7 +430,7 @@ public class HouseBreak extends GameComponents {
     public void onUpdate(final Parser parser) {
         //COMANDO MOVIMENTO
         if (parser.getComando().containsCommand("vai")) {
-            if (parser.getDirezione() != null) {
+            if (parser.getDirezione() != null ) {
                 movimentoPlayer(parser.getDirezione().getDirezione());
                 if(getCurrentRoom().nemico() && getCurrentRoom().getNemico().getVita() > 0){
                     System.out.println("Attento c'è un nemico! Ammazzalo prima che lui ammazzi te!! ");
@@ -841,8 +847,12 @@ public class HouseBreak extends GameComponents {
 
                     getUser().getBussola().spostamentoInput(getUser().getBussola()
                             .getPosizioneUtente(direzioneInput));
+                }else{
+                    System.out.println("La porta è bloccata! Cerca il modo di aprirla!");
                 }
                 getCurrentRoom().nemico();
+            }else{
+                System.out.println("Sei bloccato! Cerca il modo di liberarti!");
             }
         } else {
             System.out.println("Non esiste nessuna stanza nella direzione in cui ti vuoi muovere!");
