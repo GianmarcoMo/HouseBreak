@@ -166,7 +166,6 @@ public class HouseBreak extends GameComponents {
         //confini stanza sicurezza
         sicurezza.setConfini("nord", salone);
 
-        //TODO DEVI INSERIRE GLI OGGETTI
         //----------------------------------------------------------
         scan = new Scanner(new BufferedReader(new FileReader(file.getAbsoluteFile() + "/objects.dat")));
         //oggetto tessera

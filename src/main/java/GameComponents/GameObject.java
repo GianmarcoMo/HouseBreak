@@ -7,9 +7,6 @@ import Utils.EditorParola;
  * @author Moresi Gianmarco
  */
 public class GameObject implements Input {
-    //identifica un modo univoco l'oggetto
-    private static int ID;
-
     private StringBuilder name;
 
     private StringBuilder descrizione;
@@ -35,14 +32,12 @@ public class GameObject implements Input {
     private boolean push = false;
     
     public GameObject(){
-        ID++;
         this.name=new StringBuilder();
         this.descrizione=new StringBuilder();
         this.alias=new ArrayList<>();
     }
 
     public GameObject(String lineaInput){
-        ID++;
         this.name=new StringBuilder();
         this.descrizione=new StringBuilder();
         this.alias=new ArrayList<>();

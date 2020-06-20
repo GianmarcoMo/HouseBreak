@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author burritos
+ * @author Moresi Gianmarco
  */
 public class LoginForm extends javax.swing.JFrame {
     HomeForm formPrecedente = null;

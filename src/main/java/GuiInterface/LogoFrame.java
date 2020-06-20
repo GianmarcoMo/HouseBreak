@@ -8,7 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 /**
  *
- * @author burritos
+ * @author Moresi Gianmarco
  */
 public class LogoFrame extends javax.swing.JFrame {
 

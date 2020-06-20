@@ -7,10 +7,7 @@ import Utils.EditorParola;
  *
  * @author  Moresi Gianmarco
  */
-public class Room implements Input{
-    //ID per identificare una stanza nel caso ci siano due stanze con lo stesso nome
-    private static int id;
-    
+public class Room implements Input{   
     //nome stanza
     private StringBuilder nome;
     
@@ -45,7 +42,6 @@ public class Room implements Input{
     private final ArrayList<GameObject> objects;
     
     public Room(){
-        id++;
         this.nome=new StringBuilder();
         this.descrizione=new StringBuilder();
         this.ambienteNord= new StringBuilder();
@@ -56,7 +52,6 @@ public class Room implements Input{
     }
     
     public Room(String lineaFile){
-        id++;
         this.nome=new StringBuilder();
         this.descrizione=new StringBuilder();
         this.ambienteNord= new StringBuilder();

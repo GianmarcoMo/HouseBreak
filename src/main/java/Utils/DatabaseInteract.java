@@ -70,5 +70,28 @@ public class DatabaseInteract {
         }
         return false;
     }
+
+    public boolean inserimentoUtente(String inputEmail, char[] inputPassword, String inputUsername) throws SQLException{
+        DatabaseInteract databaseManager = new DatabaseInteract();
+        try {
+            if(!databaseManager.utenteEsistente(inputEmail ,inputUsername)){
+                Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");
+                try (PreparedStatement userDate = conn.prepareStatement("INSERT INTO Utente VALUES (?, ?, ?)")) {
+                    userDate.setString(1, inputEmail);
+                    userDate.setString(2, inputUsername);
+                    userDate.setString(3, databaseManager.convertiPassword(inputPassword));
+                    userDate.executeUpdate();
+                    userDate.close();
+                    conn.close();
+                    return true;
+                }
+            }else{
+                return false;
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return false;
+    }
 }
     

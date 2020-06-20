@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 /**
  *
- * @author burritos
+ * @author Moresi Gianmarco
  */
 public class ChoiceFrame extends javax.swing.JFrame {
     User giocatore = null;

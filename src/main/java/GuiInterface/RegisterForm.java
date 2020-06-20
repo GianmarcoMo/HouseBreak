@@ -5,16 +5,13 @@
  */
 package GuiInterface;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import Utente.User;
 import Utils.DatabaseInteract;
 
 /**
  *
- * @author burritos
+ * @author Moresi Gianmarco
  */
 public class RegisterForm extends javax.swing.JFrame {
     HomeForm formPrecedente = null;
@@ -206,18 +203,26 @@ public class RegisterForm extends javax.swing.JFrame {
         }else if(!inputEmail.getText().equals("") && !inputUsername.getText().equals("") || inputPassword.getPassword().length >= 8){
             labelError.setVisible(false);
             try {
+                DatabaseInteract database = new DatabaseInteract();
                 //Inserimento dati utente nella table
-                inserimentoUtente();
+                //Se restituisce false, significa che l'utente esiste già
+                if(!database.inserimentoUtente(inputEmail.getText(), inputPassword.getPassword(), inputUsername.getText() )){
+                    labelError.setText("Email/Username già utilizzati.");
+                    labelError.setVisible(true);
+                }else{
+                    //Se l'utente viene inserito, si passa al form delle scelte
+                    //Singleplayer o multiplayer
+                    this.dispose();
+                    //inizializzazione dell'utente con email e password
+                    User giocatore = new User();
+                    giocatore.setEmail(inputEmail.getText());
+                    giocatore.setUsername(inputUsername.getText());
+                    
+                    //Reindirizzamento  alla scelta Singleplayer/ multiplayer
+                    ChoiceFrame choice = new ChoiceFrame(giocatore);
+                    choice.setVisible(true);
+                }
                 
-                this.dispose();
-                //inizializzazione dell'utente con email e password
-                User giocatore = new User();
-                giocatore.setEmail(inputEmail.getText());
-                giocatore.setUsername(inputUsername.getText());
-                
-                //Reindirizzamento  alla scelta Singleplayer/ multiplayer
-                ChoiceFrame choice = new ChoiceFrame(giocatore);
-                choice.setVisible(true);
             } catch (SQLException ex) {
                 System.out.println(ex);
             }
@@ -252,28 +257,6 @@ public class RegisterForm extends javax.swing.JFrame {
         //</editor-fold>
         
         //</editor-fold>
-    }
-    
-    private void inserimentoUtente() throws SQLException{
-        DatabaseInteract databaseManager = new DatabaseInteract();
-        try {
-            if(!databaseManager.utenteEsistente(inputEmail.getText(),inputUsername.getText())){
-                Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");
-                try (PreparedStatement userDate = conn.prepareStatement("INSERT INTO Utente VALUES (?, ?, ?)")) {
-                    userDate.setString(1, inputEmail.getText());
-                    userDate.setString(2, inputUsername.getText());
-                    userDate.setString(3, databaseManager.convertiPassword(inputPassword.getPassword()));
-                    userDate.executeUpdate();
-                    userDate.close();
-                    conn.close();
-                }
-            }else{
-                labelError.setText("Email/Username già utilizzati.");
-                labelError.setVisible(true);
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

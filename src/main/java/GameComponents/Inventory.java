@@ -54,9 +54,6 @@ public class Inventory {
         }
         return -1;
     }
-    private void setSizeInvetory(int sizeInput){
-        this.size = sizeInput;
-    }
     
     public int getSizeInvetory(){
         if(this.size > 0){

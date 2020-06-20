@@ -8,7 +8,7 @@ import Game.*;
 import Utente.User;
 /**
  *
- * @author burritos
+ * @author Moresi Gianmarco
  */
 public class HomeForm extends javax.swing.JFrame {
     /**

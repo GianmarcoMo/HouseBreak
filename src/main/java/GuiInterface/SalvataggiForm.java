@@ -18,7 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author burritos
+ * @author Moresi Gianmarco
  */
 public class SalvataggiForm extends javax.swing.JFrame {
     User giocatore = null;
