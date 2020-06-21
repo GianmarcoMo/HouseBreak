@@ -43,7 +43,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
             PreparedStatement querySalvataggio;
             ResultSet risultato ;
             querySalvataggio = conn.prepareStatement("SELECT s.codSalvataggio, s.dataCreazione, su.stanzaCorrente, su.vita FROM "
-                    + "Salvataggio s, Utente u, StatsUtente su WHERE s.emailUtente=? AND su.codStats=s.codStatsUtente;");
+                    + "Salvataggio s, StatsUtente su WHERE s.emailUtente=? AND su.codStats=s.codStatsUtente;");
             querySalvataggio.setString(1, giocatore.getEmail());
             risultato = querySalvataggio.executeQuery();
             while(risultato.next()){
@@ -232,7 +232,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
         //nascono il form per il login e registrazione
         this.setVisible(false);
         
-        Starter gioco= new Starter(new HouseBreak(),this.giocatore, idSalvataggioScelto);
+        Starter gioco= new Starter(new HouseBreak(), this.giocatore, idSalvataggioScelto);
         gioco.run();
     }//GEN-LAST:event_caricaButtonActionPerformed
 

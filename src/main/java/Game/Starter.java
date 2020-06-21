@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Starter {
     private GameComponents gioco;
     private int idSalvataggio ;
+
     public Starter(GameComponents giocoInput, User giocatoreAttuale, int idSalvataggioInput){
         this.gioco= giocoInput;
         idSalvataggio = idSalvataggioInput;

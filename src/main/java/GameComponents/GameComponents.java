@@ -11,7 +11,6 @@ public abstract class GameComponents {
 
     private final User utente = new User();
     
-
     //Contiene tutte le stanze del gioco
     private final ArrayList<Room> rooms = new ArrayList<>();
 
@@ -30,6 +29,7 @@ public abstract class GameComponents {
     //Setting della stanza corrente per il giocatore
     private Room stanzaCorrente=null;
 
+    private int idSalvataggio =0;
     public User getUser(){
         return this.utente;
     }
@@ -60,6 +60,14 @@ public abstract class GameComponents {
     
     public ArrayList<User> getNemici(){
         return this.nemici;
+    }
+
+    public int getIdSalvataggio(){
+        return this.idSalvataggio;
+    }
+
+    public void setIdSalvataggio(int idSalInput){
+        this.idSalvataggio = idSalInput;
     }
     
     public abstract void inizializzazione(User giocatore, int idSalvataggioInput) throws Exception;

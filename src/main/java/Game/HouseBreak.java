@@ -16,7 +16,8 @@ import java.sql.SQLException;
 
 public class HouseBreak extends GameComponents {  
     @Override
-    public void inizializzazione(User giocatoreAttuale, int idSalvataggioInput) throws IOException, SQLException {       
+    public void inizializzazione(User giocatoreAttuale, int idSalvataggioInput) throws IOException, SQLException {     
+        setIdSalvataggio(idSalvataggioInput);  
         Scanner scan;
 
         /*
@@ -277,7 +278,6 @@ public class HouseBreak extends GameComponents {
             
             //Blocco il giocatore
             getUser().bloccaGiocatore();
-            
         }else{
             //INSERIMENTO STANZA CORRENTE
             initStanzaCorrente(idSalvataggioInput);
@@ -285,6 +285,10 @@ public class HouseBreak extends GameComponents {
             initInventarioUtente(idSalvataggioInput);
             //INSERIMENTO STATS UTENTE
             initUtente(idSalvataggioInput);
+            //INSERIMENTO NEMICI
+            initNemici(idSalvataggioInput);
+            //INSERIMENTO INVENTARIO UTENTE
+            initInventarioNemico(idSalvataggioInput);
             //INSERIMENTO STANZA
             initStanze(idSalvataggioInput);
             System.out.println("Partita caricata, buon divertimento!\n");
@@ -293,7 +297,56 @@ public class HouseBreak extends GameComponents {
         
     }
 
-    private void initStanzaCorrente(int idSalvataggio)throws SQLException{
+    private void initInventarioNemico(int idSalvataggioInput) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
+            PreparedStatement statsUtente;
+            ResultSet risultatoStats;
+            statsUtente = conn.prepareStatement("SELECT su.stanzaCorrente , o.nomeOggetto FROM StatsUtente su, Salvataggio s, OggettoInventario o WHERE  su.codSalvataggio=? and s.codStatsUtente != su.codStats and o.codInventario=su.codInventario");
+            statsUtente.setInt(1, idSalvataggioInput);
+            risultatoStats = statsUtente.executeQuery();
+            
+            Room stanzaCorrenteNemico;
+            while(risultatoStats.next()){
+                stanzaCorrenteNemico = cercaStanza(risultatoStats.getString(1));
+
+                stanzaCorrenteNemico.getNemico().getInvetario().addObject(cercaOggetto(risultatoStats.getString(2)));
+            }
+            
+            risultatoStats.close();
+            statsUtente.close();
+            conn.close();
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+    }
+
+    private void initNemici(int idSalvataggioInput) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
+            PreparedStatement statsUtente;
+            ResultSet risultatoStats;
+            statsUtente = conn.prepareStatement("SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, su.stanzaCorrente FROM StatsUtente su, Salvataggio s WHERE  su.codSalvataggio=? and s.codStatsUtente != su.codStats");
+            statsUtente.setInt(1, idSalvataggioInput);
+            risultatoStats = statsUtente.executeQuery();
+            
+            Room stanzaCorrenteNemico;
+            while(risultatoStats.next()){
+                stanzaCorrenteNemico = cercaStanza(risultatoStats.getString(5));
+
+                stanzaCorrenteNemico.getNemico().setVita(risultatoStats.getInt(1));
+                stanzaCorrenteNemico.getNemico().setArmaEquipaggiata((Weapon)cercaOggetto(risultatoStats.getString(2)));
+                stanzaCorrenteNemico.getNemico().getArmaEquipaggiata().setMunizioni(risultatoStats.getInt(4));
+            }
+            
+            risultatoStats.close();
+            statsUtente.close();
+            conn.close();
+        }catch (SQLException ex){
+            System.out.println(ex);
+        }
+
+    }
+
+    private void initStanzaCorrente(int idSalvataggio) throws SQLException {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             PreparedStatement stanzaCorrente;
             ResultSet nomeStanza;
@@ -366,7 +419,6 @@ public class HouseBreak extends GameComponents {
     }
     
     private void initUtente(int idSalvataggio){
-        //SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, b.avanti, b.sinistra, b.destra, b.giu FROM Salvataggio s, StatsUtente su, Bussola b WHERE s.codSalvataggio=88 AND s.codSalvataggio=su.codSalvataggio AND s.codStatsUtente=su.codStats AND su.codBussola=b.codBussola 
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             PreparedStatement statsUtente;
             ResultSet risultatoStats;
@@ -634,10 +686,12 @@ public class HouseBreak extends GameComponents {
                 System.out.println("Sei bloccato! Cerca il modo di liberarti!");
             }
         }else if(parser.getComando().containsCommand("salva")){
-            Salvataggio salvataggio = new Salvataggio(this);
+            Salvataggio salvataggio = new Salvataggio(this, getIdSalvataggio());
+            
             try {
-                System.out.println("Salvataggio in corso... Attendere...");
+                System.out.println("Salvataggio in corso... Attendere...");                
                 salvataggio.salvaPartita();
+                setIdSalvataggio(salvataggio.getIdSalvataggio());
                 System.out.println("\b\b\b\b\b");
                 System.out.println("Partita salvata con successo!");
             } catch (SQLException ex) {
@@ -656,8 +710,9 @@ public class HouseBreak extends GameComponents {
     private void estraiOggetti(Inventory inventarioCadavere){
         for (int i = 0; i < inventarioCadavere.getObjects().size(); i++) {
             getCurrentRoom().getObject().add(inventarioCadavere.getObjects().get(i));
-            inventarioCadavere.getObjects().remove(i);
         }
+        inventarioCadavere.getObjects().clear();
+        
     }
     /**
      * Notifica che l'utente ha attacco il nemico

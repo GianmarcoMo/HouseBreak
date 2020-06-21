@@ -23,8 +23,9 @@ public class Salvataggio {
     HouseBreak giocoCorrente;
     private int idSalvataggio = 0;
     
-    public Salvataggio(HouseBreak gioco){
+    public Salvataggio(HouseBreak gioco, int idSalvataggioInput){
         this.giocoCorrente = gioco;
+        this.idSalvataggio = idSalvataggioInput;
     }
 
     public int getIdSalvataggio(){
@@ -39,19 +40,23 @@ public class Salvataggio {
         if(primoSalvataggio()){
             inserimentoPartita();
         }else{
+            cancellaVecchioSalvataggio();
 
+            //EFFETTUA INSERIMENTO DI TUTTO
+            inserimentoPartita();
         }
     }
     
-    private void inserimentoInventario(Connection conn, int idInventario, ArrayList<GameObject> inventario) throws SQLException{
+    private void inserimentoInventario(Connection conn, int idInventario, int codSalvataggio, ArrayList<GameObject> inventario) throws SQLException{
         PreparedStatement inserimentoOggetto;
         //inserimento codice inventario
-        inserimentoOggetto = conn.prepareStatement("INSERT INTO Inventario VALUES (?)");
+        inserimentoOggetto = conn.prepareStatement("INSERT INTO Inventario VALUES (?, ?)");
         if(idInventario == 0){
             inserimentoOggetto.setNull(1, java.sql.Types.INTEGER);
         }else{
             inserimentoOggetto.setInt(1, idInventario);
         }
+        inserimentoOggetto.setInt(2, idSalvataggio);
         inserimentoOggetto.executeUpdate();
         inserimentoOggetto.close();
 
@@ -208,7 +213,7 @@ public class Salvataggio {
                         idInventarioStanza = (int)(Math.random()*2000);
                     }
                     //inserimento inventario
-                    inserimentoInventario(conn, idInventarioStanza, giocoCorrente.getRoom().get(i).getObject());
+                    inserimentoInventario(conn, idInventarioStanza, this.idSalvataggio ,giocoCorrente.getRoom().get(i).getObject());
                 }
                                 
                 PreparedStatement inserimentoStanza;
@@ -245,7 +250,7 @@ public class Salvataggio {
                         idInventarioNemico = (int)(Math.random()*2000);
                     }
 
-                    inserimentoInventario(conn, idInventarioNemico, giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNemico().getInvetario().getObjects());
+                    inserimentoInventario(conn, idInventarioNemico, this.idSalvataggio, giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNemico().getInvetario().getObjects());
                 }
                 
                 while(codiceEsistente("codStats", "StatsUtente", "codStats", idStatsNemico) && idStatsNemico==0){
@@ -253,7 +258,6 @@ public class Salvataggio {
                 }
                 inserimentoStats(conn, idStatsNemico, idInventarioNemico, 0, giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNemico(), giocoCorrente.getRoom().get(stanzaNemico.get(k)).getNomeStanza().toString(), idSalvataggio);
             }
-            System.out.print("Ok\n");
         }
     }
     
@@ -262,7 +266,7 @@ public class Salvataggio {
             PreparedStatement updateSalvataggio ;
             updateSalvataggio = conn.prepareStatement("UPDATE Salvataggio SET codStatsUtente = ? WHERE codSalvataggio = ?;");
             updateSalvataggio.setInt(1, codStats);
-            updateSalvataggio.setInt(2, idSalvataggio);
+            updateSalvataggio.setInt(2, this.idSalvataggio);
             updateSalvataggio.executeUpdate();
             updateSalvataggio.close();
             conn.close();
@@ -272,25 +276,25 @@ public class Salvataggio {
     }
     
     private void inserimentoPartita() throws SQLException{        
-        System.out.println("Connessione al database...");
+        System.out.print("Connessione al database...");
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             System.out.print("Ok\n");
-            int codSalvataggio= (int) (Math.random()*2000);
-            //genera un id inesistente
-            while(codiceEsistente("codSalvataggio", "Salvataggio", "codSalvataggio", codSalvataggio)){
-                codSalvataggio= (int) (Math.random()*2000);
+
+            if(idSalvataggio==0){
+                int codSalvataggio= (int) (Math.random()*2000);
+                //genera un id inesistente
+                while(codiceEsistente("codSalvataggio", "Salvataggio", "codSalvataggio", codSalvataggio)){
+                    codSalvataggio= (int) (Math.random()*2000);
+                }
+                this.idSalvataggio = codSalvataggio;
+                System.out.println("\b\b\b\b\b");
+                inserimentoSalvataggio(conn, 0, this.idSalvataggio);
             }
-            this.idSalvataggio = codSalvataggio;
+
             System.out.println("\b\b\b\b\b");
-            System.out.println("Inserimento dati salvataggio...");
-            inserimentoSalvataggio(conn, 0, idSalvataggio);
-            System.out.print("Ok\n");
-            
-            System.out.println("\b\b\b\b\b");
-            System.out.println("Inserimento stanze...");
+            System.out.print("Inserimento stanze...");
             //INSERIMENTO STANZE
-            inserimentoStanze(idSalvataggio);
-            System.out.print("Ok\n");
+            inserimentoStanze(this.idSalvataggio);
             
             int idInventario= (int) (Math.random()*2000);
             //genera un id inesistente
@@ -298,9 +302,8 @@ public class Salvataggio {
                 idInventario= (int) (Math.random()*2000);
             }
             System.out.println("\b\b\b\b\b");
-            System.out.println("Inserimento dati inventario....");
-            inserimentoInventario(conn, idInventario, giocoCorrente.getUser().getInvetario().getObjects());
-            System.out.print("Ok\n");
+            System.out.print("Inserimento dati inventario....");
+            inserimentoInventario(conn, idInventario, this.idSalvataggio, giocoCorrente.getUser().getInvetario().getObjects());
             
             int idBussola = (int) (Math.random()*2000);
             while(codiceEsistente("codBussola", "Bussola", "codBussola", idBussola)){
@@ -314,13 +317,14 @@ public class Salvataggio {
                 idStats= (int) (Math.random()*2000);
             }
             System.out.println("\b\b\b\b\b");
-            System.out.println("Inserimento dati giocatore...");
-            inserimentoStats(conn, idStats, idInventario, idBussola, this.giocoCorrente.getUser(), this.giocoCorrente.getCurrentRoom().getNomeStanza().toString(), idSalvataggio);          
-            System.out.print("Ok\n");
+            System.out.print("Inserimento dati giocatore...");
+            inserimentoStats(conn, idStats, idInventario, idBussola, this.giocoCorrente.getUser(), this.giocoCorrente.getCurrentRoom().getNomeStanza().toString(), this.idSalvataggio);          
             
             System.out.println("\b\b\b\b\b");
             System.out.println("Ritorno al gioco...");
+
             inserimentoStatsSalvataggio(idStats);
+            conn.close();
         }
     }
 
@@ -346,6 +350,110 @@ public class Salvataggio {
             System.out.println(ex);
         }
         return false;
+    }
+
+    private void setNullSalvataggio(int codSalvataggio, Connection conn)throws SQLException{
+        PreparedStatement updateSalvataggio = conn.prepareStatement("UPDATE Salvataggio SET codStatsUtente = null WHERE codSalvataggio = ?;");
+        updateSalvataggio.setInt(1, codSalvataggio);
+        updateSalvataggio.executeUpdate();
+        updateSalvataggio.close();
+    }
+
+    private void cancellazioneDati(int codConfronto, String tabellaTarget, String attributoCondizione, Connection conn)throws SQLException{
+        PreparedStatement cancellazioneStats = conn.prepareStatement("DELETE FROM "+tabellaTarget+" WHERE "+attributoCondizione+" = ?;");
+        cancellazioneStats.setInt(1, codConfronto);
+        cancellazioneStats.executeUpdate();
+        cancellazioneStats.close();
+    }
+
+    private int idBussolaUtente(int codConfronto, Connection conn)throws SQLException{
+        int codBussola=0;
+        PreparedStatement queryBussola = conn.prepareStatement("SELECT codBussola FROM StatsUtente WHERE codSalvataggio= ?;");
+        queryBussola.setInt(1, codConfronto);
+        ResultSet risultatoBussola = queryBussola.executeQuery();
+
+        if(risultatoBussola.next()){
+            codBussola = risultatoBussola.getInt(1);
+        }
+        queryBussola.close();
+        risultatoBussola.close();
+
+        return codBussola;
+    }
+
+    private ArrayList<Integer> idInventariEliminare(int codSalvataggio, Connection conn)throws SQLException{
+        ArrayList<Integer> risultatoId = new ArrayList<>();
+        PreparedStatement idInventari = conn.prepareStatement("SELECT codInventario FROM Inventario WHERE codSalvataggio= ?;");
+        ResultSet risultato ;
+
+        idInventari.setInt(1, codSalvataggio);
+        risultato = idInventari.executeQuery();
+
+        while(risultato.next()){
+            risultatoId.add(risultato.getInt(1));
+        }
+        idInventari.close();
+        risultato.close();
+
+        return risultatoId;
+    }
+
+    private void eliminazioneInventari(int codSalvataggio, ArrayList<Integer> codiciInventario , Connection conn)throws SQLException{
+        //ELIMINAZIONE OGGETTI INVENTARIO
+        PreparedStatement eliminazioneOggetti;
+        for(Integer numero : codiciInventario){
+            eliminazioneOggetti = conn.prepareStatement("DELETE FROM OggettoInventario WHERE codInventario=?;");
+            eliminazioneOggetti.setInt(1, numero.intValue());
+            eliminazioneOggetti.executeUpdate();
+            eliminazioneOggetti.close();
+        }
+
+        //ELIMINAZIONE INVENTARI
+        PreparedStatement eliminazioneInventari = conn.prepareStatement("DELETE FROM Inventario WHERE codSalvataggio=?;");
+        eliminazioneInventari.setInt(1, codSalvataggio);
+        eliminazioneInventari.executeUpdate();
+        eliminazioneInventari.close();
+    }
+
+    private void eliminazioneStanze(int codSalvataggio, Connection conn)throws SQLException{
+        PreparedStatement eliminazioneStanze = conn.prepareStatement("DELETE FROM Stanza WHERE codSalvataggio=?;");
+        eliminazioneStanze.setInt(1, codSalvataggio);
+        eliminazioneStanze.executeUpdate();
+        eliminazioneStanze.close();
+    }
+
+    /**
+     * Cancella il vecchio salvataggio per sostituirlo a quello nuovo.
+     * @param codSalvataggio - codice del salvataggio da cancellare, cancella solo le stanze/inventari e stats utente.
+     * @throws SQLException
+     */
+    public void cancellaVecchioSalvataggio()throws SQLException{
+        try(Connection conn =  DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");){
+            System.out.print("\nChiamata nani per aggiornamento in corso....");
+            //SETTA NNULL COD STATS UTENTE IN SALVATAGGIO
+            setNullSalvataggio(this.idSalvataggio, conn);
+
+            //ID BUSSOLA DA ELIMINARE
+            int idBussolaUtente = idBussolaUtente(this.idSalvataggio, conn);
+
+            //ELIMINA STATS UTENTE CON COD SALVATAGGIO
+            cancellazioneDati(this.idSalvataggio, "StatsUtente", "codSalvataggio", conn);
+
+            //ELIMINA BUSSOLA CON CODICE UGUALE ALL'UTENTE
+            cancellazioneDati(idBussolaUtente, "Bussola", "codBussola", conn);
+
+            //ELIMINA STANZE CON COD SALVATAGGIO
+            eliminazioneStanze(this.idSalvataggio, conn);
+
+            //ID INVENTARI DA ELIMINARE
+            ArrayList<Integer> idInventari = idInventariEliminare(this.idSalvataggio, conn);
+
+            //ELIMINAZIONE INVENTARI 
+            eliminazioneInventari(this.idSalvataggio, idInventari, conn);
+            System.out.print("Arrivati!\n\n");
+        }catch(SQLException ex){
+            System.out.println(ex);
+        }
     }
     
 }
