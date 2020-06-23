@@ -470,7 +470,6 @@ public class Salvataggio {
 
             //ELIMINA STANZE CON COD SALVATAGGIO
             eliminazioneStanze(this.idSalvataggio, conn);
-            System.out.println("Stanza eliminate");
 
             //ID INVENTARI DA ELIMINARE
             ArrayList<Integer> idInventari = idInventariEliminare(this.idSalvataggio, conn);

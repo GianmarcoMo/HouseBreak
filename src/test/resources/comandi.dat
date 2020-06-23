@@ -1,0 +1,15 @@
+vai . Sposta il giocatore verso una direzione specificata. . cammina corri muoviti spostati go v va .
+inventario . Elenca gli oggetti presenti nell'inventario del giocatore. . inv zaino Zaino bag Bag b .
+osserva . Effettua una descrizione della stanza. . guarda scruta analizza .
+raccogli . Raccogle un oggetto/arma specificata. . pick prendi inserisci .
+premi . Premi un pulsante o un altro oggetto premibile. . spingi push pugno .
+ricarica . Ricarica l'arma equipaggiata. . unisci ricarica combina .
+spara . Attacca un nemico con i pugni o un'arma. . attacca colpisci stordisci .
+esci . Esci dal gioco. . quit exit esci end Esci End muori ammazzati ucciditi morire .
+lascia . Rimuovi un oggetto dall'inventario. . rimuovi elimina abbandona estrai .
+help . Mostra i comandi presenti nel gioco. . aiuto comandi istruzioni regole .
+usa . Ti permette di usare un oggetto, come benda o soda. . curati bevi utilizza .
+equipaggia . Equipaggia un arma scelta dall'inventario. . indossa equi equ ind .
+taglia . Taglia qualcosa con lo strumento adatto. . rompi sfascia spacca .
+cerca . Ti permette di cercare gli oggetti nell'inventario dei cadaveri. . analizza .
+salva . Salva la partita attuale nel cloud. . salvataggio .

@@ -50,9 +50,10 @@ public class DatabaseInteract {
         return password.toString();
     }
 
-    public Boolean controlloDatiLogin(String email, char[] passwordInput, User giocatoreLogin) throws SQLException{
+    public Boolean controlloDatiLogin(String email, char[] passwordInput, User giocatoreLogin) throws SQLException, ClassNotFoundException{
         Boolean risultatoB = false;
         try {
+            //Class.forName("com.mysql.jdbc.Driver");
             Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");
             ResultSet risultato;
             try(PreparedStatement userDate = conn.prepareStatement("SELECT username FROM Utente WHERE email='"
@@ -71,7 +72,7 @@ public class DatabaseInteract {
             }
             return risultatoB;
         } catch (SQLException ex) {
-            System.out.println("Nessuna connessione al database");
+            System.out.println(ex);
         }
         return false;
     }

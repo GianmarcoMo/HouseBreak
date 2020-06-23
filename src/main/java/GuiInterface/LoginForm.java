@@ -8,6 +8,8 @@ package GuiInterface;
 import Utente.User;
 import Database.DatabaseInteract;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -197,6 +199,8 @@ public class LoginForm extends javax.swing.JFrame {
                 }
             } catch (SQLException ex) {
                 System.out.println(ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(LoginForm.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
