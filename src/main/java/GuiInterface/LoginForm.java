@@ -6,7 +6,7 @@
 package GuiInterface;
 
 import Utente.User;
-import Utils.DatabaseInteract;
+import Database.DatabaseInteract;
 import java.sql.SQLException;
 
 /**

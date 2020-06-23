@@ -6,6 +6,7 @@
 package GuiInterface;
 
 import Game.HouseBreak;
+import Game.Salvataggio;
 import Game.Starter;
 import Utente.User;
 import java.sql.Connection;
@@ -75,6 +76,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
         caricaButton = new javax.swing.JButton();
         labelLogo = new javax.swing.JLabel();
         nuovaPartita = new javax.swing.JButton();
+        eliminaButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setLocation(new java.awt.Point(600, 400));
@@ -160,6 +162,19 @@ public class SalvataggiForm extends javax.swing.JFrame {
             }
         });
 
+        eliminaButton.setBackground(new java.awt.Color(47, 54, 64));
+        eliminaButton.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        eliminaButton.setForeground(new java.awt.Color(255, 255, 255));
+        eliminaButton.setText("Elimina");
+        eliminaButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        eliminaButton.setBorderPainted(false);
+        eliminaButton.setEnabled(false);
+        eliminaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eliminaButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pannelloSalvataggioLayout = new javax.swing.GroupLayout(pannelloSalvataggio);
         pannelloSalvataggio.setLayout(pannelloSalvataggioLayout);
         pannelloSalvataggioLayout.setHorizontalGroup(
@@ -176,7 +191,9 @@ public class SalvataggiForm extends javax.swing.JFrame {
                         .addGroup(pannelloSalvataggioLayout.createSequentialGroup()
                             .addComponent(nuovaPartita, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(18, 18, 18)
-                            .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(pannelloSalvataggioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(eliminaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGap(9, 9, 9))))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
@@ -193,7 +210,9 @@ public class SalvataggiForm extends javax.swing.JFrame {
                 .addGroup(pannelloSalvataggioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(caricaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(nuovaPartita, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(eliminaButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -219,8 +238,12 @@ public class SalvataggiForm extends javax.swing.JFrame {
 
     private void tabellaSalvataggiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabellaSalvataggiMouseClicked
         int row = tabellaSalvataggi.getSelectedRow();
+        int idSalvataggioSelezionato = (int) tabellaSalvataggi.getModel().getValueAt(row, 0);
+        
+        idSalvataggioScelto = idSalvataggioSelezionato;
         if(row != -1){
             caricaButton.setEnabled(true);
+            eliminaButton.setEnabled(true);
         }
     }//GEN-LAST:event_tabellaSalvataggiMouseClicked
 
@@ -243,12 +266,30 @@ public class SalvataggiForm extends javax.swing.JFrame {
         Starter gioco= new Starter(new HouseBreak(),this.giocatore, 0);
         gioco.run();
     }//GEN-LAST:event_nuovaPartitaActionPerformed
+
+    private void eliminaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminaButtonActionPerformed
+        Salvataggio salvataggio = new Salvataggio(null, idSalvataggioScelto);
+        try {
+            salvataggio.cancellaVecchioSalvataggio();
+            eliminaRighe();
+            inizializzaSalvataggi();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_eliminaButtonActionPerformed
     
     private void addElementiTable(ResultSet risultatoQuery) throws SQLException{
         //Aggiunge elementi
         DefaultTableModel model;
         model = (DefaultTableModel) tabellaSalvataggi.getModel();
         model.addRow(new Object[]{risultatoQuery.getInt(1), risultatoQuery.getDate(2), risultatoQuery.getString(3), risultatoQuery.getInt(4)});
+    }
+    
+    private void eliminaRighe(){
+        DefaultTableModel model = (DefaultTableModel) tabellaSalvataggi.getModel();
+        for(int i=0; i< model.getRowCount();){
+            model.removeRow(i);
+        }
     }
     
     /**
@@ -282,6 +323,7 @@ public class SalvataggiForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton caricaButton;
+    private javax.swing.JButton eliminaButton;
     private javax.swing.JButton goBackButton;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelLogo;

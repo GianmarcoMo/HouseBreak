@@ -7,11 +7,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+
+import Database.DatabaseInteract;
+
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class HouseBreak extends GameComponents {  
@@ -262,6 +261,7 @@ public class HouseBreak extends GameComponents {
             getUser().getInvetario().addObject(corda);
             
             magazzino.getNemico().getInvetario().addObject(tessera);
+            System.out.println("tessera");
             magazzino.getNemico().getInvetario().addObject(munizioniUzi);
             magazzino.getNemico().setArmaEquipaggiata(uzi);
             sicurezza.getNemico().setArmaEquipaggiata(uzi);
@@ -279,204 +279,26 @@ public class HouseBreak extends GameComponents {
             //Blocco il giocatore
             getUser().bloccaGiocatore();
         }else{
+            DatabaseInteract database = new DatabaseInteract();
             //INSERIMENTO STANZA CORRENTE
-            initStanzaCorrente(idSalvataggioInput);
+            database.initStanzaCorrente(idSalvataggioInput, this);
             //INSERIMENTO INVENTARIO UTENTE
-            initInventarioUtente(idSalvataggioInput);
+            database.initInventarioUtente(idSalvataggioInput, this);
             //INSERIMENTO STATS UTENTE
-            initUtente(idSalvataggioInput);
+            database.initUtente(idSalvataggioInput, this);
             //INSERIMENTO NEMICI
-            initNemici(idSalvataggioInput);
+            database.initNemici(idSalvataggioInput, this);
             //INSERIMENTO INVENTARIO UTENTE
-            initInventarioNemico(idSalvataggioInput);
+            database.initInventarioNemico(idSalvataggioInput, this);
             //INSERIMENTO STANZA
-            initStanze(idSalvataggioInput);
+            database.initStanze(idSalvataggioInput, this);
             System.out.println("Partita caricata, buon divertimento!\n");
             System.out.println(getCurrentRoom().getDescrizioneStanza());
         }
         
     }
 
-    private void initInventarioNemico(int idSalvataggioInput) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
-            PreparedStatement statsUtente;
-            ResultSet risultatoStats;
-            statsUtente = conn.prepareStatement("SELECT su.stanzaCorrente , o.nomeOggetto FROM StatsUtente su, Salvataggio s, OggettoInventario o WHERE  su.codSalvataggio=? and s.codStatsUtente != su.codStats and o.codInventario=su.codInventario");
-            statsUtente.setInt(1, idSalvataggioInput);
-            risultatoStats = statsUtente.executeQuery();
-            
-            Room stanzaCorrenteNemico;
-            while(risultatoStats.next()){
-                stanzaCorrenteNemico = cercaStanza(risultatoStats.getString(1));
-
-                stanzaCorrenteNemico.getNemico().getInvetario().addObject(cercaOggetto(risultatoStats.getString(2)));
-            }
-            
-            risultatoStats.close();
-            statsUtente.close();
-            conn.close();
-        }catch (SQLException ex){
-            System.out.println(ex);
-        }
-    }
-
-    private void initNemici(int idSalvataggioInput) {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
-            PreparedStatement statsUtente;
-            ResultSet risultatoStats;
-            statsUtente = conn.prepareStatement("SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, su.stanzaCorrente FROM StatsUtente su, Salvataggio s WHERE  su.codSalvataggio=? and s.codStatsUtente != su.codStats");
-            statsUtente.setInt(1, idSalvataggioInput);
-            risultatoStats = statsUtente.executeQuery();
-            
-            Room stanzaCorrenteNemico;
-            while(risultatoStats.next()){
-                stanzaCorrenteNemico = cercaStanza(risultatoStats.getString(5));
-
-                stanzaCorrenteNemico.getNemico().setVita(risultatoStats.getInt(1));
-                stanzaCorrenteNemico.getNemico().setArmaEquipaggiata((Weapon)cercaOggetto(risultatoStats.getString(2)));
-                stanzaCorrenteNemico.getNemico().getArmaEquipaggiata().setMunizioni(risultatoStats.getInt(4));
-            }
-            
-            risultatoStats.close();
-            statsUtente.close();
-            conn.close();
-        }catch (SQLException ex){
-            System.out.println(ex);
-        }
-
-    }
-
-    private void initStanzaCorrente(int idSalvataggio) throws SQLException {
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
-            PreparedStatement stanzaCorrente;
-            ResultSet nomeStanza;
-            stanzaCorrente = conn.prepareStatement("SELECT su.stanzaCorrente FROM Salvataggio s, StatsUtente su WHERE s.codSalvataggio = ? AND s.codStatsUtente= su.codStats");
-            stanzaCorrente.setInt(1, idSalvataggio);
-            nomeStanza = stanzaCorrente.executeQuery();
-            
-            if(nomeStanza.next()){
-                for (Room stanza : getRoom()) {
-                    if(stanza.equals(nomeStanza.getString(1))){
-                        setStanzaCorrente(stanza);
-                        break;
-                    }
-                }
-            }
-            
-            nomeStanza.close();
-            stanzaCorrente.close();
-            conn.close();
-        }catch (SQLException ex){
-            System.out.println(ex);
-        }
-    }
     
-    private void initInventarioUtente(int idSalvataggio)throws  SQLException{
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
-            PreparedStatement oggettiInventario;
-            ResultSet oggetti;
-            oggettiInventario = conn.prepareStatement("SELECT o.nomeOggetto FROM Salvataggio s, StatsUtente su, Inventario i, OggettoInventario o WHERE s.codSalvataggio = ? AND s.codStatsUtente=su.codStats AND su.codInventario=i.codInventario ANd o.codInventario=i.codInventario");
-            oggettiInventario.setInt(1, idSalvataggio);
-            oggetti = oggettiInventario.executeQuery();
-            
-            //Per ogni risultato, cerca l'oggetto, lo restituisce e lo inserisce nell'inventario dell'utente.
-            while(oggetti.next()){
-                getUser().getInvetario().addObject(cercaOggetto(oggetti.getString(1)));
-            }
-            
-            
-            oggetti.close();
-            oggettiInventario.close();
-            conn.close();
-        }catch (SQLException ex){
-            System.out.println(ex);
-        }
-    }
-    
-    private void initStanze(int idSalvataggio)throws SQLException{
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
-            PreparedStatement stanze;
-            ResultSet risultatoStanze;
-            stanze = conn.prepareStatement("SELECT s.nomeStanza, o.nomeOggetto, s.bloccata FROM Stanza s, Inventario i, OggettoInventario o WHERE s.codSalvataggio= ? AND s.codInventario = i.codInventario AND o.codInventario=i.codInventario");
-            stanze.setInt(1, idSalvataggio);
-            risultatoStanze = stanze.executeQuery();
-            
-            Room stanzaSelezionata;
-            while(risultatoStanze.next()){
-                stanzaSelezionata = cercaStanza(risultatoStanze.getString(1));
-                stanzaSelezionata.getObject().add(cercaOggetto(risultatoStanze.getString(2)));
-                if(risultatoStanze.getInt(3)==1){
-                    stanzaSelezionata.bloccaStanza();
-                }
-            }
-            
-            risultatoStanze.close();
-            stanze.close();
-            conn.close();
-        }catch (SQLException ex){
-            System.out.println(ex);
-        }
-    }
-    
-    private void initUtente(int idSalvataggio){
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
-            PreparedStatement statsUtente;
-            ResultSet risultatoStats;
-            statsUtente = conn.prepareStatement("SELECT su.vita, su.armaEquipaggiata, su.bloccato, su.numeroMunizioni, b.avanti, b.sinistra, b.destra, b.giu FROM Salvataggio s, StatsUtente su, Bussola b WHERE s.codSalvataggio=? AND s.codSalvataggio=su.codSalvataggio AND s.codStatsUtente=su.codStats AND su.codBussola=b.codBussola");
-            statsUtente.setInt(1, idSalvataggio);
-            risultatoStats = statsUtente.executeQuery();
-            
-            if(risultatoStats.next()){
-                //Inserimento vita
-                getUser().setVita(risultatoStats.getInt(1));
-                //Inserimento arma equipaggiata
-                getUser().setArmaEquipaggiata((Weapon)cercaOggetto(risultatoStats.getString(2)));
-                //Inserimento bloccato/sbloccato
-                if(risultatoStats.getInt(3)==1)
-                    getUser().bloccaGiocatore();
-                else
-                    getUser().sbloccaGiocatore();
-                if(getUser().getArmaEquipaggiata()!=null){
-                    //inserimento numero munizioni
-                    getUser().getArmaEquipaggiata().setMunizioni(risultatoStats.getInt(4));
-                }
-                
-                //Inserimento bussola
-                getUser().getBussola().setAvanti(risultatoStats.getString(5));
-                getUser().getBussola().setSinistra(risultatoStats.getString(6));
-                getUser().getBussola().setDestra(risultatoStats.getString(7));
-                getUser().getBussola().setGiu(risultatoStats.getString(8));
-            }
-            
-            risultatoStats.close();
-            statsUtente.close();
-            conn.close();
-        }catch (SQLException ex){
-            System.out.println(ex);
-        }
-    }
-    
-    private Room cercaStanza(String nomeStanza){
-        int id=0;
-        for(Room stanza : getRoom()){
-            if(stanza.getNomeStanza().toString().equals(nomeStanza)){
-                return getRoom().get(id);
-            }
-            id++;
-        }
-        return null;
-    }
-    
-    private GameObject cercaOggetto(String nomeOggetto){
-        int id=0;
-        for(GameObject oggetto : getObject()){
-            if(oggetto.getNome().equals(nomeOggetto)){
-                return  getObject().get(id);
-            }
-            id++;
-        }
-        return null;
-    }
     @Override
     public void onUpdate(final Parser parser) {
         //COMANDO MOVIMENTO

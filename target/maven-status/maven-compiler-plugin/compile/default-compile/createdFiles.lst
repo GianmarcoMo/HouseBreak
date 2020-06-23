@@ -18,11 +18,11 @@ GuiInterface/ChoiceFrame.class
 GuiInterface/ChoiceFrame$2.class
 GuiInterface/HomeForm$3.class
 Game/Salvataggio.class
+GuiInterface/SalvataggiForm$6.class
 GameComponents/Room.class
 GuiInterface/LoginForm$1.class
 GameComponents/Inventory.class
 GuiInterface/HomeForm$1.class
-Utils/DatabaseInteract.class
 GuiInterface/RegisterForm.class
 GuiInterface/HomeForm.class
 Game/Starter.class

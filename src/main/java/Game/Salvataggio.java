@@ -280,16 +280,15 @@ public class Salvataggio {
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak")) {
             System.out.print("Ok\n");
 
-            if(idSalvataggio==0){
-                int codSalvataggio= (int) (Math.random()*2000);
-                //genera un id inesistente
-                while(codiceEsistente("codSalvataggio", "Salvataggio", "codSalvataggio", codSalvataggio)){
-                    codSalvataggio= (int) (Math.random()*2000);
-                }
-                this.idSalvataggio = codSalvataggio;
-                System.out.println("\b\b\b\b\b");
-                inserimentoSalvataggio(conn, 0, this.idSalvataggio);
+            int codSalvataggio= (int) (Math.random()*2000);
+            //genera un id inesistente
+            while(codiceEsistente("codSalvataggio", "Salvataggio", "codSalvataggio", codSalvataggio)){
+                codSalvataggio= (int) (Math.random()*2000);
             }
+            this.idSalvataggio = codSalvataggio;
+            System.out.println("\b\b\b\b\b");
+            inserimentoSalvataggio(conn, 0, this.idSalvataggio);
+            
 
             System.out.println("\b\b\b\b\b");
             System.out.print("Inserimento stanze...");
@@ -353,47 +352,68 @@ public class Salvataggio {
     }
 
     private void setNullSalvataggio(int codSalvataggio, Connection conn)throws SQLException{
-        PreparedStatement updateSalvataggio = conn.prepareStatement("UPDATE Salvataggio SET codStatsUtente = null WHERE codSalvataggio = ?;");
-        updateSalvataggio.setInt(1, codSalvataggio);
-        updateSalvataggio.executeUpdate();
-        updateSalvataggio.close();
+        try (PreparedStatement updateSalvataggio = conn.prepareStatement("UPDATE Salvataggio SET codStatsUtente = null WHERE codSalvataggio = ?;")) {
+            updateSalvataggio.setInt(1, codSalvataggio);
+            updateSalvataggio.executeUpdate();
+            updateSalvataggio.close();
+        }catch(SQLException ex){
+            System.err.println(ex);
+        }
+    }
+
+    private void cancellaSalvataggio(int codSalvataggio, Connection conn)throws SQLException{
+        try (PreparedStatement eliminaSalvataggio = conn.prepareStatement("DELETE FROM Salvataggio WHERE codSalvataggio = ?;")) {
+            eliminaSalvataggio.setInt(1, codSalvataggio);
+            eliminaSalvataggio.executeUpdate();
+            eliminaSalvataggio.close();
+        }catch(SQLException ex){
+            System.err.println(ex);
+        }
     }
 
     private void cancellazioneDati(int codConfronto, String tabellaTarget, String attributoCondizione, Connection conn)throws SQLException{
-        PreparedStatement cancellazioneStats = conn.prepareStatement("DELETE FROM "+tabellaTarget+" WHERE "+attributoCondizione+" = ?;");
-        cancellazioneStats.setInt(1, codConfronto);
-        cancellazioneStats.executeUpdate();
-        cancellazioneStats.close();
+        try (PreparedStatement cancellazioneStats = conn.prepareStatement("DELETE FROM "+tabellaTarget+" WHERE "+attributoCondizione+" = ?;")) {
+            cancellazioneStats.setInt(1, codConfronto);
+            cancellazioneStats.executeUpdate();
+            cancellazioneStats.close();
+        }catch(SQLException ex){
+            System.out.println(ex);
+        }
     }
 
     private int idBussolaUtente(int codConfronto, Connection conn)throws SQLException{
         int codBussola=0;
-        PreparedStatement queryBussola = conn.prepareStatement("SELECT codBussola FROM StatsUtente WHERE codSalvataggio= ?;");
-        queryBussola.setInt(1, codConfronto);
-        ResultSet risultatoBussola = queryBussola.executeQuery();
-
-        if(risultatoBussola.next()){
-            codBussola = risultatoBussola.getInt(1);
+        ResultSet risultatoBussola;
+        try (PreparedStatement queryBussola = conn.prepareStatement("SELECT codBussola FROM StatsUtente WHERE codSalvataggio= ?;")) {
+            queryBussola.setInt(1, codConfronto);
+            risultatoBussola = queryBussola.executeQuery();
+            if(risultatoBussola.next()){
+                codBussola = risultatoBussola.getInt(1);
+            }
+            risultatoBussola.close();
+            queryBussola.close();
+        }catch(SQLException ex){
+            System.out.println(ex);
         }
-        queryBussola.close();
-        risultatoBussola.close();
-
         return codBussola;
     }
 
     private ArrayList<Integer> idInventariEliminare(int codSalvataggio, Connection conn)throws SQLException{
         ArrayList<Integer> risultatoId = new ArrayList<>();
-        PreparedStatement idInventari = conn.prepareStatement("SELECT codInventario FROM Inventario WHERE codSalvataggio= ?;");
-        ResultSet risultato ;
-
-        idInventari.setInt(1, codSalvataggio);
-        risultato = idInventari.executeQuery();
-
-        while(risultato.next()){
-            risultatoId.add(risultato.getInt(1));
+        ResultSet risultato;
+        try (PreparedStatement idInventari = conn.prepareStatement("SELECT codInventario FROM Inventario WHERE codSalvataggio= ?;")) {
+            idInventari.setInt(1, codSalvataggio);
+            risultato = idInventari.executeQuery();
+            
+            while(risultato.next()){
+                risultatoId.add(risultato.getInt(1));
+            }
+            idInventari.close();
+            risultato.close();
+        }catch(SQLException ex){
+            System.err.println(ex);
         }
-        idInventari.close();
-        risultato.close();
+        
 
         return risultatoId;
     }
@@ -403,38 +423,44 @@ public class Salvataggio {
         PreparedStatement eliminazioneOggetti;
         for(Integer numero : codiciInventario){
             eliminazioneOggetti = conn.prepareStatement("DELETE FROM OggettoInventario WHERE codInventario=?;");
-            eliminazioneOggetti.setInt(1, numero.intValue());
+            eliminazioneOggetti.setInt(1, numero);
             eliminazioneOggetti.executeUpdate();
             eliminazioneOggetti.close();
         }
 
-        //ELIMINAZIONE INVENTARI
-        PreparedStatement eliminazioneInventari = conn.prepareStatement("DELETE FROM Inventario WHERE codSalvataggio=?;");
-        eliminazioneInventari.setInt(1, codSalvataggio);
-        eliminazioneInventari.executeUpdate();
-        eliminazioneInventari.close();
+        try ( //ELIMINAZIONE INVENTARI
+            PreparedStatement eliminazioneInventari = conn.prepareStatement("DELETE FROM Inventario WHERE codSalvataggio=?;")) {
+            eliminazioneInventari.setInt(1, codSalvataggio);
+            eliminazioneInventari.executeUpdate();
+            eliminazioneInventari.close();
+        }catch(SQLException ex){
+            System.err.println(ex);
+        }
     }
 
     private void eliminazioneStanze(int codSalvataggio, Connection conn)throws SQLException{
-        PreparedStatement eliminazioneStanze = conn.prepareStatement("DELETE FROM Stanza WHERE codSalvataggio=?;");
-        eliminazioneStanze.setInt(1, codSalvataggio);
-        eliminazioneStanze.executeUpdate();
-        eliminazioneStanze.close();
+        try (PreparedStatement eliminazioneStanze = conn.prepareStatement("DELETE FROM Stanza WHERE codSalvataggio=?;")) {
+            eliminazioneStanze.setInt(1, codSalvataggio);
+            eliminazioneStanze.executeUpdate();
+            eliminazioneStanze.close();
+        }catch(SQLException ex){
+            System.err.println(ex);
+        }
     }
 
     /**
      * Cancella il vecchio salvataggio per sostituirlo a quello nuovo.
-     * @param codSalvataggio - codice del salvataggio da cancellare, cancella solo le stanze/inventari e stats utente.
      * @throws SQLException
      */
     public void cancellaVecchioSalvataggio()throws SQLException{
         try(Connection conn =  DriverManager.getConnection("jdbc:mysql://housebreak-db.cafdhyoaqv4t.eu-west-2.rds.amazonaws.com:3306/HouseBreak","admin", "housebreak");){
-            System.out.print("\nChiamata nani per aggiornamento in corso....");
+            System.out.print("\nChiamata degli umpa lumpa per aggiornamento in corso....");
             //SETTA NNULL COD STATS UTENTE IN SALVATAGGIO
             setNullSalvataggio(this.idSalvataggio, conn);
 
             //ID BUSSOLA DA ELIMINARE
             int idBussolaUtente = idBussolaUtente(this.idSalvataggio, conn);
+            
 
             //ELIMINA STATS UTENTE CON COD SALVATAGGIO
             cancellazioneDati(this.idSalvataggio, "StatsUtente", "codSalvataggio", conn);
@@ -444,12 +470,17 @@ public class Salvataggio {
 
             //ELIMINA STANZE CON COD SALVATAGGIO
             eliminazioneStanze(this.idSalvataggio, conn);
+            System.out.println("Stanza eliminate");
 
             //ID INVENTARI DA ELIMINARE
             ArrayList<Integer> idInventari = idInventariEliminare(this.idSalvataggio, conn);
 
             //ELIMINAZIONE INVENTARI 
             eliminazioneInventari(this.idSalvataggio, idInventari, conn);
+
+            //eliminazione salvataggio
+            cancellaSalvataggio(this.idSalvataggio, conn);
+            this.idSalvataggio = 0;
             System.out.print("Arrivati!\n\n");
         }catch(SQLException ex){
             System.out.println(ex);
