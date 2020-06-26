@@ -1,6 +1,0 @@
-3 giorni prima dell'esame dovete consegnarmi il codice come progetto Maven con una breve relazione/documentazione. Volendo 
- potete mettere tutto in un repository git.
- 
-Invece, la presentazione dovrebbe seguire questo template:
- -alcuni dettagli implementativi o particolari della soluzione (scegliete qualcosa che metta in luce degli aspetti che secondo voi sono interessanti/innovativi), 
- -un esempio live (demo) di utilizzo del sistema.

@@ -315,6 +315,7 @@ public class HouseBreak extends GameComponents {
             
             if(getCurrentRoom().getNomeStanza().toString().contains("Uscita")){
                 System.out.println("\n Spero che ti sia divertito! Alla prossima!\n Ciao ciao!!\n\n");
+                System.exit(0);
             }
 
             //COMANDO PER GUARDARE LA STANZA
