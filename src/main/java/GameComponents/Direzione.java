@@ -14,7 +14,6 @@ public class Direzione implements Input{
     public Direzione(String lineaInput){
         this.direzione=new StringBuilder();
         this.alias= new ArrayList<>();
-        
         acquisizoneInputFile(lineaInput);
     }
     

@@ -16,6 +16,10 @@ public class Inventory {
     public ArrayList<GameObject> getObjects(){
         return this.objectsUser;
     }
+
+    public Inventory getInventario(){
+        return this;
+    }
     
     public void guardaInventario(){
         if (objectsUser.size() >= 1) {
@@ -28,7 +32,6 @@ public class Inventory {
         } else {
             System.out.println("Inventario piu' vuoto del tuo conto in banca!");
         }
-        
     }
 
     //aggiunge un singolo oggetto all'inventario
@@ -56,18 +59,14 @@ public class Inventory {
     }
     
     public int getSizeInvetory(){
-        if(this.size > 0){
-            return this.size;
-        }else{
-            return this.size;
-        }
+        return this.size;
     }
     
-    public void decementaSizeInventory(){
+    private void decementaSizeInventory(){
         this.size--;
     }
     
-    public void incrementaSizeInvetory(){
+    private void incrementaSizeInvetory(){
         this.size++;
     }
 }

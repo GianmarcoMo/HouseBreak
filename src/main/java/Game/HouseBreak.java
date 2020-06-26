@@ -250,6 +250,7 @@ public class HouseBreak extends GameComponents {
 
         getUser().setEmail(giocatoreAttuale.getEmail());
         getUser().setUsername(giocatoreAttuale.getUsername());
+
         scan.close();
         
         if(idSalvataggioInput == 0){
@@ -508,18 +509,23 @@ public class HouseBreak extends GameComponents {
                 System.out.println("Sei bloccato! Cerca il modo di liberarti!");
             }
         }else if(parser.getComando().containsCommand("salva")){
-            Salvataggio salvataggio = new Salvataggio(this, getIdSalvataggio());
-            
-            try {
-                System.out.println("Salvataggio in corso... Attendere...");                
-                salvataggio.salvaPartita();
-                setIdSalvataggio(salvataggio.getIdSalvataggio());
-                System.out.println("\b\b\b\b\b");
-                System.out.println("Partita salvata con successo!");
-            } catch (SQLException ex) {
-                System.out.println(ex);
-            }
-            
+            try{
+                if(!getUser().getEmail().isEmpty()){
+                    Salvataggio salvataggio = new Salvataggio(this, getIdSalvataggio());
+                    try {
+                        System.out.println("Salvataggio in corso... Attendere...");                
+                        salvataggio.salvaPartita();
+                        setIdSalvataggio(salvataggio.getIdSalvataggio());
+                        System.out.println("\b\b\b\b\b");
+                        System.out.println("Partita salvata con successo!");
+                    } catch (SQLException ex) {
+                        System.out.println(ex);
+                    }
+                }
+            }catch(NullPointerException ex){
+                System.out.println("Non puoi utilizzare questa funzione.");
+                System.out.println("Per favore, registrati o effettua il login, grazie.");
+            }      
         }
     }
 

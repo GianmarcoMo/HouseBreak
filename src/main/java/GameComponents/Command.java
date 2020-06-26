@@ -27,18 +27,6 @@ public final class Command implements Input{
         this.alias = new ArrayList<>();
         acquisizoneInputFile(lineaInput);
     }
-
-    public void setNomeComando(String nomeInput){
-        this.nome.append(nomeInput);
-    }
-
-    public void setAlias(String aliasInput){
-        this.alias.add(alias.size(), aliasInput);
-    }
-
-    public void setDescrizione(String descrizioneInput){
-        this.description.append(descrizioneInput);
-    }
     
     public StringBuilder getNomeComando(){
         return this.nome;
