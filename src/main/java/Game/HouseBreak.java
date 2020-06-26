@@ -262,7 +262,6 @@ public class HouseBreak extends GameComponents {
             getUser().getInvetario().addObject(corda);
             
             magazzino.getNemico().getInvetario().addObject(tessera);
-            System.out.println("tessera");
             magazzino.getNemico().getInvetario().addObject(munizioniUzi);
             magazzino.getNemico().setArmaEquipaggiata(uzi);
             sicurezza.getNemico().setArmaEquipaggiata(uzi);

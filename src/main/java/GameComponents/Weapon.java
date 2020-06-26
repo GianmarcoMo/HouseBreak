@@ -60,21 +60,15 @@ public class Weapon extends GameObject{
         //se non esiste il tipo munizioni
         //l'arma non può avere delle munizioni
         //esempio mazza, padella ecc...
-            nonHaMunizioni();
             return 0;
         }
-    }
-
-    //messaggio che avvisa che l'arma non ha munizioni
-    private void nonHaMunizioni(){
-        System.out.println("Quest'arma non ha munizioni");
     }
 
     //diminuisce la vita dell'arma
     private void diminuisciVita(){
         //la vita diminuirà di un numero casuale 
         //ogni volta che viene usata per sparare/colpire
-        this.vita-= Math.random()*10;
+        this.vita -= Math.random()*10;
         if(this.vita <= 0){
             System.out.println("Arma rotta!");
         }
