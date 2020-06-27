@@ -10,7 +10,6 @@ import Database.DatabaseInteract;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  *
  * @author Moresi Gianmarco
@@ -182,7 +181,8 @@ public class LoginForm extends javax.swing.JFrame {
     }//GEN-LAST:event_goBackButtonActionPerformed
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        DatabaseInteract databaseManger = new DatabaseInteract();
+        DatabaseInteract databaseManger = new DatabaseInteract();        
+        
         if (inputEmail.getText().equals("") || passwordInput.getPassword().length < 8) {
             labelError.setVisible(true);
         } else if (!inputEmail.getText().equals("") && passwordInput.getPassword().length >= 8) {

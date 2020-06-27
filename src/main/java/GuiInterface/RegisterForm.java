@@ -8,6 +8,8 @@ package GuiInterface;
 import java.sql.SQLException;
 import Utente.User;
 import Database.DatabaseInteract;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -198,9 +200,13 @@ public class RegisterForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonRegistrazioneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegistrazioneActionPerformed
-        if(inputEmail.getText().equals("") || inputUsername.getText().equals("") || inputPassword.getPassword().length < 8){
+        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(inputEmail.getText());
+       
+        if(!matcher.matches() || inputUsername.getText().equals("") || inputPassword.getPassword().length < 8){
             labelError.setVisible(true);
-        }else if(!inputEmail.getText().equals("") && !inputUsername.getText().equals("") || inputPassword.getPassword().length >= 8){
+        }else if(matcher.matches() && !inputUsername.getText().equals("") || inputPassword.getPassword().length >= 8){
             labelError.setVisible(false);
             try {
                 DatabaseInteract database = new DatabaseInteract();
